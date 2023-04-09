@@ -1,0 +1,310 @@
+require('dotenv').config();
+const User = require('../models/UserModel')
+const ObjectId = require('mongodb').ObjectId
+const jwt = require('jsonwebtoken')
+const axios = require("axios");
+const { OAuth2Client } = require('google-auth-library');
+ 
+
+const validate = require('../utils/ValidateUser')
+const {hashPassword, comparePasswords} = require('../utils/hashPassword')
+const {generateAuthToken, generateRefreshToken} = require('../utils/GenerateAuthToken')
+ 
+/*
+@description: Register User to database
+@route POST /user/register
+@access Public
+*/
+const registerUser = async(req, res, next) => {
+    try{
+        
+        //Validate user data being sent from client browser, error, send back status and error message
+        const {error} = validate(req.body.user_data)
+        
+        if(error){ 
+            return res.status(400).send({message: error.details[0].message})
+        }
+
+        //Retrieve data sent from client side
+        const { username, email, password} = req.body.user_data
+        const token = req.body.token
+       
+        //Verify if all inputs exist
+        if(!(username && email && password)){
+            return res.status(400).send('All inputs are required')
+        }
+        
+        // Sending secret key and response token to Google Recaptcha API for authentication.
+        const token_response = await axios.post( `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_SECRET_KEY}&response=${token}`);
+ 
+
+        //Check if user already exists on the database  
+        const userExists = await User.findOne({email})
+ 
+        if(userExists !== null){
+            return res.status(409).send({message: 'User with given email already exists'});
+        }
+        else{
+            // Check response status and send back to the client-side, set toke_sucess to true if successful
+            let token_success = false
+           
+            if (token_response.data.success) {
+                token_success = true;
+            }
+             
+            //Hash user passwords
+            const hashedPassword = hashPassword(password)
+            const newCollectionId = new ObjectId()
+            
+            //Create user model and relevant properties
+            const newUser = new User({
+                username: username, email: email.toLowerCase(), password: hashedPassword, collections: [{name: "First Collection", collectionId: newCollectionId, categoryList: []}]
+            });
+            
+            //Save a new doc into the users collection
+            await newUser.save().then((response)=>console.log('SUCCESSFUL')).catch((err)=>console.log(err));
+            //Send back object to client side saying success
+            return res.send({ 
+                success: true,
+                collectionId: newCollectionId,
+                captcha: token_success
+            })
+        }
+    }
+    catch(err){
+        res.status(500).send({message: 'Internal Server Error', success: false})
+        next(err)
+    }
+}
+
+/*
+@description: LoginUser to database
+@route POST /user/login
+@access Public
+*/
+const loginUser = async(req, res, next) => {
+    try{
+        const { email, password, doNotLogout} = req.body //doNotLogout comes from frontend
+       
+        if(!(email && password)){
+            return res.status(400).send('All fields are required')
+        }
+
+        const user = await User.findOne({email}) //Retrieve user from database
+
+        //If user exists and passwords match
+        if(user && comparePasswords(password, user.password)){
+
+            //Create new access token for user as well as refresh token
+            const {_id, username, email } = user 
+            const token = generateAuthToken(_id, username, email)
+            const refreshToken = generateRefreshToken(_id, username, email)
+            const collectionId = user.collections[0].collectionId
+
+            //If do not logout is checked, create user session
+            if(doNotLogout){
+                //Create new session
+                req.session.ongoingSession = true
+                // req.session.user = user
+            }
+            
+            // Create secure cookie with refresh token 
+            res.cookie('jwt', refreshToken, {
+                httpOnly: true, //accessible only by web server and not client, put false if you want client to be able to access it 
+                secure: false, //true if https
+                sameSite: 'None', //cross-site cookie 
+                maxAge: 3600000 * 48//cookie expiry: set to match refresh token, 48 hours
+            })
+
+            //Store user id in a http only cookie
+            res.cookie('user_id', _id.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: process.env.NODE_ENV !== "development"});
+
+            //Store current collection id in a cookie
+            res.cookie('currentCollectionId', collectionId.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: process.env.NODE_ENV !== "development"});
+
+            // Send accessToken containing user data and token
+            return res.json({ 
+                message: 'User Logged In Successfully', 
+                user: user,
+                auth: true,
+                token: token,
+                collectionId: collectionId
+            })
+        }
+        else{
+            return res.status(401).send({message: 'Invalid credentials'})
+        }
+    }
+    catch(err){
+        res.status(500).send({message: 'Internal Server Error'})
+        next(err)
+    }
+}
+
+/*
+@description: Login user using google
+@route POST /user/google-login
+@access Public
+*/
+const googleLoginUser = async(req, res, next) => {
+    const client = new OAuth2Client(process.env.GOOGLE_LOGIN_CLIENT_ID);
+ 
+    try{
+        //Retrieve token from frontend
+        const jwt_token = req.body.google_token
+        
+        //Verify google token and client ID with api
+        const ticket = await client.verifyIdToken({
+            idToken: jwt_token,
+            audience: process.env.GOOGLE_LOGIN_CLIENT_ID,
+        });
+        
+        //Payload from google server
+        const payload = ticket.getPayload();
+        //Extract revelant fields
+        const { email, given_name, family_name } = payload;
+        
+        const user = await User.findOne({email: email.toLowerCase()}) //Retrieve user from database
+
+        let user_id;
+        let collectionId;
+        //If no user exists create a new one without password field
+        if(!user){
+            const newCollectionId = new ObjectId()
+            
+            //Create user doc and relevant properties
+            const newUser = new User({
+                username: `${given_name} ${family_name}`, email: email.toLowerCase(), collections: [{name: "First Collection", collectionId: newCollectionId, categoryList: []}]
+            });
+            
+            //Save a new doc into the users collection and return the new user
+            await newUser.save().then((response)=>{
+                const createdUser = response.toObject();
+                user_id = createdUser._id
+                collectionId = newCollectionId
+            }).catch((err)=>console.log(err));
+        } 
+        else{
+            user_id = user._id
+            collectionId = user.collectionId
+        }
+
+        //Create new session
+        req.session.ongoingSession = true
+
+        //Set google jwt
+        res.cookie('google_jwt', jwt_token, { httpOnly: false, maxAge: 3600000 * 24, secure: process.env.NODE_ENV !== "development"})
+
+        //Store user id in a http only cookie
+        res.cookie('user_id', user_id, { httpOnly: true, maxAge: 3600000 * 24, secure: process.env.NODE_ENV !== "development"});
+
+        //Store current collection id in a cookie
+        res.cookie('currentCollectionId', collectionId.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: process.env.NODE_ENV !== "development"});
+
+        // Send accessToken containing user data and token
+        return res.json({ 
+            message: 'User Logged In Successfully', 
+            auth: true,
+            collectionId: collectionId
+        })
+    }
+    catch(err){
+        res.status(500).send({message: 'Internal Server Error'})
+        next(err)
+    }
+}
+
+// @desc Refresh access token using refresh token
+// @route GET /auth/refresh
+// @access Public - because access token has expired
+const refresh = (req, res, next) => {
+     
+    //Check if cookies exist in request
+    const cookies = req.cookies
+    
+    if (!cookies?.jwt) {
+        return res.status(401).json({ message: 'Unauthorized' })
+    }
+    
+    const refreshToken = cookies.jwt
+    
+    //Verify jwt refresh token
+    jwt.verify(
+        refreshToken,
+        process.env.JWT_REFRESH_TOKEN ,
+        //Catch errors
+        async function asyncHandler(err, decoded){
+            
+            if (err) {
+                return res.status(403).json({ message: 'Forbidden' })
+            }
+
+            //Find user in database
+            const foundUser = await User.findOne({ email: decoded.email }).exec()
+
+            //If no user found return unauthorized
+            if (!foundUser) {
+                return res.status(401).json({ message: 'Unauthorized' })
+            }
+
+            //Generate new access token
+            const accessToken = generateAuthToken(foundUser._id, foundUser.username, foundUser.email)
+
+            return res.json({ token: accessToken})
+        }
+    )
+}
+
+// @desc Logout and destroy session
+// @route GET /user/logout
+// @access Public - just to clear cookie if exists
+const logoutUser = async(req, res, next) =>{
+    try{
+        //Destroy session on server side, not the cookie
+        req.session.destroy();
+        
+        //Check for http only cookie
+        const cookies = req.cookies
+        
+        //If no jwt cookie
+        // if (!cookies?.jwt){
+        //     return res.status(204) 
+        // }
+        
+        //Remove cookies when logging out
+        res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: process.env.NODE_ENV !== "development" })
+        res.clearCookie("user_id") //Remove user_id storage
+        res.clearCookie("session") //Remove session cookie
+        res.clearCookie("google_jwt") //Remove google sign in jwt token
+        res.clearCookie("currentCollectionId") 
+
+    
+        //Clear local storage
+        // localStorage.clear("currentCollection")
+        return res.send({loggedOut: true, message: 'User logged out'});
+
+    }
+    catch(err){
+        res.status(500).send({message: 'Internal Server Error', loggedOut: false})
+        next(err)
+    }
+}
+
+//Verify if user already has a session running
+const verifyLoggedInUser = async(req, res, next) => {
+    try{
+        if(req.session.user){
+            return res.send({loggedIn: true, user: req.session.user})
+        }
+        else{
+            return res.send({loggedIn: false})
+        }
+    }
+    catch(err){
+        res.status(500).send({message: 'Internal Server Error'})
+        next(err)
+    }
+}
+
+
+module.exports = {registerUser, loginUser, verifyLoggedInUser, logoutUser, refresh, googleLoginUser}
