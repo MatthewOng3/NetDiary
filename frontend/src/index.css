@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  /* position: relative; */
+  /* min-height: 100%; */
+   
+  background-color: #0c0c18;
+}
+
+body{
+  min-height: 100%;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+

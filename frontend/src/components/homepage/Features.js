@@ -1,0 +1,57 @@
+import "./Features.css";
+
+function Features() {
+  return (
+    <section className=" w-full py-20 flex items-center justify-center" style={{backgroundColor: '#181717'}}>
+      <div className="container">
+        <h1 className="text-white text-center capitalize ">
+          Save your online world
+        </h1>
+        <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6 mt-16   ">
+          <div className="rounded-2xl overflow-hidden bg-white">
+            <img className="w-full" src="/images/test.jpg" alt="" />
+            <div className="w-full px-3 py-6 ">
+              <h1 style={{ marginBottom: "0" }} className="text-2xl font-bold">
+                {" "}
+                Multiple Categories
+              </h1>
+              <h6 style={{ marginBottom: "0" }}>
+                {" "}
+                Sort your favourite webpages by category! Be it your favourite movies or tv shows and more!
+              </h6>
+            </div>
+          </div>
+          <div className="rounded-2xl overflow-hidden bg-white">
+            <img className="w-full" src="/images/test.jpg" alt="" />
+            <div className="w-full px-3 py-6 ">
+              <h1 style={{ marginBottom: "0" }} className="text-2xl font-bold">
+                {" "}
+                Quick and simple entries
+              </h1>
+              <h6 style={{ marginBottom: "0" }}>
+           
+                Create and name each webpage entry and just paste the link of your
+              webpage
+              </h6>
+            </div>
+          </div>
+          <div className="rounded-2xl overflow-hidden bg-white">
+            <img className="w-full" src="/images/test.jpg" alt="" />
+            <div className="w-full px-3 py-6 ">
+              <h1 style={{ marginBottom: "0" }} className="text-2xl font-bold">
+              Multiple Collections
+              </h1>
+              <h6 style={{ marginBottom: "0" }}>
+                Create multiple diary collections to split work and leisure and
+              more
+              </h6>
+            </div>
+          </div>
+   
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default Features;

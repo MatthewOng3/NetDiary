@@ -1,0 +1,42 @@
+.popup-container{
+    background-color: #20202f;
+    width: 600px;
+    height: 330px;
+    opacity: 1;
+    border-radius: 12px;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+
+.form-container{
+    min-height: 87%;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 3.7%;
+}
+
+.form-group{
+    width: 90%;
+    
+    margin-left: 20px;
+}
+
+.ReactModal__Overlay {
+    opacity: 0;
+    transform: translateX(-100px);
+    transition: all 500ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open {
+opacity: 1;
+transform: translateX(0px);
+}
+
+.ReactModal__Overlay--before-close {
+opacity: 0;
+transform: translateX(-100px);
+}

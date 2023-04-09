@@ -1,0 +1,28 @@
+.feedback-container{
+    position: initial;
+    width:100%;
+    min-height: 100%;
+    top:0px;
+    left:0px;
+    z-index:1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 50px;
+}
+
+.form-container{
+    max-width: 600px;
+    max-height: 50%;
+    min-height: 500px;
+    height: auto;
+    width: 600px;
+    
+}
+
+@media (width <= 1300px){
+    .fill{
+        width: 80%;
+         
+    }
+}

@@ -1,0 +1,16 @@
+
+
+.form-container{
+    max-height: 50%;
+    min-height: 500px;
+    height: auto;
+    width: 50%;    
+}
+ 
+
+@media (width <= 1000px){
+    .fill{
+        width: 80%;
+         
+    }
+}

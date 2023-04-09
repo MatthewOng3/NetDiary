@@ -1,0 +1,39 @@
+ 
+.col{
+    margin-left: 55px;
+}
+
+.input-container{
+    background: transparent;
+    border: none;
+    outline: none;
+    white-space: pre-line;
+}
+
+@media  (769px <= width <= 1225px){
+    .condition{
+        background-color: red;
+    }
+}
+
+.card-header{
+    border-bottom: none;
+    flex-direction: row;
+    display: flex;
+    border-bottom: none;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.card-body{
+    background-color: #1c1433;
+    border-bottom-left-radius: 5px; 
+    border-bottom-right-radius: 5px; 
+    flex-direction: column;
+    justify-content: flex-start;
+    display: flex;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+}
+
+ 

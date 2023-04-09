@@ -1,0 +1,12 @@
+.navbar-container{
+    display: flex;
+    flex-direction: row;
+    background-color: 'black';
+}
+
+.drawer-body{
+    background-repeat: no-repeat; 
+    background-attachment: fixed;
+    height: 100%;
+    overflow-y: auto;
+}

@@ -1,0 +1,9 @@
+.new-category{
+    justify-content: center;
+    display: flex;
+    padding-top: 15px;
+    overflow-y:auto
+}
+
+
+ 

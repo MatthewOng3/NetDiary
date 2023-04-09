@@ -1,0 +1,21 @@
+.links{
+    display: flex;
+    justify-content: center;
+}
+
+.nav-item{
+    color: 'white'
+}
+
+.navbar{
+    background-color: transparent;
+}
+
+.link-active{
+    color: 'white';
+    font-weight: 500;
+}
+
+.link-container{
+    max-height: 40px;
+}

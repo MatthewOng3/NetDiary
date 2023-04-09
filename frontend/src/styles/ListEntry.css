@@ -1,0 +1,24 @@
+.list-entry{
+    width: 100%;
+    background-color: #5d1669;
+    border-radius: 7px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.list-entry-button:hover{
+    background-color: #5d1669;
+}
+
+.icon-btn{
+    background-color: #610fdd;
+    border-radius: 6px;
+}
+
+.page-name{
+    text-align: inherit;
+    font-weight: 500;
+    color: white;
+    text-transform: capitalize;
+}
+
