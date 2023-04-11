@@ -3,8 +3,9 @@ import '../styles/CollectionItem.css'
 
 //ICONS
 import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
-import { Button } from '@mui/material';
+import { Button, IconButton, Tooltip } from '@mui/material';
 
 
 import { useDispatch, useSelector } from 'react-redux'
@@ -44,16 +45,26 @@ function CollectionItem({name, collectionId}) {
   
   return (
     <div className='container mt-3 rounded-full  ' style={{opacity: currentCollectionId === collectionId ? "1" : "0.5"}}>
-        <Button variant='contained' size='large' sx={{backgroundColor: '#3f3c3c', borderRadius: '18px'}} disableRipple onClick={displayCategoriesHandler}>
+        <Button variant='contained' size='large' sx={{backgroundColor: '#3f3c3c', borderRadius: '18px', '&:hover': {backgroundColor: '#5a5757'}}} disableRipple onClick={displayCategoriesHandler}>
           <div  style={{flexDirection: 'row', display: 'flex', justifyContent: 'space-between', width: '100%'}}>
-            <div  style={{width: '38%'}}>
+            <div  style={{width: '38%'}}> 
               <input placeholder='Diary Name' id='input' className='input-container' autoComplete='off'  value={collectionName} onChange={(event)=>{
                 setCollectionName(event.target.value)
               }} onClick={(event) => {event.stopPropagation()}}/>
             </div>
             <div className=' flex w-14 justify-between '>
-              <SaveIcon fontSize='medium' sx={{color: '#128d12', marginRight: '2px'}} onClick={updateNameHandler}/>
-              <DeleteIcon fontSize='medium' sx={{color: '#c71b1b', marginLeft: '2px'}} onClick={deleteHandler}/>
+              <Tooltip title="Save collection name">
+                <IconButton size='small' edge='start' color='green' aria-label='Save collection name'  onClick={updateNameHandler}>
+                  <SaveIcon fontSize='medium' sx={{color: '#128d12', marginRight: '2px'}} title="Save Collection Name"/>
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Delete collection">
+                <IconButton size='small' edge='start' color='red' aria-label='delete collection'  onClick={deleteHandler} sx={{'&:hover': {backgroundColor: '#223138'}}}
+                    onMouseEnter={(e) => e.stopPropagation()}
+                    onMouseLeave={(e) => e.stopPropagation()}>
+                  <DeleteOutlinedIcon fontSize='medium' sx={{color: '#c71b1b', marginLeft: '2px'}}/>
+                </IconButton>
+              </Tooltip>
             </div>
           </div>
         </Button>

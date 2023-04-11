@@ -1,4 +1,4 @@
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import {BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 
 //Components
@@ -13,9 +13,10 @@ import ContactPage from './pages/ContactPage'
 //User available routes
 import FeedbackPage from './pages/user/FeedbackPage'
 import DiaryPage from './pages/user/DiaryPage'
- 
+
 
 function App() {
+	
 	
   return (
     <BrowserRouter>
@@ -27,10 +28,14 @@ function App() {
 				<Route path='/register' element={<RegisterPage/>}/>
 				<Route path='/contact' element={<ContactPage/>}/>
 				{/*User protected routes:*/}
-				<Route element={<ProtectedRoutes admin={false}/>}>
-					<Route path='/user/netdiary' element={<DiaryPage/>}/>
-					<Route path='/user/feedback' element={<FeedbackPage/>}/>
-				</Route>
+				{/* <Route element={<ProtectedRoutes isLoggedIn={isLoggedIn}/>} path='/user/*'> */}
+				
+				<Route element={<DiaryPage/>} path='/user/net-diary' exact/>
+				<Route element={<FeedbackPage/>} path='/user/feedback'/>
+				
+			
+				{/* </Route> */}
+				
 			</Route>
 		</Routes>
 	</BrowserRouter>

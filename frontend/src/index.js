@@ -19,11 +19,11 @@ root.render(
   // <React.StrictMode>
    
     <Provider store={store}>
-    <head>
-      <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
-      {/* <meta name="viewport" content="width=device-width,initial-scale=1"/> */}
-    </head>
-    <App />
+      <head>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+        {/* <meta name="viewport" content="width=device-width,initial-scale=1"/> */}
+      </head>
+      <App />
     </Provider>
   
   // </React.StrictMode>

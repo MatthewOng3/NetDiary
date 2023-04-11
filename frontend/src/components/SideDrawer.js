@@ -63,7 +63,7 @@ function SideDrawer({setIsDrawerOpen, isDrawerOpen}){
     return(
         <> 
             <Drawer anchor='left' open={isDrawerOpen} onClose={()=> setIsDrawerOpen(false)}>
-                <Box p={2} width='290px' textAlign='center' role='presentation' style={{backgroundColor: Colors.navbar, display: 'flex', width: '100%' }}>
+                <Box p={2} width='290px' textAlign='center' role='presentation' style={{backgroundColor: Colors.charcoal, display: 'flex', width: '100%' }}>
                     <Typography variant='h6' component='div' style={{marginLeft: '87px', color: 'white'}}>
                         Diary List
                     </Typography>

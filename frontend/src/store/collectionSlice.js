@@ -2,9 +2,6 @@ import { createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {API_URL} from '../constants/ApiURL'
 import cleanInputData from '../security/CleanInputData'
 import axios from 'axios';
-import { forceCategoryFetchFunction } from '../util/ForceCategoryFetch';
-import { forceCategoryFetch } from './categorySlice';
-
 
 /*
 Collection redux state to handle the CRUD operations of collections

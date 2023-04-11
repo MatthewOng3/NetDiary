@@ -104,7 +104,7 @@ const loginUser = async(req, res, next) => {
             //If do not logout is checked, create user session
             if(doNotLogout){
                 //Create new session
-                req.session.ongoingSession = true
+                req.session.user = true
                 // req.session.user = user
             }
             
@@ -121,7 +121,8 @@ const loginUser = async(req, res, next) => {
 
             //Store current collection id in a cookie
             res.cookie('currentCollectionId', collectionId.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: process.env.NODE_ENV !== "development"});
-
+            
+           
             // Send accessToken containing user data and token
             return res.json({ 
                 message: 'User Logged In Successfully', 
@@ -214,9 +215,11 @@ const googleLoginUser = async(req, res, next) => {
     }
 }
 
-// @desc Refresh access token using refresh token
-// @route GET /auth/refresh
-// @access Public - because access token has expired
+/*
+@desc Refresh access token using refresh token
+@route GET /auth/refresh
+@access Public - because access token has expired
+*/
 const refresh = (req, res, next) => {
      
     //Check if cookies exist in request
@@ -255,9 +258,11 @@ const refresh = (req, res, next) => {
     )
 }
 
-// @desc Logout and destroy session
-// @route GET /user/logout
-// @access Public - just to clear cookie if exists
+/*
+@desc Logout and destroy session
+@route GET /user/logout
+@access Public - just to clear cookie if exists
+*/
 const logoutUser = async(req, res, next) =>{
     try{
         //Destroy session on server side, not the cookie
@@ -290,18 +295,23 @@ const logoutUser = async(req, res, next) =>{
     }
 }
 
-//Verify if user already has a session running
+/*
+@desc Verify if user has an ongoing session
+@route GET /user/verifySession
+@access Public 
+*/
 const verifyLoggedInUser = async(req, res, next) => {
     try{
-        if(req.session.user){
-            return res.send({loggedIn: true, user: req.session.user})
+        let loggedIn = false;
+        
+        if(req.cookies.session){
+            loggedIn = true
         }
-        else{
-            return res.send({loggedIn: false})
-        }
+       
+        return res.send({loggedIn: loggedIn})
     }
     catch(err){
-        res.status(500).send({message: 'Internal Server Error'})
+        res.status(500).send({message: 'Internal Server Error', loggedIn: false})
         next(err)
     }
 }

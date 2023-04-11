@@ -12,13 +12,15 @@ import { updateCurrentCollection } from "../store/collectionSlice";
 
 import { GoogleLogin } from "@react-oauth/google";
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { setLoginState } from "../store/userSlice";
 
 /**
  * Login page component that allows users to log in from either a net diary account or gmail account, seperate function handlers for them
 */
 function LoginPage(){
     const [validated, setValidated] = useState(false);
-	const [loginUserResponseState, setLoginUserResponseState] = useState({success: "", error: "", status: "",loading: false, disabled: false}) //State to handle spinner display
+	//State to handle spinner login response
+	const [loginUserResponseState, setLoginUserResponseState] = useState({success: "", error: "", status: "",loading: false, disabled: false}) 
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
 
@@ -51,19 +53,17 @@ function LoginPage(){
 			
 			//Send post request to api endpoint to log user in
 			axios.defaults.withCredentials = true
-			axios.post("http://localhost:3001/api/user/login", {email, password, doNotLogout}) 
+			axios.post(process.env.REACT_APP_API_URL + "user/login", {email, password, doNotLogout}) 
 			.then((res) => {
 				setLoginUserResponseState({success: res.data.message, loading: false, error: ""})
-
-				//Store token in local storage	
-				// localStorage.setItem("access_token", res.data.token)
-				//Store current collection Id in redux state
-				 
-			 
+				
 				//If back end validation is successful, navigate to net diary page
 				if(res.data.auth){
+					//Update the current collection id local state
 					dispatch(updateCurrentCollection(res.data.collectionId))
-					navigate("/user/netdiary", {replace: true}) //Replace deletes history of webpages so you cant go back to login page
+					//Dispatch action to store to set Login state to true
+					dispatch(setLoginState(true))
+					navigate("/user/net-diary", {replace: true}) //Replace deletes history of webpages so you cant go back to login page
 				}
 			}) 
 			.catch((err) => {
@@ -82,7 +82,7 @@ function LoginPage(){
 		
 		//Send post request to log user in using google
 		axios.defaults.withCredentials = true;
-		axios.post('http://localhost:3001/api/user/google-login', {google_token})
+		axios.post(process.env.REACT_APP_API_URL + 'user/google-login', {google_token})
 		  .then((res) => {
 			setLoginUserResponseState({
 			  success: res.data.message,
@@ -93,7 +93,8 @@ function LoginPage(){
 			//If authentication is succesful navigate to main app page
 			if (res.data.auth) {
 				dispatch(updateCurrentCollection(res.data.collectionId))
-			  	navigate('/user/netdiary', { replace: true });
+				dispatch(setLoginState(true))
+			  	navigate('/user/net-diary', { replace: true });
 			}
 		  })
 		  .catch((err) => {
@@ -109,7 +110,6 @@ function LoginPage(){
 		setLoginUserResponseState({error: error})
 	}
 
- 
 	// //
 	// useEffect(()=>{
 	// 	//Check if user is already logged in
@@ -121,7 +121,7 @@ function LoginPage(){
 	// },[])
 
     return(
-		<body>
+		<div style={{minHeight: '100vh'}}>
 			<div className="formComponent">
 				<h1 style={{color: 'white', fontWeight: 'normal', marginLeft: '10px', marginBottom: '20px'}}>Welcome</h1>
 				<Form noValidate validated={validated} onSubmit={handleSubmit} className='inputComponent'>
@@ -171,8 +171,7 @@ function LoginPage(){
 					</Alert>
 				</Form>
 			</div>
-		</body>
-        
+		</div>
     )
 }
 

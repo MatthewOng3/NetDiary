@@ -12,7 +12,7 @@ router.post('/user/login', loginUser)
 
 //Route to log in user using google
 router.post('/user/google-login', googleLoginUser)
-// router.get('/user/login', verifyLoggedInUser)
+router.get('/user/verifySession', verifyLoggedInUser)
 
 //Log out user
 router.get('/user/logout',logoutUser);
