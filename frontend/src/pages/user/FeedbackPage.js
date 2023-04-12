@@ -9,6 +9,7 @@ import { useRef } from "react";
 
 function FeedbackPage() {
 
+    
     const form = useRef();
     //Send feedback as email to net diary company email using email js
     function sendFeedback(event){
@@ -26,7 +27,7 @@ function FeedbackPage() {
     return (
         <body>
             <DiaryNavbar diaryPage={false}/>
-            <div className="feedback-container" style={{backgroundColor: Colors.dark__blue200}}>
+            <div className="feedback-container" style={{backgroundColor: Colors.charcoal}}>
                 <div className="p-4  bg-slate-200  rounded-lg w-4/12 fill">
                     <Form autoComplete="off" onSubmit={sendFeedback}  ref={form}>
                         <div className="flex justify-center align-middle">
@@ -36,7 +37,7 @@ function FeedbackPage() {
                             <h3 className="mt-3">FEEDBACK FORM</h3>
                             <p className="text-primary-text">
                             Thanks for trying us out! We're still in beta as a new company, and we are working hard to constantly make our service better. 
-                            We value your feedback ony any issues or suggestions and appreciate your patience as we grow.
+                            We value your feedback ony any issues or suggestions and appreciate your patience as we grow and add more features.
                             </p>
                         </div>
                         <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}> 

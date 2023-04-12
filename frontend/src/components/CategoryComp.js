@@ -53,11 +53,15 @@ function CategoryComp({name, listEntries, catId, collectionId}){
     if(767 <= windowDimension.winWidth && windowDimension.winWidth<= 1225){
       setColValue(7)
     }
+    else if( windowDimension.winWidth <= 775){
+      setColValue(12)
+    }
     else{
       setColValue(3)
     }
   },[windowDimension.winWidth, colValue])
 
+  console.log(colValue)
   /*Change catName state*/
   function updateName(event){
     setCatName(event.target.value)
@@ -93,8 +97,8 @@ function CategoryComp({name, listEntries, catId, collectionId}){
   
   return(
     <>
-      <Col md={colValue} className='col' style={{marginBottom: '30px'}}>
-          <div className="card" style={{height: '100%', boxShadow: '2px 2px #1c1c20', boxSizing: 'border-box', borderWidth: '0', borderRadius: '9px', width: '90%' }} >
+      <Col md={colValue} className='col' style={{marginBottom: '30px',}}>
+          <div className="card" style={{height: '100%', boxShadow: '2px 2px #1c1c20', boxSizing: 'border-box', borderWidth: '0', borderRadius: '9px', width: '100%' }} >
             <div className="card-header "  style={{backgroundColor: '#2c2c31', width: '100%', borderBottom: 'none', }}>
               <div style={{width: '60%', padding: '6px'}}>
                 <input autoComplete='off' placeholder='Enter Name of Category' className='input-container' value={catName} onChange={updateName} onBlur={updateCategoryName}/>

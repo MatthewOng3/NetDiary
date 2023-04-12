@@ -4,6 +4,16 @@
     padding-top: 15px;
     overflow-y:auto
 }
-
-
  
+ 
+@media ( max-width: 1222px){
+    .condition{
+        justify-content: center;
+    }
+}
+
+@media ( max-width: 770px){
+    .wrap{
+        flex-wrap: wrap;
+    }
+}

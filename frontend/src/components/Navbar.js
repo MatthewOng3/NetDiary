@@ -7,6 +7,7 @@ import { Colors } from '../constants/Colors'
 
 function Navbar() {
   const [isclose, setIsclose] = useState(false);
+
   return (
     
     <div
@@ -25,6 +26,12 @@ function Navbar() {
               to="/"
             >
               Home
+            </Link>
+            <Link
+              class=" text-gray-50 text-sm hover:text-blue-500"
+              to="/feedback"
+            >
+              Feedback
             </Link>
             <Link
               class=" text-gray-50 text-sm hover:text-blue-500"

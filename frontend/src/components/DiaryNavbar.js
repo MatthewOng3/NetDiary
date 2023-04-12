@@ -23,9 +23,8 @@ function DiaryNavbar({diaryPage}){
         axios.get(API_URL + 'user/logout', {withCredentials: true, credentials: "include", headers: {
             'Content-Type': 'application/json',
         },}).then((res) => {
-            
+            //If logged out successful navigate back to login page
             if(res.data.loggedOut){
-                 
                 navigate('/login')
             }
         })
@@ -33,7 +32,7 @@ function DiaryNavbar({diaryPage}){
             console.error(err)
         })
     }
-    
+   
     return( 
         <nav className="navbar navbar-expand-lg navbar-light " style={{backgroundColor: Colors.navbar}}>
             <div className="container-fluid d-flex">
@@ -49,19 +48,27 @@ function DiaryNavbar({diaryPage}){
                 <div className="links" id="navbarSupportedContent">
                     <form className="links">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link text-light " href="/user/feedback">Feedback</a>
-                            </li>
-                            <li class="nav-item mt-1">
-                                <Button type='button' size='sm' onClick={logoutUser}>
-                                    Log Out 
-                                </Button> 
-                            </li>
+                            {diaryPage &&
+                            <>
+                                <li class="nav-item">
+                                    <a class="nav-link text-light " href="/feedback">Feedback</a>
+                                </li>
+                                <li class="nav-item mt-1">
+                                    <Button type='button' size='sm' onClick={logoutUser}>
+                                        Log Out 
+                                    </Button> 
+                                </li>
+                            </>
+                            }
+                            
                         </ul>
                     </form>
                 </div>
             </div>
-            <SideDrawer setIsDrawerOpen={setIsDrawerOpen} isDrawerOpen={isDrawerOpen}/>
+            {
+                diaryPage && <SideDrawer setIsDrawerOpen={setIsDrawerOpen} isDrawerOpen={isDrawerOpen}/>
+            }
+            
         </nav>
 
     )

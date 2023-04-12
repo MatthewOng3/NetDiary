@@ -27,11 +27,12 @@ function App() {
 				<Route path='/login' element={<LoginPage/>}/>
 				<Route path='/register' element={<RegisterPage/>}/>
 				<Route path='/contact' element={<ContactPage/>}/>
+				<Route  path='/feedback' element={<FeedbackPage/>}/>
 				{/*User protected routes:*/}
 				{/* <Route element={<ProtectedRoutes isLoggedIn={isLoggedIn}/>} path='/user/*'> */}
 				
 				<Route element={<DiaryPage/>} path='/user/net-diary' exact/>
-				<Route element={<FeedbackPage/>} path='/user/feedback'/>
+				
 				
 			
 				{/* </Route> */}

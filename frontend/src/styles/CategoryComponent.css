@@ -1,6 +1,7 @@
  
 .col{
-    margin-left: 55px;
+    margin-left: 0px;
+ 
 }
 
 .input-container{
@@ -10,11 +11,11 @@
     white-space: pre-line;
 }
 
-@media  (769px <= width <= 1225px){
+/* @media (min-width: 769px) and (max-width: 1225px){
     .condition{
         background-color: red;
     }
-}
+} */
 
 .card-header{
     border-bottom: none;
