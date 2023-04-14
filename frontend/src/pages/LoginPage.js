@@ -152,7 +152,7 @@ function LoginPage(){
 						/>
 					</Form.Group>
 					<div className=" mb-3 flex items-center justify-center">
-						<GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_LOGIN_CLIENT_ID}  > 
+						<GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_LOGIN_CLIENT_ID} > 
 							<GoogleLogin onSuccess={googleLoginHandler} onError={handleLoginError} shape="circle" theme="filled_blue"/>
 						</GoogleOAuthProvider>
 					</div>

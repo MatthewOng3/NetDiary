@@ -12,26 +12,29 @@ import { useDispatch, useSelector } from 'react-redux'
 import { deleteCollection, updateCollectionName, updateCurrentCollection} from '../store/collectionSlice'
 import { fetchCategories } from '../store/categorySlice';
 
+
 /*
 Component that allows user to create, choose, delete diary collections
 */
-function CollectionItem({name, collectionId}) {
+function CollectionItem({name, collectionId, showDeleteVerificationModal}) {
   const dispatch = useDispatch(); //Dispatch an action to store  
   const [collectionName, setCollectionName] = useState(name) //State to handle name of collection
+  
 
   //Mainly for the conditional opacity style
   const currentCollectionId = useSelector((store) => store.collection.currentCollection)
 
   //Handles the deleting of collections 
-  function deleteHandler(){
-    dispatch(deleteCollection(collectionId))
+  function deleteHandler(event){
+    showDeleteVerificationModal(collectionId)
+    event.stopPropagation()
+    event.prevenDefault()
   }
   
   //Handles name update of collections
   function updateNameHandler(event){
     event.stopPropagation();  
     dispatch(updateCollectionName({collectionId: collectionId, name: collectionName}))
-    
   }
   
   //Displays the categories based on collection clicked
@@ -40,11 +43,11 @@ function CollectionItem({name, collectionId}) {
     dispatch(fetchCategories(collectionId))
     //update current collection id
     dispatch(updateCurrentCollection(collectionId))
-     
   }
-  
+
   return (
-    <div className='container mt-3 rounded-full  ' style={{opacity: currentCollectionId === collectionId ? "1" : "0.5"}}>
+    <>
+      <div className='container mt-3 rounded-full  ' style={{opacity: currentCollectionId === collectionId ? "1" : "0.5"}}>
         <Button variant='contained' size='large' sx={{backgroundColor: '#3f3c3c', borderRadius: '18px', '&:hover': {backgroundColor: '#5a5757'}}} disableRipple onClick={displayCategoriesHandler}>
           <div  style={{flexDirection: 'row', display: 'flex', justifyContent: 'space-between', width: '100%'}}>
             <div  style={{width: '38%'}}> 
@@ -68,7 +71,8 @@ function CollectionItem({name, collectionId}) {
             </div>
           </div>
         </Button>
-    </div>
+      </div>
+    </>
   );
 }
 

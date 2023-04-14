@@ -16,7 +16,9 @@ import { RandomId } from '../util/RandomId';
 //Redux functions
 import { useDispatch } from 'react-redux';
 import { deleteCategory, updateCatName } from '../store/categorySlice';
+import DeleteVerificationModal from './DeleteVerificationModal';
  
+
 /*Each category card component*/
 function CategoryComp({name, listEntries, catId, collectionId}){
   const dispatch = useDispatch();
@@ -24,6 +26,7 @@ function CategoryComp({name, listEntries, catId, collectionId}){
   const [showModal, setShowModal] = useState(false) //Show ListEntry state
   const [catName, setCatName] = useState(name) //State to keep track of the category's name
   const [clickedEntryId, setClickedEntryId] = useState('') //State to keep track of which entry clicked to open the modal
+  const [deleteVerificationModal, setDeleteVerificationModal] = useState(false) //State for showing delete verification modal
 
   //State to keep track of window size
   const [windowDimension, detectWD] = useState({
@@ -61,7 +64,7 @@ function CategoryComp({name, listEntries, catId, collectionId}){
     }
   },[windowDimension.winWidth, colValue])
 
-  console.log(colValue)
+  
   /*Change catName state*/
   function updateName(event){
     setCatName(event.target.value)
@@ -76,7 +79,11 @@ function CategoryComp({name, listEntries, catId, collectionId}){
   function deleteCategoryHandler(){
     dispatch(deleteCategory({collectionId: collectionId, catId: catId}))
   }
- 
+  
+  function showDeleteVerificationModal(){
+    setDeleteVerificationModal(true)
+  }
+
   /*Entry Modal functions*/
   /*Show modal that creates a new list entry*/
   function createListEntry(){
@@ -93,6 +100,7 @@ function CategoryComp({name, listEntries, catId, collectionId}){
   /*Cancel entry*/
   function closeEntry(){
     setShowModal(false)
+    setDeleteVerificationModal(false)
   }
   
   return(
@@ -104,10 +112,10 @@ function CategoryComp({name, listEntries, catId, collectionId}){
                 <input autoComplete='off' placeholder='Enter Name of Category' className='input-container' value={catName} onChange={updateName} onBlur={updateCategoryName}/>
               </div>
               <div className='justify-end'>
-                <IconButton size='medium' edge='start' color='primary' aria-label='add collection' onClick={createListEntry} >
+                <IconButton size='medium' edge='start' color='primary' aria-label='add collection' onClick={createListEntry}>
                     <AddIcon/>
                 </IconButton>
-                <IconButton size='medium' edge='start' color='warning' aria-label='add collection' style={{marginLeft: '3px'}} onClick={deleteCategoryHandler}>
+                <IconButton size='medium' edge='start' color='warning' aria-label='add collection' style={{marginLeft: '3px'}} onClick={showDeleteVerificationModal}>
                     <DeleteOutlineIcon/>
                 </IconButton>
               </div>
@@ -131,6 +139,9 @@ function CategoryComp({name, listEntries, catId, collectionId}){
                 </div>
             </Fade>
         </Modal>
+      }
+      {
+        deleteVerificationModal && <DeleteVerificationModal message={"Category"} onCancel={closeEntry} onConfirm={deleteCategoryHandler} modalState={deleteVerificationModal}/>
       }
     </>
   )

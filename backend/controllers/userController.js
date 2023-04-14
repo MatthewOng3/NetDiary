@@ -1,20 +1,23 @@
 require('dotenv').config();
 const User = require('../models/UserModel')
+const Token = require('../models/tokenModel')
 const ObjectId = require('mongodb').ObjectId
 const jwt = require('jsonwebtoken')
 const axios = require("axios");
 const { OAuth2Client } = require('google-auth-library');
- 
+const crypto = require("crypto")
 
 const validate = require('../utils/ValidateUser')
 const {hashPassword, comparePasswords} = require('../utils/hashPassword')
 const {generateAuthToken, generateRefreshToken} = require('../utils/GenerateAuthToken')
- 
-/*
+const {sendEmailVerification} = require('../utils/sendEmailVerification')
+
+/**
 @description: Register User to database
 @route POST /user/register
 @access Public
 */
+
 const registerUser = async(req, res, next) => {
     try{
         
@@ -47,7 +50,8 @@ const registerUser = async(req, res, next) => {
         else{
             // Check response status and send back to the client-side, set toke_sucess to true if successful
             let token_success = false
-           
+            let registration_success = false
+
             if (token_response.data.success) {
                 token_success = true;
             }
@@ -60,12 +64,22 @@ const registerUser = async(req, res, next) => {
             const newUser = new User({
                 username: username, email: email.toLowerCase(), password: hashedPassword, collections: [{name: "First Collection", collectionId: newCollectionId, categoryList: []}]
             });
-            
+
             //Save a new doc into the users collection
-            await newUser.save().then((response)=>console.log('SUCCESSFUL')).catch((err)=>console.log(err));
+            const user = await newUser.save()
+
+            const token = await new Token({
+                userId: user._id,
+                token: crypto.randomBytes(32).toString("hex")
+            }).save();
+
+            const url= `${process.env.FRONTEND_URL}api/user/${user._id}/verify/${token.token}`
+            await sendEmailVerification(user.email, "Email Verification for NetDiary", url)
+
+            
             //Send back object to client side saying success
             return res.send({ 
-                success: true,
+                success: registration_success,
                 collectionId: newCollectionId,
                 captcha: token_success
             })
@@ -142,11 +156,12 @@ const loginUser = async(req, res, next) => {
     }
 }
 
-/*
+/**
 @description: Login user using google
 @route POST /user/google-login
 @access Public
 */
+
 const googleLoginUser = async(req, res, next) => {
     const client = new OAuth2Client(process.env.GOOGLE_LOGIN_CLIENT_ID);
  
@@ -316,5 +331,42 @@ const verifyLoggedInUser = async(req, res, next) => {
     }
 }
 
+/*
+@desc Verify email verification token
+@route GET /user/:id/verify/:token
+@access Public 
+*/
+const verifyEmailToken = async(req, res, next) => {
+    
+    try{
+        const user = await User.findOne({_id: req.params.id})
 
-module.exports = {registerUser, loginUser, verifyLoggedInUser, logoutUser, refresh, googleLoginUser}
+        //If no user found 
+        if(!user){
+            return res.status(400).send({verified: false, message: "Invalid link"})
+        }
+
+        //Search for given token
+        const token = await Token.findOne({
+			userId: user._id,
+			token: req.params.token,
+		});
+
+        //If token not found
+		if (!token) {
+            return res.status(400).send({ message: "Invalid link", verified: false });
+        }
+
+		// await User.updateOne({ _id: user._id, verified: true });
+        //Remove token once verified
+		await token.remove();
+
+		res.status(200).send({ message: "Email verified successfully", verified: true});
+    }
+    catch(err){
+        res.status(500).send({message: 'Internal Server Error', verified: false})
+        next(err)
+    }
+}
+
+module.exports = {registerUser, loginUser, verifyLoggedInUser, logoutUser, refresh, googleLoginUser, verifyEmailToken}

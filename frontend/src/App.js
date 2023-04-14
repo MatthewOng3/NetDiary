@@ -11,8 +11,9 @@ import HomePage from './pages/HomePage'
 import ContactPage from './pages/ContactPage'
 
 //User available routes
-import FeedbackPage from './pages/user/FeedbackPage'
+import FeedbackPage from './pages/FeedbackPage'
 import DiaryPage from './pages/user/DiaryPage'
+import EmailVerificationPage from './pages/EmailVerificationPage'
 
 
 function App() {
@@ -30,10 +31,8 @@ function App() {
 				<Route  path='/feedback' element={<FeedbackPage/>}/>
 				{/*User protected routes:*/}
 				{/* <Route element={<ProtectedRoutes isLoggedIn={isLoggedIn}/>} path='/user/*'> */}
-				
+				<Route path='/users/:id/verify/:token' element={<EmailVerificationPage/>}/>
 				<Route element={<DiaryPage/>} path='/user/net-diary' exact/>
-				
-				
 			
 				{/* </Route> */}
 				

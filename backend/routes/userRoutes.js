@@ -1,11 +1,14 @@
 const express = require('express')
 const router = express.Router()
-const {registerUser, loginUser, googleLoginUser, verifyLoggedInUser, logoutUser, refresh} = require("../controllers/userController")
+const {registerUser, loginUser, googleLoginUser, verifyLoggedInUser, logoutUser, refresh, verifyEmailToken} = require("../controllers/userController")
 
 
  
 //Route to register user
 router.post('/user/register', registerUser) 
+
+//Verify email verification token
+router.get('/user/:id/verify/:token', verifyEmailToken)
 
 //Routes to log in  user
 router.post('/user/login', loginUser) 

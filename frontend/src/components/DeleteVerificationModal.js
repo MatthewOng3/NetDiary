@@ -1,0 +1,28 @@
+import '../styles/DeleteVerificationModal.css';
+import { Fade, Modal } from '@mui/material';
+
+function DeleteVerificationModal({ message, onCancel, onConfirm, modalState }){
+  return (
+    <Modal open={modalState} >
+        <Fade in={modalState} out>
+            <div className= "flex h-full justify-center">
+                <div className="delete-confirmation-modal">
+                    <div className="delete-confirmation-modal__content">
+                        <div className="delete-confirmation-modal__message">{"Are you sure you want to delete this " + message + "?"}</div>
+                        <div className="delete-confirmation-modal__buttons">
+                        <button className="delete-confirmation-modal__cancel-button" onClick={onCancel}>
+                            Cancel
+                        </button>
+                        <button className="delete-confirmation-modal__confirm-button" onClick={onConfirm}>
+                            Confirm
+                        </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Fade>
+    </Modal>
+  );
+};
+
+export default DeleteVerificationModal;

@@ -1,8 +1,8 @@
 import { Col, FloatingLabel, Form } from "react-bootstrap";
-import '../../styles/FeedbackPage.css'
+import '../styles/FeedbackPage.css'
 import EmailIcon from '@mui/icons-material/Email';
-import DiaryNavbar from "../../components/DiaryNavbar";
-import { Colors } from "../../constants/Colors";
+import DiaryNavbar from "../components/DiaryNavbar";
+import { Colors } from "../constants/Colors";
 import {FiSend} from "react-icons/fi"
 import emailjs from '@emailjs/browser';
 import { useRef } from "react";
