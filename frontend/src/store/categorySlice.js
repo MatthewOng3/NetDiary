@@ -25,7 +25,7 @@ export const fetchCategories = createAsyncThunk('category/fetchCategories', asyn
         }
         
         //Send a get request to express server
-        const response = await axios.get(API_URL + `categories/get/${collectionId}`, axiosConfig)  
+        const response = await axios.get(process.env.REACT_APP_API_URL + `categories/get/${collectionId}`, axiosConfig)  
         
         if(!response.data.success){
             throw "No Collection Id Found"
@@ -52,7 +52,7 @@ export const addCategory = createAsyncThunk('category/addCategory', async (colle
         }
         
         //Send a get request to express server  
-        const response = await axios.post(API_URL + 'categories/addCategory', {collectionId: collectionId}, {withCredentials: true})  
+        const response = await axios.post(process.env.REACT_APP_API_URL + 'categories/addCategory', {collectionId: collectionId}, {withCredentials: true})  
         
         if(!response.data.success){
             throw response.data.err
@@ -73,7 +73,7 @@ export const addCategory = createAsyncThunk('category/addCategory', async (colle
 export const deleteCategory = createAsyncThunk('category/deleteCategory', async(id_data,{rejectWithValue}) => {
     try{
         
-        const response = await axios.put(API_URL + 'categories/deleteCategory', {data: id_data}, axiosConfig)  
+        const response = await axios.put(process.env.REACT_APP_API_URL + 'categories/deleteCategory', {data: id_data}, axiosConfig)  
 
         if(!response.data.success){
             throw response.data.err
@@ -101,7 +101,7 @@ export const updateCatName = createAsyncThunk('category/updateCatName', async(da
             throw "Invalid Input"
         }
         
-        const response = await axios.put(API_URL + 'categories/updateCatName', {data: data_payload}, axiosConfig) 
+        const response = await axios.put(process.env.REACT_APP_API_URL + 'categories/updateCatName', {data: data_payload}, axiosConfig) 
         
         if(!response.data.success){
             throw response.data.err
@@ -131,7 +131,7 @@ export const saveEntry = createAsyncThunk('category/saveEntry', async(data_paylo
             throw "Invalid Input"
         }   
          
-        const response = await axios.put(API_URL + 'categories/saveEntry', {data: data_payload}, axiosConfig)  
+        const response = await axios.put(process.env.REACT_APP_API_URL + 'categories/saveEntry', {data: data_payload}, axiosConfig)  
         
         if(!response.data.success){
             throw response.data.err
@@ -159,7 +159,7 @@ export const deleteEntry = createAsyncThunk('category/deleteEntry', async(payloa
             throw "Invalid Input"
         }   
          
-        const response = await axios.put(API_URL + 'categories/deleteEntry', {data: payload}, axiosConfig)  
+        const response = await axios.put(process.env.REACT_APP_API_URL + 'categories/deleteEntry', {data: payload}, axiosConfig)  
         
         if(!response.data.success){
             throw response.data.err

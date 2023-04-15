@@ -9,7 +9,7 @@ const ObjectId = require('mongodb').ObjectId
 */
 async function fetchCategories(req, res, next){
     try{
-       
+         
         //Retrieve user_id cookie from frontend
         const userId = req.cookies.user_id
         let collectionId = req.params.collectionId

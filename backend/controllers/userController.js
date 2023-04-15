@@ -99,13 +99,13 @@ const registerUser = async(req, res, next) => {
 const loginUser = async(req, res, next) => {
     try{
         const { email, password, doNotLogout} = req.body //doNotLogout comes from frontend
-       
+        
         if(!(email && password)){
             return res.status(400).send('All fields are required')
         }
 
         const user = await User.findOne({email}) //Retrieve user from database
-
+       
         //If user exists and passwords match
         if(user && comparePasswords(password, user.password)){
 
@@ -123,19 +123,19 @@ const loginUser = async(req, res, next) => {
             }
             
             // Create secure cookie with refresh token 
-            res.cookie('jwt', refreshToken, {
-                httpOnly: true, //accessible only by web server and not client, put false if you want client to be able to access it 
-                secure: false, //true if https
-                sameSite: 'None', //cross-site cookie 
-                maxAge: 3600000 * 48//cookie expiry: set to match refresh token, 48 hours
-            })
-
-            //Store user id in a http only cookie
-            res.cookie('user_id', _id.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: process.env.NODE_ENV !== "development"});
-
-            //Store current collection id in a cookie
-            res.cookie('currentCollectionId', collectionId.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: process.env.NODE_ENV !== "development"});
+            // res.cookie('jwt', refreshToken, {
+            //     httpOnly: true, //accessible only by web server and not client, put false if you want client to be able to access it 
+            //     secure: true, //true if https
+            //     sameSite: 'None', //cross-site cookie 
+            //     maxAge: 3600000 * 48//cookie expiry: set to match refresh token, 48 hours
+            // })
             
+            //Store user id in a http only cookie
+            res.cookie('user_id', _id.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: true});
+            
+            //Store current collection id in a cookie
+            res.cookie('currentCollectionId', collectionId.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: true});
+             
            
             // Send accessToken containing user data and token
             return res.json({ 

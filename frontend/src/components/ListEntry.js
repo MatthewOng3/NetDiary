@@ -6,7 +6,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Col} from 'react-bootstrap'
-import axios from 'axios'
 
 //Redux store
 import { useDispatch, useSelector } from 'react-redux';
@@ -49,7 +48,7 @@ function ListEntry({text_description, link, entryId, catId, editEntry}){
     function closeModal(){
         setDeleteVerificationModal(false)
     }
-    console.log(deleteVerificationModal)
+     
     return(
         <>
             <div className="w-76  rounded-md"style={{ marginBottom: '10px',backgroundColor: '#5d1669'}}>          

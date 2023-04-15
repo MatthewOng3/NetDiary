@@ -114,7 +114,7 @@ function DiaryPage(){
             {isLoading && <LoadingSpinner/>}    
             {isLoggedIn &&  (
                 <>
-                <DiaryNavbar diaryPage={true}/>
+                    <DiaryNavbar diaryPage={true}/>
                     <div style={{backgroundColor: Colors.dark_grey200, width: '100%', height:'100vh', overflow: 'scroll', scrollBehavior:'smooth', paddingBottom: '2%'}} >   
                         <div className="new-category mb-4" style={{backgroundColor: Colors.dark_grey200}}>
                             <Button width='150px' height='45px' onClick={addNewCategory} color={'#FB8C00'} disabled={categoryList.length >= MAX_CATEGORIES}>
@@ -142,20 +142,5 @@ function DiaryPage(){
     )
 }
 
-const styles = {
-    row: {
-      display: "flex",
-      flexWrap: "wrap",
-      justifyContent: "flex-start",
-      marginLeft: "-8px", // To offset the padding of columns
-      marginRight: "-8px" // To offset the padding of columns
-    },
-    col: {
-      paddingLeft: "8px", // To add some space between columns
-      paddingRight: "8px" // To add some space between columns
-    },
-    categoryComp: {
-      marginBottom: "16px" // To add some space between rows
-    }
-  };
+ 
 export default DiaryPage;

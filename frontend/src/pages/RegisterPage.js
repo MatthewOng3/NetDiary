@@ -84,7 +84,7 @@ function RegisterPage(){
 	};
 	 
 	return(
-        <body>
+        <div className="root">
             <div className="formComponent">
                 <h1 style={{color: 'white', fontWeight: 'normal', marginLeft: '10px', marginBottom: '20px'}}>Create an Account</h1>
                 <Form noValidate validated={validated} onSubmit={handleSubmit} className='inputComponent'>
@@ -161,8 +161,7 @@ function RegisterPage(){
                     </Alert>
                 </Form>
             </div>
-        </body>
-		
+        </div>
 	)
 }
 

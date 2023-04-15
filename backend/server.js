@@ -5,13 +5,20 @@ const cookieParser = require('cookie-parser')
  
 const app = express()
 const session = require('express-session')
+const https = require('https');
+const fs = require('fs');
+
+const options = {
+  key: fs.readFileSync('../ssl/server.key'),
+  cert: fs.readFileSync('../ssl/server.crt')
+};
 
 const cors = require('cors');
 const corsOptions ={
-    origin:'http://localhost:3000', 
-    methods: ["POST", "PUT", "GET", "DELETE"],
+    origin:'https://localhost:3000', 
     credentials:true,            //access-control-allow-credentials:true
-    optionSuccessStatus:200
+    optionSuccessStatus:200,
+    
 }
 app.use(cors(corsOptions));
 app.use(cookieParser());
@@ -39,7 +46,11 @@ const categoryRoutes = require('./routes/categoryRoutes')
 const connectDB = require("./config/db"); //import connect function
  
 connectDB(); //call functin to connect to database
-app.listen(3001)
+// app.listen(3001)
+
+https.createServer(options, app).listen(3001, () => {
+  console.log('Server started on port 3001');
+});
 
 //Different 
 app.use('/api', userRoutes) 

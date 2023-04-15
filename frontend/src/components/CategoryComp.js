@@ -1,7 +1,6 @@
 import '../styles/CategoryComponent.css'
 import '../styles/Scrollbar.css'
 import { Col } from 'react-bootstrap';
-import { Colors } from '../constants/Colors';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { IconButton } from '@mui/material';
@@ -11,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { Fade, Modal } from '@mui/material';
 import EntryModal from "./EntryModal";
 import { RandomId } from '../util/RandomId';
- 
+import ShareIcon from '@mui/icons-material/Share';
 
 //Redux functions
 import { useDispatch } from 'react-redux';
@@ -36,7 +35,7 @@ function CategoryComp({name, listEntries, catId, collectionId}){
 
   //Callback function called for event listener, setting the new dimensions
   const detectSize = () => {
-      detectWD({
+      detectWD({  
           winWidth: window.innerWidth,
           winHeight: window.innerHeight
       })
@@ -77,6 +76,7 @@ function CategoryComp({name, listEntries, catId, collectionId}){
   
   /*Delete category handler*/
   function deleteCategoryHandler(){
+    setDeleteVerificationModal(false)
     dispatch(deleteCategory({collectionId: collectionId, catId: catId}))
   }
   
@@ -103,6 +103,12 @@ function CategoryComp({name, listEntries, catId, collectionId}){
     setDeleteVerificationModal(false)
   }
   
+  /*Create url and copy to user clipboard*/
+  function shareCategory(){
+    const url = `${process.env.REACT_APP_API_URL}share/getCategory/${collectionId}/${catId}`
+    //Insert webshare api here
+  }
+
   return(
     <>
       <Col md={colValue} className='col' style={{marginBottom: '30px',}}>
@@ -117,6 +123,9 @@ function CategoryComp({name, listEntries, catId, collectionId}){
                 </IconButton>
                 <IconButton size='medium' edge='start' color='warning' aria-label='add collection' style={{marginLeft: '3px'}} onClick={showDeleteVerificationModal}>
                     <DeleteOutlineIcon/>
+                </IconButton>
+                <IconButton size='medium' edge='start' color='warning' aria-label='add collection' style={{marginLeft: '3px'}} onClick={shareCategory}>
+                    <ShareIcon/>
                 </IconButton>
               </div>
             </div>

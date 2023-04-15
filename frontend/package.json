@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "version": "0.1.0",
-  "proxy": "http://localhost:3000/",
+  "proxy": "https://localhost:3001/",
   "private": true,
   "dependencies": {
     "@emailjs/browser": "^3.10.0",
@@ -39,7 +39,7 @@
     "webpack": "^5.76.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set HTTPS=true&&set SSL_CRT_FILE=../ssl/server.crt&&set SSL_KEY_FILE=../ssl/server.key&&react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

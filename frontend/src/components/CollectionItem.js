@@ -58,7 +58,7 @@ function CollectionItem({name, collectionId, showDeleteVerificationModal}) {
             <div className=' flex w-14 justify-between '>
               <Tooltip title="Save collection name">
                 <IconButton size='small' edge='start' color='green' aria-label='Save collection name'  onClick={updateNameHandler}>
-                  <SaveIcon fontSize='medium' sx={{color: '#128d12', marginRight: '2px'}} title="Save Collection Name"/>
+                  <SaveIcon fontSize='medium' sx={{color: '#979493', marginRight: '2px'}} title="Save Collection Name"/>
                 </IconButton>
               </Tooltip>
               <Tooltip title="Delete collection">

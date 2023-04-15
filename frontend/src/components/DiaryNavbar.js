@@ -20,7 +20,7 @@ function DiaryNavbar({diaryPage}){
     //Send log out request to server and clear cookies and redirect to login page
     function logoutUser(){
       
-        axios.get(API_URL + 'user/logout', {withCredentials: true, credentials: "include", headers: {
+        axios.get(process.env.REACT_APP_API_URL + 'user/logout', {withCredentials: true, credentials: "include", headers: {
             'Content-Type': 'application/json',
         },}).then((res) => {
             //If logged out successful navigate back to login page

@@ -23,7 +23,7 @@ const axiosConfig = {
 export const fetchCollections = createAsyncThunk('collection/fetchCollections', async (_,{rejectWithValue}) =>{
     try{
         //Send a get request to express server
-        const response = await axios.get(API_URL + 'collection/get', axiosConfig) //NEED WITH CREDENTIALS TO SEND COOKIE
+        const response = await axios.get(process.env.REACT_APP_API_URL + 'collection/get', axiosConfig) //NEED WITH CREDENTIALS TO SEND COOKIE
         
         if(!response.data.success){
             throw response.data.err
@@ -42,7 +42,7 @@ export const addCollection = createAsyncThunk('collection/addCollectionApi', asy
     try{
         
         //Send a get request to express server
-        const response = await axios.put(API_URL + 'collection/add',{}, {withCredentials: true}) //newCollection can be accessed by req.body
+        const response = await axios.put(process.env.REACT_APP_API_URL + 'collection/add',{}, {withCredentials: true}) //newCollection can be accessed by req.body
         
         if(!response.data.success){
             throw response.data.err
@@ -69,7 +69,7 @@ export const updateCollectionName = createAsyncThunk('collection/updateCollectio
         const currentCollectionId = cleanInputData(collectionId)
 
         //Send a get request to express server
-        const response = await axios.put(API_URL + 'collection/updateName', {name: newName, collectionId: currentCollectionId}, axiosConfig) //newCollection can be accessed by req.body
+        const response = await axios.put(process.env.REACT_APP_API_URL + 'collection/updateName', {name: newName, collectionId: currentCollectionId}, axiosConfig) //newCollection can be accessed by req.body
         
         if(!response.data.success){
             throw response.data.err
@@ -92,7 +92,7 @@ export const deleteCollection = createAsyncThunk('collection/deleteCollection', 
         }
         
         //Send a get request to express server
-        const response = await axios.put(API_URL + `collection/delete`, {data: collectionId}, axiosConfig) //need data field if using delete
+        const response = await axios.put(process.env.REACT_APP_API_URL + `collection/delete`, {data: collectionId}, axiosConfig) //need data field if using delete
     
         if(!response.data.success){
             throw response.data.err

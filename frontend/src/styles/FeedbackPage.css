@@ -1,3 +1,14 @@
+.root{
+    width:100%;
+    min-height: 100vh;
+    background-color: #0c0c18;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+ 
+}
+
+
 .feedback-container{
     position: initial;
     width:100%;

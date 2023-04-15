@@ -12,7 +12,7 @@ function HomePage(){
         <>
             <Helmet>
                 <meta name="viewport" content="width=device-width" initial-scale="1.00" maximum-scale="1.0" />
-                <title>Organize your favourite websites in one place with our user-friendly platform.</title>
+                <title>Organize and share your favourite websites in one place with our user-friendly platform.</title>
             </Helmet>
             <Navbar/>
             <div style={{height: '100vh', overflow: 'scroll'}}>

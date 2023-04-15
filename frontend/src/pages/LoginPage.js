@@ -67,6 +67,7 @@ function LoginPage(){
 				}
 			}) 
 			.catch((err) => {
+				console.log(err, "IN LOGIN PAGE")
 				setLoginUserResponseState({error: err.data.message ? err.data.message : err.data, status: err.status})
 			})
 		} 
@@ -121,10 +122,10 @@ function LoginPage(){
 	// },[])
 
     return(
-		<div style={{minHeight: '100vh'}}>
+		<div className="root">
 			<div className="formComponent">
 				<h1 style={{color: 'white', fontWeight: 'normal', marginLeft: '10px', marginBottom: '20px'}}>Welcome</h1>
-				<Form noValidate validated={validated} onSubmit={handleSubmit} className='inputComponent'>
+				<Form noValidate validated={validated} onSubmit={handleSubmit} className='inputComponent width-condition' style={{width: '30%'}}>
 					<Form.Group className="mb-3" controlId="formBasicEmail">
 						<Form.Label className="text-light">Email address</Form.Label>
 						<Form.Control
