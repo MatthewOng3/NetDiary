@@ -23,12 +23,12 @@ function CollectionItem({name, collectionId, showDeleteVerificationModal}) {
 
   //Mainly for the conditional opacity style
   const currentCollectionId = useSelector((store) => store.collection.currentCollection)
-
-  //Handles the deleting of collections 
+  
+  //Show delete verification modal and calls delete collection function in sidedrawer
   function deleteHandler(event){
     showDeleteVerificationModal(collectionId)
     event.stopPropagation()
-    event.prevenDefault()
+    event.preventDefault()
   }
   
   //Handles name update of collections

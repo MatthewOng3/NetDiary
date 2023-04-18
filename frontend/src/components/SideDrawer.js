@@ -23,7 +23,7 @@ function SideDrawer({setIsDrawerOpen, isDrawerOpen}){
     const [isLoading, setIsLoading] = useState(false) //State to set loading spinner
     const [collectionAmount, setCollectionAmount] = useState(0) //State to keep track of amount of collections and disable accordingly
     const [deleteVerificationModal, setDeleteVerificationModal] = useState(false) //State for showing delete verification modal
-    const [deletingCollectionId, setDeletingCollectionId] = useState("") //State to keep track of the collection id of the deleting collection
+    const [deletingCollectionId, setDeletingCollectionId] = useState("") //State to keep track of the collection id of the deleting collection, due to collectionId coming from collectionitem
 
     // const collectionList = useSelector((store) => store.collection) //Retrieve default collection which is the first item
     const collectionListStatus = useSelector(getCollectionsStatus)
@@ -86,15 +86,19 @@ function SideDrawer({setIsDrawerOpen, isDrawerOpen}){
     return(
         <> 
             <Drawer anchor='left' open={isDrawerOpen} onClose={()=> setIsDrawerOpen(false)}>
-                <Box p={2} width='290px' textAlign='center' role='presentation' style={{backgroundColor: Colors.charcoal, display: 'flex', width: '100%' }}>
-                    <Typography variant='h6' component='div' style={{marginLeft: '87px', color: 'white'}}>
-                        Diary List
-                    </Typography>
-                    <span style={{position: 'absolute', right: '20px', top: '12px'}}>
-                        <IconButton size='medium' edge='start' color='primary' aria-label='add collection' onClick={addNewCollection} disabled={collectionAmount >= MAX_COLLECTIONS}>
-                            <AddIcon/>
-                        </IconButton>
-                    </span>
+                <Box p={2} width='305px' textAlign='center' role='presentation' style={{backgroundColor: Colors.charcoal}}>
+                    <div className='flex-1 items-center' style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
+                        <div style={{width: '100%', paddingLeft: '15px'}}>
+                            <Typography variant='h6' component='div' style={{color: 'white' }}>
+                                Diary List
+                            </Typography>
+                        </div>
+                        <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+                            <IconButton size='medium' edge='start' color='primary' aria-label='add collection' onClick={addNewCollection} disabled={collectionAmount >= MAX_COLLECTIONS}>
+                                <AddIcon/>
+                            </IconButton>
+                        </div>
+                    </div>
                 </Box>
                 <div className='drawer-body' style={{backgroundColor: Colors.charcoal}}>
                     {isLoading && <LoadingSpinner/>}

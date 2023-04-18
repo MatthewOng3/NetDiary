@@ -74,9 +74,10 @@ function DiaryPage(){
     const categoryListStatus = useSelector(getCategoryStatus)
     const collectionListStatus = useSelector(getCollectionsStatus)
     const currentCollectionId = useSelector((store) => store.collection.currentCollection)
+    
     //Retrieve error
     const error = useSelector(getCategoryError)
-  
+    
     //Everytime the status is in idle, fetch most recent collections from database
     useEffect(()=>{
         //return a cleanup function that calls abort on the controller, which will cancel any outstanding requests when the component unmounts or the dependencies change.
@@ -109,7 +110,7 @@ function DiaryPage(){
         dispatch(addCategory(currentCollectionId))
     }
     
-    return(
+    return( 
         <>
             {isLoading && <LoadingSpinner/>}    
             {isLoggedIn &&  (
@@ -117,10 +118,10 @@ function DiaryPage(){
                     <DiaryNavbar diaryPage={true}/>
                     <div style={{backgroundColor: Colors.dark_grey200, width: '100%', height:'100vh', overflow: 'scroll', scrollBehavior:'smooth', paddingBottom: '2%'}} >   
                         <div className="new-category mb-4" style={{backgroundColor: Colors.dark_grey200}}>
-                            <Button width='150px' height='45px' onClick={addNewCategory} color={'#FB8C00'} disabled={categoryList.length >= MAX_CATEGORIES}>
+                            {currentCollectionId ? <Button width='150px' height='45px' onClick={addNewCategory} color={'#FB8C00'} disabled={(categoryList.length >= MAX_CATEGORIES)}>
                                 <NewspaperIcon sx={{marginRight: '2px'}}/>
                                 New Category
-                            </Button>
+                            </Button> : null}
                         </div>
                         <Container fluid style={{backgroundColor: Colors.dark_grey200, paddingLeft: '0%', }} >
                             <Row className="flex justify-start condition" style={{paddingLeft: '10px', paddingRight: '0%', }}>

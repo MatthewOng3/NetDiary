@@ -14,6 +14,7 @@ import { updateCurrentCollection } from "../store/collectionSlice";
 import axios from 'axios'
 import cleanInputData  from '../security/CleanInputData'
 import ReCAPTCHA from "react-google-recaptcha";
+import ErrorModal from "../components/utils/ErrorModal";
 
 
 function RegisterPage(){
@@ -63,10 +64,14 @@ function RegisterPage(){
             //Send post request with user credentials to api endpoint
             axios.defaults.withCredentials = true
            
-            axios.post("http://localhost:3001/api/user/register",{user_data:{username: username, email: email, password: password}, token: token }).then((res)=>{
+            axios.post(`${process.env.REACT_APP_API_URL}user/register`,{user_data:{username: username, email: email, password: password}, token: token }).then((res)=>{
            
                 //If user is registered successfully
-                if(res.data.success && res.data.captcha){
+                if(res.data.status === "409"){
+                    console.log(res.data, 'IN REGISTER PAGE')
+                    setRegisterUserResponseState({error: res.data.message})
+                }
+                else if(res.data.success && res.data.captcha){
                     //Reupdate state to re enable button and disable loading spinner
                     setRegisterUserResponseState({success: res.data.message, loading: false, error: "", disabled: false}) 
                     
@@ -77,12 +82,16 @@ function RegisterPage(){
                     //Navigate to login page
                     navigate("/login", {replace: true}) //Replace deletes history of webpages so you cant go back to login page
                 }
-            }).catch(err=>{ console.log(err) 
-                setRegisterUserResponseState({error: err.data.message ? err.data.message : err.data, status: err.status})})
+            }).catch(err=>{ setRegisterUserResponseState({error: err.message, status: err.status})})
 		}
 		setValidated(true);
 	};
-	 
+	
+    function closeErrorModal(){
+        setRegisterUserResponseState({error: undefined})
+    }
+
+    console.log(registerUserResponseState.error)
 	return(
         <div className="root">
             <div className="formComponent">
@@ -160,6 +169,7 @@ function RegisterPage(){
                         User created
                     </Alert>
                 </Form>
+                <ErrorModal isOpen={registerUserResponseState.error} onClose={closeErrorModal}>{registerUserResponseState.error}</ErrorModal>
             </div>
         </div>
 	)

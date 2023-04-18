@@ -13,7 +13,7 @@ async function fetchCategories(req, res, next){
         //Retrieve user_id cookie from frontend
         const userId = req.cookies.user_id
         let collectionId = req.params.collectionId
-
+        
         //If there is nothing in params meaning its after a new redux state, so retrieve from cookies instead
         if(!collectionId){
             collectionId = req.cookies.currentCollectionId

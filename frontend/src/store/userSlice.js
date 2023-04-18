@@ -30,15 +30,13 @@ export const verifyLoggedIn = createAsyncThunk('user/verifyLoggedIn', async (_,{
 
 const userSlice = createSlice({
     name: 'user',
-    initialState: { allowCookies: false, loggedIn: false, status: 'idle' },
+    initialState: { loggedIn: false, status: 'idle', error:"" },
     reducers:{
-        //Reducer function to update the allow cookies status
-        updateAllowCookies: (state,{payload}) => {
-            state.allowCookies = payload
-        },
         setLoginState: (state,{payload}) => {
             state.loggedIn = payload
-            
+        },
+        setUserErrorState: (state,{payload}) => {
+            state.error = payload
         }
     },
     extraReducers(builder){
@@ -55,12 +53,15 @@ const userSlice = createSlice({
         .addCase(verifyLoggedIn.rejected, (state, {payload}) => {
             state.loggedIn = false
             state.status = 'failed'
+            state.error = payload.message
         })
     }
 })
 
 export const getLoggedInStatus = (state) => state.user.loggedIn
 export const getUserStatus = (state) => state.user.status
-export const {setLoginState, updateAllowCookies} = userSlice.actions;
+export const getUserErrorStatus = (state) => state.user.error
+
+export const {setLoginState, updateAllowCookies, setUserErrorState} = userSlice.actions;
 
 export default userSlice.reducer;

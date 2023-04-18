@@ -1,6 +1,6 @@
 import { Form, Alert } from "react-bootstrap";
 import Spinner from 'react-bootstrap/Spinner';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "../components/utils/Button";
 import '../styles/AuthForm.css'
@@ -13,6 +13,7 @@ import { updateCurrentCollection } from "../store/collectionSlice";
 import { GoogleLogin } from "@react-oauth/google";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { setLoginState } from "../store/userSlice";
+ 
 
 /**
  * Login page component that allows users to log in from either a net diary account or gmail account, seperate function handlers for them
@@ -67,7 +68,6 @@ function LoginPage(){
 				}
 			}) 
 			.catch((err) => {
-				console.log(err, "IN LOGIN PAGE")
 				setLoginUserResponseState({error: err.data.message ? err.data.message : err.data, status: err.status})
 			})
 		} 
@@ -83,6 +83,7 @@ function LoginPage(){
 		
 		//Send post request to log user in using google
 		axios.defaults.withCredentials = true;
+		 
 		axios.post(process.env.REACT_APP_API_URL + 'user/google-login', {google_token})
 		  .then((res) => {
 			setLoginUserResponseState({
@@ -105,21 +106,11 @@ function LoginPage(){
 			});
 		  });
 	}
-
+	
 	//Set error state if error with google auth
 	function handleLoginError(error){
 		setLoginUserResponseState({error: error})
 	}
-
-	// //
-	// useEffect(()=>{
-	// 	//Check if user is already logged in
-	// 	axios.get("http://localhost:3001/api/user/login").then((res) => {
-	// 		if(res.data.loggedIn === true){
-	// 			setLoginUserResponseState({success: true})
-	// 		}
-	// 	}).catch((err)=>{console.log(err)})
-	// },[])
 
     return(
 		<div className="root">
@@ -152,11 +143,11 @@ function LoginPage(){
 							label='Keep me signed in'
 						/>
 					</Form.Group>
-					<div className=" mb-3 flex items-center justify-center">
+					{/* <div className=" mb-3 flex items-center justify-center">
 						<GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_LOGIN_CLIENT_ID} > 
 							<GoogleLogin onSuccess={googleLoginHandler} onError={handleLoginError} shape="circle" theme="filled_blue"/>
 						</GoogleOAuthProvider>
-					</div>
+					</div> */}
 					<Button width='100%' height='40px' color={Colors.light_purple100}>
 						{loginUserResponseState && loginUserResponseState.loading === true ? (
 							<Spinner as="span" animation="border" size="sm" role="status"/>

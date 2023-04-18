@@ -28,18 +28,18 @@ function Navbar() {
               Home
             </Link>
             <Link
-              class=" text-gray-50 text-sm hover:text-blue-500"
+              className=" text-gray-50 text-sm hover:text-blue-500"
               to="/feedback"
             >
               Feedback
             </Link>
             <Link
-              class=" text-gray-50 text-sm hover:text-blue-500"
+              className=" text-gray-50 text-sm hover:text-blue-500"
               to="/contact"
             >
               Contact Us
             </Link>
-            <Link class="text-gray-50 text-sm  hover:text-blue-500" to="/login">
+            <Link className="text-gray-50 text-sm  hover:text-blue-500" to="/login">
               Log In
             </Link>
             <Link

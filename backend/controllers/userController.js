@@ -39,23 +39,21 @@ const registerUser = async(req, res, next) => {
         
         // Sending secret key and response token to Google Recaptcha API for authentication.
         const token_response = await axios.post( `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_SECRET_KEY}&response=${token}`);
- 
-
+        
+        
         //Check if user already exists on the database  
         const userExists = await User.findOne({email})
- 
+         
         if(userExists !== null){
-            return res.status(409).send({message: 'User with given email already exists'});
+            return res.status(409).send({message: 'User with given email already exists', success: false, captcha: false});
+        }
+        else if(!token_response.data.success){
+            return res.send({message: 'Invalid Captcha', success: false, captcha: false });
         }
         else{
             // Check response status and send back to the client-side, set toke_sucess to true if successful
-            let token_success = false
-            let registration_success = false
-
-            if (token_response.data.success) {
-                token_success = true;
-            }
              
+            
             //Hash user passwords
             const hashedPassword = hashPassword(password)
             const newCollectionId = new ObjectId()
@@ -64,24 +62,29 @@ const registerUser = async(req, res, next) => {
             const newUser = new User({
                 username: username, email: email.toLowerCase(), password: hashedPassword, collections: [{name: "First Collection", collectionId: newCollectionId, categoryList: []}]
             });
-
+            
             //Save a new doc into the users collection
-            const user = await newUser.save()
+            const user = await newUser.save((err)=>{
+                if(err){
+                    console.log(err)
+                }
+            })
+             
+            //For email verification
+            // const token = await new Token({
+            //     userId: user._id,
+            //     token: crypto.randomBytes(32).toString("hex")
+            // }).save();
 
-            const token = await new Token({
-                userId: user._id,
-                token: crypto.randomBytes(32).toString("hex")
-            }).save();
-
-            const url= `${process.env.FRONTEND_URL}api/user/${user._id}/verify/${token.token}`
-            await sendEmailVerification(user.email, "Email Verification for NetDiary", url)
+            // const url= `${process.env.FRONTEND_URL}api/user/${user._id}/verify/${token.token}`
+            // await sendEmailVerification(user.email, "Email Verification for NetDiary", url)
 
             
             //Send back object to client side saying success
             return res.send({ 
-                success: registration_success,
+                success: true,
                 collectionId: newCollectionId,
-                captcha: token_success
+                captcha: true
             })
         }
     }
@@ -105,22 +108,27 @@ const loginUser = async(req, res, next) => {
         }
 
         const user = await User.findOne({email}) //Retrieve user from database
-       
+        
         //If user exists and passwords match
         if(user && comparePasswords(password, user.password)){
-
+            let collectionId = ""
             //Create new access token for user as well as refresh token
             const {_id, username, email } = user 
             const token = generateAuthToken(_id, username, email)
             const refreshToken = generateRefreshToken(_id, username, email)
-            const collectionId = user.collections[0].collectionId
-
+            
+            //Set collectionId to the first object in collections
+            if(user.collections.length > 0){
+                collectionId = user.collections[0].collectionId
+                //Store current collection id in a cookie
+                res.cookie('currentCollectionId', collectionId.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: false});
+            }
+            
             //If do not logout is checked, create user session
             if(doNotLogout){
-                //Create new session
                 req.session.user = true
-                // req.session.user = user
             }
+            
             
             // Create secure cookie with refresh token 
             // res.cookie('jwt', refreshToken, {
@@ -133,10 +141,6 @@ const loginUser = async(req, res, next) => {
             //Store user id in a http only cookie
             res.cookie('user_id', _id.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: true});
             
-            //Store current collection id in a cookie
-            res.cookie('currentCollectionId', collectionId.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: true});
-             
-           
             // Send accessToken containing user data and token
             return res.json({ 
                 message: 'User Logged In Successfully', 
@@ -147,11 +151,11 @@ const loginUser = async(req, res, next) => {
             })
         }
         else{
-            return res.status(401).send({message: 'Invalid credentials'})
+            return res.status(401).send({message: 'Invalid credentials', auth: false})
         }
     }
     catch(err){
-        res.status(500).send({message: 'Internal Server Error'})
+        res.status(500).send({message: 'Internal Server Error', auth: false})
         next(err)
     }
 }
@@ -187,7 +191,7 @@ const googleLoginUser = async(req, res, next) => {
         //If no user exists create a new one without password field
         if(!user){
             const newCollectionId = new ObjectId()
-            
+          
             //Create user doc and relevant properties
             const newUser = new User({
                 username: `${given_name} ${family_name}`, email: email.toLowerCase(), collections: [{name: "First Collection", collectionId: newCollectionId, categoryList: []}]
@@ -204,10 +208,10 @@ const googleLoginUser = async(req, res, next) => {
             user_id = user._id
             collectionId = user.collectionId
         }
-
+        
         //Create new session
         req.session.ongoingSession = true
-
+        
         //Set google jwt
         res.cookie('google_jwt', jwt_token, { httpOnly: false, maxAge: 3600000 * 24, secure: process.env.NODE_ENV !== "development"})
 
@@ -361,7 +365,7 @@ const verifyEmailToken = async(req, res, next) => {
         //Remove token once verified
 		await token.remove();
 
-		res.status(200).send({ message: "Email verified successfully", verified: true});
+		return res.status(200).send({ message: "Email verified successfully", verified: true});
     }
     catch(err){
         res.status(500).send({message: 'Internal Server Error', verified: false})

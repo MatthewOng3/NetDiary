@@ -14,7 +14,7 @@ function HowWorks(){
               width="600"
               height="300"
               controls="controls"
-              autoplay="true"
+              autoPlay={true}
             />
           </div>
           <div>

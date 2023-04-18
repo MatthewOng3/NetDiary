@@ -13,7 +13,7 @@ async function retrieveCurrentCollection(req, res, next){
         const collectionId = req.cookies.currentCollectionId
         
         if(!collectionId){
-            res.json({success: false})
+            return res.json({success: false})
         }
         return res.send({collectionId: collectionId, success: true})
     }
@@ -21,7 +21,7 @@ async function retrieveCurrentCollection(req, res, next){
         res.status(500).send({message: 'Internal Server Error', success: false, error: err})
         next(err)
     }
-}
+} 
 
 /*
 @description: Fetch all collections of the user from the database
@@ -35,7 +35,7 @@ async function fetchCollections(req, res, next){
         
         //Search database for the corresponding user with the id
         const user = await User.findOne({_id: ObjectId(userId)})
- 
+        
         return res.send({collections: user.collections, success: true})
     }
     catch(err){
@@ -63,11 +63,13 @@ async function addCollection(req, res, next){
         
         //Search database for the corresponding user with the id
         const user = await User.updateOne({_id: ObjectId(userId)}, { $push: {collections: newCollection}}).orFail()
-         
+        
         //Return error if user not found
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
+        //Update cookie value
+        res.cookie('currentCollectionId', newCollection.collectionId.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: true});
 
         return res.status(200).json({success: true, collectionId: newCollection.collectionId});         
     }
@@ -129,8 +131,16 @@ async function deleteCollection(req, res, next){
      
         // //Send the collection id of the next collection object
         const userDoc = await User.findOne({_id: ObjectId(userId)}, {collections: {$slice: -1}}).orFail()
-        const newCollectionId = userDoc.collections[0].collectionId;
-    
+        let newCollectionId = "";
+        
+        //If there is still a collection left then update accordingly
+        if(userDoc.collections.length > 0){
+            newCollectionId = userDoc.collections[0].collectionId;
+        }
+        
+        //Update cookie value
+        res.cookie('currentCollectionId', newCollectionId.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: true});
+        
         res.status(200).json({success: true, collectionId: newCollectionId });    
     }
     catch(err){

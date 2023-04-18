@@ -4,7 +4,7 @@ import { Fade, Modal } from '@mui/material';
 function DeleteVerificationModal({ message, onCancel, onConfirm, modalState }){
   return (
     <Modal open={modalState} >
-        <Fade in={modalState} out>
+        <Fade in={modalState}>  
             <div className= "flex h-full justify-center">
                 <div className="delete-confirmation-modal">
                     <div className="delete-confirmation-modal__content">

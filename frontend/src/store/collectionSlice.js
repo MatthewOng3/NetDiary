@@ -97,7 +97,7 @@ export const deleteCollection = createAsyncThunk('collection/deleteCollection', 
         if(!response.data.success){
             throw response.data.err
         }
-
+       
         //Return everything in response.data field 
         return response.data
     }

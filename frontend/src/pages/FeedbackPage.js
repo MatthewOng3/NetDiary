@@ -2,7 +2,7 @@ import { Col, FloatingLabel, Form } from "react-bootstrap";
 import '../styles/FeedbackPage.css'
 import EmailIcon from '@mui/icons-material/Email';
 import DiaryNavbar from "../components/DiaryNavbar";
-import { Colors } from "../constants/Colors";
+ 
 import {FiSend} from "react-icons/fi"
 import emailjs from '@emailjs/browser';
 import { useRef } from "react";
@@ -37,8 +37,8 @@ function FeedbackPage() {
                             <div className="text-black text-center mb-4">
                                 <h3 className="mt-3">FEEDBACK FORM</h3>
                                 <p className="text-primary-text">
-                                Thanks for trying us out! We're still in beta as a new company, and we are working hard to constantly make our service better. 
-                                We value your feedback ony any issues or suggestions and appreciate your patience as we grow and add more features.
+                                Thanks for trying my product out! The service is still in beta as a startup and I am only a team of one, but I am working hard to constantly make my service better!
+                                I truly value your feedback on any issues or suggestions and appreciate your patience as this grows and more features are added.
                                 </p>
                             </div>
                             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}> 
