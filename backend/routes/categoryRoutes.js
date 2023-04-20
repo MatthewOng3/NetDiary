@@ -9,6 +9,9 @@ const verifyJWT = require("../middleware/verifyJWT")
 //Retrieve categories of the user from database
 router.get('/categories/get/:collectionId', fetchCategories)
 
+//Share category
+router.get('/share/getCategory/:token/:collectionId/:catId', fetchCategories)
+
 //Add new category to database
 router.post('/categories/addCategory', addCategory)
 

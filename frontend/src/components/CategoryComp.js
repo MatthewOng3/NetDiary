@@ -13,10 +13,11 @@ import { RandomId } from '../util/RandomId';
 import ShareIcon from '@mui/icons-material/Share';
 
 //Redux functions
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteCategory, updateCatName } from '../store/categorySlice';
 import DeleteVerificationModal from './DeleteVerificationModal';
 import ErrorModal from './utils/ErrorModal';
+import { getShareToken } from '../store/userSlice';
  
 
 /*Each category card component*/
@@ -28,6 +29,7 @@ function CategoryComp({name, listEntries, catId, collectionId}){
   const [clickedEntryId, setClickedEntryId] = useState('') //State to keep track of which entry clicked to open the modal
   const [deleteVerificationModal, setDeleteVerificationModal] = useState(false) //State for showing delete verification modal
   const [error, setError] = useState()
+ 
 
   //State to keep track of window size
   const [windowDimension, detectWD] = useState({
@@ -113,10 +115,11 @@ function CategoryComp({name, listEntries, catId, collectionId}){
   function closeErrorModal(){
     setError(undefined)
   }
-
-  /*Create url and copy to user clipboard*/
+  
+  /*Allow users to share either by link or native apps*/
   async function shareCategory(){
-    const url = `${process.env.REACT_APP_API_URL}share/getCategory/${collectionId}/${catId}`
+    const shareToken = localStorage.getItem("shareToken")
+    const url = `${process.env.REACT_APP_API_URL}share/getCategory/${shareToken}/${collectionId}/${catId}`
     
     //Create sharing data object
     const shareData = {
@@ -127,6 +130,7 @@ function CategoryComp({name, listEntries, catId, collectionId}){
     ///Check if data is shareable
     const canShare = navigator.canShare(shareData)
 
+    //Trigger native share api
     if(canShare){
       try{
         await navigator.share(shareData)

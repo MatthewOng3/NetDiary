@@ -3,7 +3,7 @@ const router = express.Router()
 const verifyJWT = require("../middleware/verifyJWT")
 const {fetchCollections, addCollection, updateCollectionName, deleteCollection, retrieveCurrentCollection} = require("../controllers/collectionController")
 
-// router.use(verifyJWT)
+//router.use(verifyJWT)
 
 //Retrieve collections of the user from database
 router.get('/collection/get',fetchCollections)

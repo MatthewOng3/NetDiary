@@ -50,7 +50,7 @@ function CollectionItem({name, collectionId, showDeleteVerificationModal}) {
       <div className='container mt-3 rounded-full  ' style={{opacity: currentCollectionId === collectionId ? "1" : "0.5"}}>
         <Button variant='contained' size='large' sx={{backgroundColor: '#3f3c3c', borderRadius: '18px', '&:hover': {backgroundColor: '#5a5757'}}} disableRipple onClick={displayCategoriesHandler}>
           <div  style={{flexDirection: 'row', display: 'flex', justifyContent: 'space-between', width: '100%'}}>
-            <div  style={{width: '38%'}}> 
+            <div  style={{width: '60%'}}> 
               <input placeholder='Diary Name' id='input' className='input-container' autoComplete='off'  value={collectionName} onChange={(event)=>{
                 setCollectionName(event.target.value)
               }} onClick={(event) => {event.stopPropagation()}}/>

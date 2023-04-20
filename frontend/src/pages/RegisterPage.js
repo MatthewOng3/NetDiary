@@ -20,7 +20,7 @@ import ErrorModal from "../components/utils/ErrorModal";
 function RegisterPage(){
     const navigate = useNavigate()
 	const [validated, setValidated] = useState(false);
-    const [registerUserResponseState, setRegisterUserResponseState] = useState({success: "", error: "", status: "", loading: false, disabled: false}) 
+    const [registerUserResponseState, setRegisterUserResponseState] = useState({success: false, error: "", status: "", loading: false, disabled: false}) 
     const captchaRef = useRef(null)
     const dispatch = useDispatch()
     
@@ -59,39 +59,36 @@ function RegisterPage(){
 		const password = cleanInputData(form.password.value)
          
 		if (event.currentTarget.checkValidity() === true && email && password && username) {
-            setRegisterUserResponseState({loading: true, disabled: true}) //Set the loading state to true
+            setRegisterUserResponseState({loading: true, disabled: true, error: ""}) //Set the loading state to true
 
             //Send post request with user credentials to api endpoint
             axios.defaults.withCredentials = true
            
             axios.post(`${process.env.REACT_APP_API_URL}user/register`,{user_data:{username: username, email: email, password: password}, token: token }).then((res)=>{
-           
-                //If user is registered successfully
-                if(res.data.status === "409"){
-                    console.log(res.data, 'IN REGISTER PAGE')
-                    setRegisterUserResponseState({error: res.data.message})
-                }
-                else if(res.data.success && res.data.captcha){
+                
+                //If user registers successfully
+                if(res.data.success && res.data.captcha){
                     //Reupdate state to re enable button and disable loading spinner
-                    setRegisterUserResponseState({success: res.data.message, loading: false, error: "", disabled: false}) 
+                    setRegisterUserResponseState({success: res.data.success, loading: false, error: "", disabled: false}) 
                     
                     //Set current collection id state with the collectionId field from express response
-                    // localStorage.setItem("currentCollection", res.data.collectionId)
                     dispatch(updateCurrentCollection(res.data.collectionId))
-
+                
                     //Navigate to login page
-                    navigate("/login", {replace: true}) //Replace deletes history of webpages so you cant go back to login page
+                    navigate("/login", {replace: true}) 
                 }
-            }).catch(err=>{ setRegisterUserResponseState({error: err.message, status: err.status})})
+            }).catch(err=>{ 
+                setRegisterUserResponseState({error: err.response.data.message, status: err.response.status, loading: false})
+            })
 		}
 		setValidated(true);
 	};
-	
+
     function closeErrorModal(){
         setRegisterUserResponseState({error: undefined})
     }
 
-    console.log(registerUserResponseState.error)
+ 
 	return(
         <div className="root">
             <div className="formComponent">
@@ -162,10 +159,10 @@ function RegisterPage(){
                             <Link to={"/login"}> Login </Link>
                         </div>
                     </div> 
-                    <Alert show={registerUserResponseState.status === "409"} variant="danger">
-                        User with that email already exists!
+                    <Alert show={registerUserResponseState.error !== ""} variant="danger">
+                        {registerUserResponseState.error}
                     </Alert>
-                    <Alert show={registerUserResponseState.success !== ""} variant="info">
+                    <Alert show={registerUserResponseState.success === true} variant="info">
                         User created
                     </Alert>
                 </Form>

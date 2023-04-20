@@ -10,7 +10,8 @@ const crypto = require("crypto")
 const validate = require('../utils/ValidateUser')
 const {hashPassword, comparePasswords} = require('../utils/hashPassword')
 const {generateAuthToken, generateRefreshToken} = require('../utils/GenerateAuthToken')
-const {sendEmailVerification} = require('../utils/sendEmailVerification')
+const {sendEmailVerification} = require('../utils/sendEmailVerification');
+const { generateShareToken } = require('../utils/GenerateShareToken');
 
 /**
 @description: Register User to database
@@ -40,7 +41,6 @@ const registerUser = async(req, res, next) => {
         // Sending secret key and response token to Google Recaptcha API for authentication.
         const token_response = await axios.post( `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_SECRET_KEY}&response=${token}`);
         
-        
         //Check if user already exists on the database  
         const userExists = await User.findOne({email})
          
@@ -64,12 +64,19 @@ const registerUser = async(req, res, next) => {
             });
             
             //Save a new doc into the users collection
-            const user = await newUser.save((err)=>{
-                if(err){
-                    console.log(err)
-                }
-            })
-             
+            const user = await newUser.save()
+            
+            //Retrieve newly saved user and generate share token to save into token schema
+            const newlySavedUser = await User.findOne({email: email}) 
+            
+            //Create new token schema and generate the share token
+            const shareToken = generateShareToken()
+            const newToken = new Token({userId: newlySavedUser._id, shareToken: shareToken})
+  
+            //Save new token doc
+            const newShareToken = await newToken.save() 
+          
+
             //For email verification
             // const token = await new Token({
             //     userId: user._id,
@@ -81,10 +88,10 @@ const registerUser = async(req, res, next) => {
 
             
             //Send back object to client side saying success
-            return res.send({ 
+            return res.json({ 
                 success: true,
                 collectionId: newCollectionId,
-                captcha: true
+                captcha: true,
             })
         }
     }
@@ -114,8 +121,11 @@ const loginUser = async(req, res, next) => {
             let collectionId = ""
             //Create new access token for user as well as refresh token
             const {_id, username, email } = user 
-            const token = generateAuthToken(_id, username, email)
+            const accessToken = generateAuthToken(_id, username, email)
             const refreshToken = generateRefreshToken(_id, username, email)
+             
+            //Find user's special share token 
+            const shareTokenDoc = await Token.findOne({userId: _id})
             
             //Set collectionId to the first object in collections
             if(user.collections.length > 0){
@@ -131,22 +141,25 @@ const loginUser = async(req, res, next) => {
             
             
             // Create secure cookie with refresh token 
-            // res.cookie('jwt', refreshToken, {
-            //     httpOnly: true, //accessible only by web server and not client, put false if you want client to be able to access it 
-            //     secure: true, //true if https
-            //     sameSite: 'None', //cross-site cookie 
-            //     maxAge: 3600000 * 48//cookie expiry: set to match refresh token, 48 hours
-            // })
+            res.cookie('jwt', refreshToken, {
+                httpOnly: true, //accessible only by web server and not client, put false if you want client to be able to access it 
+                secure: true, //true if https
+                sameSite: 'None', //cross-site cookie 
+                maxAge: 3600000 * 48//cookie expiry: set to match refresh token, 48 hours
+            })
             
             //Store user id in a http only cookie
             res.cookie('user_id', _id.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: true});
+            
+            localStorage.setItem("share-token", shareTokenDoc.shareToken)
             
             // Send accessToken containing user data and token
             return res.json({ 
                 message: 'User Logged In Successfully', 
                 user: user,
                 auth: true,
-                token: token,
+                token: accessToken,
+                shareToken: shareTokenDoc.shareToken,
                 collectionId: collectionId
             })
         }
@@ -262,7 +275,7 @@ const refresh = (req, res, next) => {
             }
 
             //Find user in database
-            const foundUser = await User.findOne({ email: decoded.email }).exec()
+            const foundUser = await User.findOne({ _id: decoded._id }).exec()
 
             //If no user found return unauthorized
             if (!foundUser) {
@@ -270,11 +283,12 @@ const refresh = (req, res, next) => {
             }
 
             //Generate new access token
-            const accessToken = generateAuthToken(foundUser._id, foundUser.username, foundUser.email)
+            const newAccessToken = generateAuthToken(foundUser._id, foundUser.username, foundUser.email)
 
-            return res.json({ token: accessToken})
+            res.json({ token: newAccessToken})
         }
     )
+    return //Might cause errors
 }
 
 /*
@@ -325,6 +339,7 @@ const verifyLoggedInUser = async(req, res, next) => {
         
         if(req.cookies.session){
             loggedIn = true
+            
         }
        
         return res.send({loggedIn: loggedIn})

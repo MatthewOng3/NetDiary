@@ -12,7 +12,7 @@ import { updateCurrentCollection } from "../store/collectionSlice";
 
 import { GoogleLogin } from "@react-oauth/google";
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { setLoginState } from "../store/userSlice";
+import { setLoginState, setShareToken } from "../store/userSlice";
  
 
 /**
@@ -64,8 +64,11 @@ function LoginPage(){
 					dispatch(updateCurrentCollection(res.data.collectionId))
 					//Dispatch action to store to set Login state to true
 					dispatch(setLoginState(true))
+					//Set share token state
+					dispatch(setShareToken(res.data.shareToken))
 					navigate("/user/net-diary", {replace: true}) //Replace deletes history of webpages so you cant go back to login page
 				}
+				
 			}) 
 			.catch((err) => {
 				setLoginUserResponseState({error: err.data.message ? err.data.message : err.data, status: err.status})

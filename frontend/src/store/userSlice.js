@@ -9,7 +9,7 @@ const axiosConfig = {
 };
 
 /**
-* Verify user session
+* Verify user session so can log user in right away
 */
 export const verifyLoggedIn = createAsyncThunk('user/verifyLoggedIn', async (_,{rejectWithValue}) =>{
     try{
@@ -27,16 +27,27 @@ export const verifyLoggedIn = createAsyncThunk('user/verifyLoggedIn', async (_,{
         return rejectWithValue(err.message)
     }
 })
+ 
 
 const userSlice = createSlice({
     name: 'user',
-    initialState: { loggedIn: false, status: 'idle', error:"" },
+    initialState: { loggedIn: false, status: 'idle', error:"", token: null, shareToken: null },
     reducers:{
         setLoginState: (state,{payload}) => {
             state.loggedIn = payload
         },
         setUserErrorState: (state,{payload}) => {
             state.error = payload
+        },
+        setShareToken: (state, {payload}) => {
+            state.shareToken = payload
+        },
+        setCredentials: (state, {payload}) => {
+            const {accessToken} = payload
+            state.token = accessToken
+        },
+        logout: (state, {payload}) => {
+            state.token = null
         }
     },
     extraReducers(builder){
@@ -61,7 +72,8 @@ const userSlice = createSlice({
 export const getLoggedInStatus = (state) => state.user.loggedIn
 export const getUserStatus = (state) => state.user.status
 export const getUserErrorStatus = (state) => state.user.error
+export const getShareToken = (state) => state.user.shareToken
 
-export const {setLoginState, updateAllowCookies, setUserErrorState} = userSlice.actions;
+export const {setLoginState, updateAllowCookies, setUserErrorState, setCredentials, logout, setShareToken} = userSlice.actions;
 
 export default userSlice.reducer;
