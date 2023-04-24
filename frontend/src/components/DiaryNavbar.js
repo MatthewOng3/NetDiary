@@ -25,6 +25,7 @@ function DiaryNavbar({diaryPage}){
         },}).then((res) => {
             //If logged out successful navigate back to login page
             if(res.data.loggedOut){
+                localStorage.clear() //Clear all local storage data
                 navigate('/login')
             }
         })

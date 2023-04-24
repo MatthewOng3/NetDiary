@@ -20,7 +20,6 @@ function CollectionItem({name, collectionId, showDeleteVerificationModal}) {
   const dispatch = useDispatch(); //Dispatch an action to store  
   const [collectionName, setCollectionName] = useState(name) //State to handle name of collection
   
-
   //Mainly for the conditional opacity style
   const currentCollectionId = useSelector((store) => store.collection.currentCollection)
   
@@ -39,10 +38,10 @@ function CollectionItem({name, collectionId, showDeleteVerificationModal}) {
   
   //Displays the categories based on collection clicked
   function displayCategoriesHandler(){
-    //Fetch categories
-    dispatch(fetchCategories(collectionId))
     //update current collection id
     dispatch(updateCurrentCollection(collectionId))
+    //Fetch categories
+    dispatch(fetchCategories(collectionId))
   }
 
   return (
@@ -50,7 +49,7 @@ function CollectionItem({name, collectionId, showDeleteVerificationModal}) {
       <div className='container mt-3 rounded-full  ' style={{opacity: currentCollectionId === collectionId ? "1" : "0.5"}}>
         <Button variant='contained' size='large' sx={{backgroundColor: '#3f3c3c', borderRadius: '18px', '&:hover': {backgroundColor: '#5a5757'}}} disableRipple onClick={displayCategoriesHandler}>
           <div  style={{flexDirection: 'row', display: 'flex', justifyContent: 'space-between', width: '100%'}}>
-            <div  style={{width: '60%'}}> 
+            <div  style={{width: '48%'}}> 
               <input placeholder='Diary Name' id='input' className='input-container' autoComplete='off'  value={collectionName} onChange={(event)=>{
                 setCollectionName(event.target.value)
               }} onClick={(event) => {event.stopPropagation()}}/>

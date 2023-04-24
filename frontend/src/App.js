@@ -9,6 +9,7 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import HomePage from './pages/HomePage'
 import ContactPage from './pages/ContactPage'
+import SharedPage from './pages/SharedPage'
 
 //User available routes
 import FeedbackPage from './pages/FeedbackPage'
@@ -29,6 +30,7 @@ function App() {
 				<Route path='/register' element={<RegisterPage/>}/>
 				<Route path='/contact' element={<ContactPage/>}/>
 				<Route  path='/feedback' element={<FeedbackPage/>}/>
+				<Route  path='/shared/:collectionId/:catId' element={<SharedPage/>}/>
 				{/*User protected routes:*/}
 				{/* <Route element={<ProtectedRoutes isLoggedIn={isLoggedIn}/>} path='/user/*'> */}
 				<Route path='/users/:id/verify/:token' element={<EmailVerificationPage/>}/>

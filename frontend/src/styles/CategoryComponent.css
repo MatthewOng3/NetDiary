@@ -21,7 +21,6 @@
     border-bottom: none;
     flex-direction: row;
     display: flex;
-    border-bottom: none;
     width: 100%;
     justify-content: space-between;
 }

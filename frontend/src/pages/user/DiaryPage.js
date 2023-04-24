@@ -74,7 +74,7 @@ function DiaryPage(){
     const categoryListStatus = useSelector(getCategoryStatus)
     const collectionListStatus = useSelector(getCollectionsStatus)
     const currentCollectionId = useSelector((store) => store.collection.currentCollection)
-    
+ 
     //Retrieve error
     const error = useSelector(getCategoryError)
     

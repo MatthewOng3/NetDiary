@@ -68,6 +68,7 @@ async function addCollection(req, res, next){
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
+        
         //Update cookie value
         res.cookie('currentCollectionId', newCollection.collectionId.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: true});
 

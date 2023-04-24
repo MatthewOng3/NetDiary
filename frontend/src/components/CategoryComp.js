@@ -13,7 +13,7 @@ import { RandomId } from '../util/RandomId';
 import ShareIcon from '@mui/icons-material/Share';
 
 //Redux functions
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch  } from 'react-redux';
 import { deleteCategory, updateCatName } from '../store/categorySlice';
 import DeleteVerificationModal from './DeleteVerificationModal';
 import ErrorModal from './utils/ErrorModal';
@@ -118,8 +118,8 @@ function CategoryComp({name, listEntries, catId, collectionId}){
   
   /*Allow users to share either by link or native apps*/
   async function shareCategory(){
-    const shareToken = localStorage.getItem("shareToken")
-    const url = `${process.env.REACT_APP_API_URL}share/getCategory/${shareToken}/${collectionId}/${catId}`
+
+    const url = `${process.env.REACT_APP_BASE_URL}shared/${collectionId}/${catId}`
     
     //Create sharing data object
     const shareData = {
@@ -145,7 +145,7 @@ function CategoryComp({name, listEntries, catId, collectionId}){
     <>
       <Col md={colValue} className='col' style={{marginBottom: '30px',}}>
           <div className="card" style={{height: '100%', boxShadow: '2px 2px #1c1c20', boxSizing: 'border-box', borderWidth: '0', borderRadius: '9px', width: '100%' }} >
-            <div className="card-header "  style={{backgroundColor: '#2c2c31', width: '100%', borderBottom: 'none', }}>
+            <div className="card-header "  style={{backgroundColor: '#2c2c31', width: '100%', borderBottom: 'none'}}>
               <div style={{width: '60%', padding: '6px'}}>
                 <input autoComplete='off' placeholder='Enter Name of Category' className='input-container' value={catName} onChange={updateName} onBlur={updateCategoryName}/>
               </div>
@@ -165,7 +165,7 @@ function CategoryComp({name, listEntries, catId, collectionId}){
               <div className="card-body scrollbar" id='scrollbar1'>
                 {
                   listEntries.map((value,index)=>(
-                    <ListEntry key={RandomId() + index} text_description={value.name} link={value.link} entryId={value.entryId} catId={catId} editEntry={updateListEntry}/>
+                    <ListEntry key={RandomId() + index} text_description={value.name} link={value.link} entryId={value.entryId} catId={catId} editEntry={updateListEntry} allowEdit={true}/>
                   ))
                 }
               </div>

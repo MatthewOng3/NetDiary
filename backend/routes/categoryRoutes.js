@@ -1,5 +1,5 @@
 const express = require('express');
-const { fetchCategories, addCategory, deleteCategory, updateCategoryName, saveEntry, deleteEntry} = require('../controllers/categoryController');
+const { fetchCategories, addCategory, deleteCategory, updateCategoryName, saveEntry, deleteEntry, getSharedCategory} = require('../controllers/categoryController');
 const router = express.Router()
 const verifyJWT = require("../middleware/verifyJWT")
  
@@ -10,7 +10,7 @@ const verifyJWT = require("../middleware/verifyJWT")
 router.get('/categories/get/:collectionId', fetchCategories)
 
 //Share category
-router.get('/share/getCategory/:token/:collectionId/:catId', fetchCategories)
+router.get('/share/getCategory/:token/:collectionId/:catId', getSharedCategory)
 
 //Add new category to database
 router.post('/categories/addCategory', addCategory)

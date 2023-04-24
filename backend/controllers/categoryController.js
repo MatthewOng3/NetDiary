@@ -1,6 +1,7 @@
 require('dotenv').config();
 const User = require('../models/UserModel')
 const ObjectId = require('mongodb').ObjectId
+const Token = require('../models/tokenModel')
 
 /*
 @description: Fetch all categories
@@ -93,7 +94,7 @@ async function deleteCategory(req, res, next){
 
 /*
 @description: Update the name of a specific category object in cateogry list array of a specific collection object
-@route PUT categories/updateCatName
+@route PUT /categories/updateCatName
 @access Public
 */
 async function updateCategoryName(req, res, next){
@@ -118,6 +119,41 @@ async function updateCategoryName(req, res, next){
         next(err)
     }
 }
+
+/**
+ * @description Redirect shared link to the shared category webpage with the relevant category
+ * @route /share/getCategory/:token/:collectionId/:catId
+ * @return Category component data from relevant user
+ */
+
+async function getSharedCategory(req, res, next){
+    try{
+        
+        //Retrieve relevant data from url
+        const shareToken = req.params.token
+        const collectionId = req.params.collectionId
+        const catId = req.params.catId
+         
+        //Retrieve the userId associated with the token 
+        const {userId} = await Token.findOne({shareToken: shareToken})
+        
+        //Find the specific category but idk the query
+        const foundDoc = await User.findOne(
+            {_id: ObjectId(userId), 'collections.collectionId': ObjectId(collectionId)},
+        );
+        
+        const collection = foundDoc.collections[0]
+        const cat = collection.categoryList.find((item)=>{
+            return item.catId.toString() === catId
+        })
+
+        return res.status(200).json({success: true, categoryObj: cat})
+    }
+    catch(err){
+        return res.status(500).send({message: 'Internal Server Error', success: false, error: err})
+    }
+}
+
 
 /*
 @description: Save Entry of webpage or update it 
@@ -196,4 +232,4 @@ async function deleteEntry(req, res, next){
 }
 
 
-module.exports = {fetchCategories, addCategory, deleteCategory, updateCategoryName, saveEntry, deleteEntry}
+module.exports = {fetchCategories, addCategory, deleteCategory, updateCategoryName, saveEntry, deleteEntry, getSharedCategory}

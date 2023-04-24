@@ -141,18 +141,16 @@ const loginUser = async(req, res, next) => {
             
             
             // Create secure cookie with refresh token 
-            res.cookie('jwt', refreshToken, {
-                httpOnly: true, //accessible only by web server and not client, put false if you want client to be able to access it 
-                secure: true, //true if https
-                sameSite: 'None', //cross-site cookie 
-                maxAge: 3600000 * 48//cookie expiry: set to match refresh token, 48 hours
-            })
+            // res.cookie('jwt', refreshToken, {
+            //     httpOnly: true, //accessible only by web server and not client, put false if you want client to be able to access it 
+            //     secure: true, //true if https
+            //     sameSite: 'None', //cross-site cookie 
+            //     maxAge: 3600000 * 48//cookie expiry: set to match refresh token, 48 hours
+            // })
             
             //Store user id in a http only cookie
             res.cookie('user_id', _id.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: true});
-            
-            localStorage.setItem("share-token", shareTokenDoc.shareToken)
-            
+  
             // Send accessToken containing user data and token
             return res.json({ 
                 message: 'User Logged In Successfully', 
@@ -315,10 +313,7 @@ const logoutUser = async(req, res, next) =>{
         res.clearCookie("session") //Remove session cookie
         res.clearCookie("google_jwt") //Remove google sign in jwt token
         res.clearCookie("currentCollectionId") 
-
-    
-        //Clear local storage
-        // localStorage.clear("currentCollection")
+ 
         return res.send({loggedOut: true, message: 'User logged out'});
 
     }

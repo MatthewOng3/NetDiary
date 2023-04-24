@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {API_URL} from '../constants/ApiURL'
 import cleanInputData from '../security/CleanInputData'
 import axios from 'axios';
 

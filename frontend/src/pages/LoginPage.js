@@ -64,8 +64,8 @@ function LoginPage(){
 					dispatch(updateCurrentCollection(res.data.collectionId))
 					//Dispatch action to store to set Login state to true
 					dispatch(setLoginState(true))
-					//Set share token state
-					dispatch(setShareToken(res.data.shareToken))
+					//Set share token to local storage
+					localStorage.setItem('share-token', res.data.shareToken)
 					navigate("/user/net-diary", {replace: true}) //Replace deletes history of webpages so you cant go back to login page
 				}
 				
