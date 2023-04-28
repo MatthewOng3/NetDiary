@@ -13,6 +13,7 @@ import { updateCurrentCollection } from "../store/collectionSlice";
 import { GoogleLogin } from "@react-oauth/google";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { setLoginState, setShareToken } from "../store/userSlice";
+import cleanInputData from "../security/CleanInputData";
  
 
 /**
@@ -44,9 +45,9 @@ function LoginPage(){
 		const form = event.currentTarget.elements;
 
 		//Get relevant data from form 
-		const email = form.email.value
-		const password = form.password.value
-		const doNotLogout = form.doNotLogout.checked 
+		const email = cleanInputData(form.email.value)
+		const password = cleanInputData(form.password.value)
+		const doNotLogout = cleanInputData(form.doNotLogout.checked )
 
 		//If it passes validaty
 		if (event.currentTarget.checkValidity() === true && email && password) {
@@ -71,7 +72,11 @@ function LoginPage(){
 				
 			}) 
 			.catch((err) => {
-				setLoginUserResponseState({error: err.data.message ? err.data.message : err.data, status: err.status})
+				setLoginUserResponseState({
+					error: err.response.data.message,
+					loading: false,
+					status: err.response.status,
+				});
 			})
 		} 
 		setValidated(true);
@@ -104,8 +109,9 @@ function LoginPage(){
 		  })
 		  .catch((err) => {
 			setLoginUserResponseState({
-			  error: err.data.message ? err.data.message : err.data,
-			  status: err.status,
+			  error: err.response.data.message,
+			  loading: false,
+			  status: err.response.status,
 			});
 		  });
 	}
@@ -161,8 +167,12 @@ function LoginPage(){
 						<span style={{color: 'white', marginRight: '10px', marginLeft: '30px'}}>Don't have an account?</span>
 						<Link to={"/register"}> Register </Link>
 					</div>
-					<Alert show={loginUserResponseState && (loginUserResponseState.error === "Invalid credentials" || loginUserResponseState.status === '401')} variant="danger">
-						Wrong Credentials!
+					<div className="goToRegisterContainer">
+						<span style={{color: 'white', marginRight: '10px', marginLeft: '30px'}}>Forgot your password?</span>
+						<Link to={"/forgot-pass"}> Reset Password</Link>
+					</div>
+					<Alert show={loginUserResponseState.error !== ""} variant="danger">
+						{loginUserResponseState.error}
 					</Alert>
 				</Form>
 			</div>

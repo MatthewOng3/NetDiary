@@ -6,18 +6,18 @@ const {fetchCollections, addCollection, updateCollectionName, deleteCollection, 
 //router.use(verifyJWT)
 
 //Retrieve collections of the user from database
-router.get('/collection/get',fetchCollections)
+router.get('/get',fetchCollections)
 
 //Retrieve currentCollectionid of user in cookie and send to client side
-router.get('/collection/retrieveCollectionId', retrieveCurrentCollection)
+router.get('/retrieveCollectionId', retrieveCurrentCollection)
 
 //Add collection of the user 
-router.put('/collection/add',addCollection)
+router.put('/add',addCollection)
 
 //Update collection name
-router.put('/collection/updateName',updateCollectionName)
+router.put('/updateName',updateCollectionName)
 
 //Delete collection
-router.put('/collection/delete', deleteCollection)
+router.put('/delete', deleteCollection)
 
 module.exports = router; 

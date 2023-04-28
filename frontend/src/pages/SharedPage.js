@@ -21,7 +21,7 @@ function SharedPage(){
     useEffect(()=>{
       setIsLoading(true)
       const shareToken = localStorage.getItem("share-token")
-      const url = `${process.env.REACT_APP_API_URL}share/getCategory/${shareToken}/${collectionId}/${catId}`
+      const url = `${process.env.REACT_APP_API_URL}categories/shareCategory/${shareToken}/${collectionId}/${catId}`
 
       axios.get(url).then((res)=>{
           const categoryObj = res.data.categoryObj

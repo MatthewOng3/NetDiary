@@ -7,24 +7,24 @@ const verifyJWT = require("../middleware/verifyJWT")
 // router.use(verifyJWT)
 
 //Retrieve categories of the user from database
-router.get('/categories/get/:collectionId', fetchCategories)
+router.get('/get/:collectionId', fetchCategories)
 
 //Share category
-router.get('/share/getCategory/:token/:collectionId/:catId', getSharedCategory)
+router.get('/shareCategory/:token/:collectionId/:catId', getSharedCategory)
 
 //Add new category to database
-router.post('/categories/addCategory', addCategory)
+router.post('/addCategory', addCategory)
 
 //Update name of category 
-router.put('/categories/updateCatName', updateCategoryName)
+router.put('/updateCatName', updateCategoryName)
 
 //Delete category
-router.put('/categories/deleteCategory', deleteCategory)
+router.put('/deleteCategory', deleteCategory)
 
 //Save entry
-router.put('/categories/saveEntry', saveEntry)
+router.put('/saveEntry', saveEntry)
 
 //Save entry
-router.put('/categories/deleteEntry', deleteEntry)
+router.put('/deleteEntry', deleteEntry)
 
 module.exports = router; 

@@ -8,7 +8,7 @@ const tokenSchema = new Schema({
         ref: 'User',
         required: true,
       },
-	shareToken: { type: String, required: true },
+	  shareToken: { type: String, required: true },
 },{
 	timestamps: false
 });

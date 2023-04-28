@@ -1,3 +1,4 @@
+/* Import relevant modules*/
 require('dotenv').config();
 //Set up server and other things
 const express = require('express')
@@ -7,6 +8,8 @@ const app = express()
 const session = require('express-session')
 const https = require('https');
 const fs = require('fs');
+
+/*Set up and use relevant web config options*/
 
 const options = {
   key: fs.readFileSync('../ssl/server.key'),
@@ -38,10 +41,8 @@ app.use(session({
   }
 }))
 
-//import routes from userRoutes file
-const userRoutes = require('./routes/userRoutes')
-const collectionRoutes = require('./routes/collectionRoutes')
-const categoryRoutes = require('./routes/categoryRoutes')
+/* Server connection*/
+
 //Connect to mongodb database
 const connectDB = require("./config/db"); //import connect function
  
@@ -52,12 +53,14 @@ https.createServer(options, app).listen(3001, () => {
   console.log('Server started on port 3001');
 });
 
-//Different 
-app.use('/api', userRoutes) 
-app.use('/api', collectionRoutes)
-app.use('/api', categoryRoutes)
 
-//Show error on browser
+/*Routing*/
+const apiRoutes = require('./routes/apiRoutes') //apiRoutes from other file
+
+app.use('/api', apiRoutes) //if url starts with /api, use apiRoutes to handle the request
+
+
+/* Show error on browser*/
 app.use((error, req, res, next) => {
     if(process.env.NODE_ENV === 'development'){
       res.status(500).json({

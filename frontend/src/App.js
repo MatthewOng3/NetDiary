@@ -15,7 +15,8 @@ import SharedPage from './pages/SharedPage'
 import FeedbackPage from './pages/FeedbackPage'
 import DiaryPage from './pages/user/DiaryPage'
 import EmailVerificationPage from './pages/EmailVerificationPage'
-
+import ResetPasswordPage from './pages/PasswordResetPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
 
 function App() {
 	
@@ -31,6 +32,8 @@ function App() {
 				<Route path='/contact' element={<ContactPage/>}/>
 				<Route  path='/feedback' element={<FeedbackPage/>}/>
 				<Route  path='/shared/:collectionId/:catId' element={<SharedPage/>}/>
+				<Route  path='/forgot-pass' element={<ForgotPasswordPage/>}/>
+				<Route  path='/password-reset/:id/:token' element={<ResetPasswordPage/>}/>
 				{/*User protected routes:*/}
 				{/* <Route element={<ProtectedRoutes isLoggedIn={isLoggedIn}/>} path='/user/*'> */}
 				<Route path='/users/:id/verify/:token' element={<EmailVerificationPage/>}/>

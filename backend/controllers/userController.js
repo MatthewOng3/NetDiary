@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken')
 const axios = require("axios");
 const { OAuth2Client } = require('google-auth-library');
 const crypto = require("crypto")
+const Joi = require("joi");
 
 const validate = require('../utils/ValidateUser')
 const {hashPassword, comparePasswords} = require('../utils/hashPassword')
@@ -18,7 +19,6 @@ const { generateShareToken } = require('../utils/GenerateShareToken');
 @route POST /user/register
 @access Public
 */
-
 const registerUser = async(req, res, next) => {
     try{
         
@@ -111,7 +111,7 @@ const loginUser = async(req, res, next) => {
         const { email, password, doNotLogout} = req.body //doNotLogout comes from frontend
         
         if(!(email && password)){
-            return res.status(400).send('All fields are required')
+            return res.status(400).send({message: 'All fields are required'})
         }
 
         const user = await User.findOne({email}) //Retrieve user from database
@@ -241,6 +241,53 @@ const googleLoginUser = async(req, res, next) => {
     }
     catch(err){
         res.status(500).send({message: 'Internal Server Error'})
+        next(err)
+    }
+}
+
+/**
+ * @description: Verify users email sent from client
+ * @route POST /verify-email
+ * @access Public
+ */
+const verifyUserEmail = async(req, res, next) => {
+    try{
+        const emailSchema = Joi.object({
+			email: Joi.string().email().required().label("Email"),
+		});
+        
+
+		const { error } = emailSchema.validate(req.body);
+
+        console.log(error, "VALIODATE EMAIL IN BACKEND")
+
+		if (error){
+            return res.status(400).send({ message: error.details[0].message });
+        }
+			
+		const user = await User.findOne({ email: req.body.email });
+		if (!user){
+            return res
+            .status(409)
+            .send({ message: "User with given email does not exist!" });
+        }
+			
+		const token = await Token.findOne({ userId: user._id });
+
+		if (!token) {
+			token = await new Token({
+				userId: user._id,
+				token: crypto.randomBytes(32).toString("hex"),
+			}).save();
+		}
+
+		const url = `${process.env.FRONTEND_URL}password-reset/${user._id}/${token.token}/`;
+		await sendEmail(user.email, "Password Reset Link", url);
+
+		return res.status(200).send({ message: "Password reset link sent to your email account!" });
+    }
+    catch(err){
+        res.status(500).send({message: 'Internal Server Error', auth: false})
         next(err)
     }
 }
@@ -383,4 +430,4 @@ const verifyEmailToken = async(req, res, next) => {
     }
 }
 
-module.exports = {registerUser, loginUser, verifyLoggedInUser, logoutUser, refresh, googleLoginUser, verifyEmailToken}
+module.exports = {registerUser, loginUser, verifyLoggedInUser, logoutUser, refresh, googleLoginUser, verifyEmailToken, verifyUserEmail}
