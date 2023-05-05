@@ -22,7 +22,7 @@ import cleanInputData from "../security/CleanInputData";
 function LoginPage(){
     const [validated, setValidated] = useState(false);
 	//State to handle spinner login response
-	const [loginUserResponseState, setLoginUserResponseState] = useState({success: "", error: "", status: "",loading: false, disabled: false}) 
+	const [loginUserResponseState, setLoginUserResponseState] = useState({success: "", error: undefined, status: "",loading: false, disabled: false}) 
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
 
@@ -57,7 +57,7 @@ function LoginPage(){
 			axios.defaults.withCredentials = true
 			axios.post(process.env.REACT_APP_API_URL + "user/login", {email, password, doNotLogout}) 
 			.then((res) => {
-				setLoginUserResponseState({success: res.data.message, loading: false, error: ""})
+				setLoginUserResponseState({success: res.data.message, loading: false, error: undefined})
 				
 				//If back end validation is successful, navigate to net diary page
 				if(res.data.auth){
@@ -121,6 +121,7 @@ function LoginPage(){
 		setLoginUserResponseState({error: error})
 	}
 
+	console.log(loginUserResponseState.error)
     return(
 		<div className="root">
 			<div className="formComponent">
@@ -171,7 +172,7 @@ function LoginPage(){
 						<span style={{color: 'white', marginRight: '10px', marginLeft: '30px'}}>Forgot your password?</span>
 						<Link to={"/forgot-pass"}> Reset Password</Link>
 					</div>
-					<Alert show={loginUserResponseState.error !== ""} variant="danger">
+					<Alert show={loginUserResponseState.error !== "" && loginUserResponseState.error !== undefined} variant="danger">
 						{loginUserResponseState.error}
 					</Alert>
 				</Form>

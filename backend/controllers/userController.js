@@ -11,9 +11,10 @@ const Joi = require("joi");
 const validate = require('../utils/ValidateUser')
 const {hashPassword, comparePasswords} = require('../utils/hashPassword')
 const {generateAuthToken, generateRefreshToken} = require('../utils/GenerateAuthToken')
-const {sendEmailVerification} = require('../utils/sendEmailVerification');
-const { generateShareToken } = require('../utils/GenerateShareToken');
+const { generateToken } = require('../utils/GenerateToken');
+const {sendEmail} = require('../utils/sendEmail');
 
+ 
 /**
 @description: Register User to database
 @route POST /user/register
@@ -70,7 +71,7 @@ const registerUser = async(req, res, next) => {
             const newlySavedUser = await User.findOne({email: email}) 
             
             //Create new token schema and generate the share token
-            const shareToken = generateShareToken()
+            const shareToken = generateToken()
             const newToken = new Token({userId: newlySavedUser._id, shareToken: shareToken})
   
             //Save new token doc
@@ -179,7 +180,7 @@ const loginUser = async(req, res, next) => {
 
 const googleLoginUser = async(req, res, next) => {
     const client = new OAuth2Client(process.env.GOOGLE_LOGIN_CLIENT_ID);
- 
+    
     try{
         //Retrieve token from frontend
         const jwt_token = req.body.google_token
@@ -246,45 +247,50 @@ const googleLoginUser = async(req, res, next) => {
 }
 
 /**
- * @description: Verify users email sent from client
+ * @description: Verify users email sent from client, used for sending password reset email
  * @route POST /verify-email
  * @access Public
  */
 const verifyUserEmail = async(req, res, next) => {
     try{
+        //Validate email
         const emailSchema = Joi.object({
 			email: Joi.string().email().required().label("Email"),
 		});
-        
 
 		const { error } = emailSchema.validate(req.body);
 
-        console.log(error, "VALIODATE EMAIL IN BACKEND")
-
-		if (error){
+        //There is an error in validation return error details
+		if(error){
             return res.status(400).send({ message: error.details[0].message });
         }
-			
+
+		//Find the user associated with this email
 		const user = await User.findOne({ email: req.body.email });
+ 
 		if (!user){
             return res
             .status(409)
             .send({ message: "User with given email does not exist!" });
         }
-			
+		
+        //Find token schema assocaited with the user using _id
 		const token = await Token.findOne({ userId: user._id });
-
+        
+        //If no token exists create a new one
 		if (!token) {
 			token = await new Token({
 				userId: user._id,
-				token: crypto.randomBytes(32).toString("hex"),
+				shareToken: generateToken(),
 			}).save();
 		}
-
-		const url = `${process.env.FRONTEND_URL}password-reset/${user._id}/${token.token}/`;
-		await sendEmail(user.email, "Password Reset Link", url);
-
-		return res.status(200).send({ message: "Password reset link sent to your email account!" });
+        
+        //Link that will be sent to users in the email
+		const url = `${process.env.FRONTEND_URL}password-reset/${user._id}/${token.shareToken}/`;
+        
+		const response = await sendEmail(user.email, "Password Reset Link", "d-602360db6ebc4466a850582808683ae5", {reset_link: url});
+        
+		return res.status(200).send({ message: response.message, auth: response.auth});
     }
     catch(err){
         res.status(500).send({message: 'Internal Server Error', auth: false})

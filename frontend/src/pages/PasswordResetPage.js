@@ -3,6 +3,8 @@ import { Form, Alert } from "react-bootstrap";
 import Spinner from 'react-bootstrap/Spinner';
 import { Colors } from "../constants/Colors";
 import Button from "../components/utils/Button";
+import axios from "axios";
+import cleanInputData from "../security/CleanInputData";
 
 function ResetPasswordPage(){
     const [validated, setValidated] = useState(false);
@@ -12,7 +14,22 @@ function ResetPasswordPage(){
 		event.preventDefault();
         event.stopPropagation();
 
-         
+		const form = event.currentTarget.elements;
+        const newPassword = cleanInputData(form.password.value)
+        const url = 'user/pass-reset';
+        
+        if (event.currentTarget.checkValidity() === true && newPassword) {
+            setResetPassResponseState({ loading: true, disabled: true });
+
+            axios.post(process.env.REACT_APP_API_URL + url, {newPassword: newPassword}).then((res)=>{
+                setResetPassResponseState({success: res.data.message, loading: false, error: ""})
+            }).catch((err)=>{
+                setResetPassResponseState({error: err.response.message, loading: false, disabled: false});
+            });
+        
+        }
+
+        setValidated(true);
 	};
 
     return(

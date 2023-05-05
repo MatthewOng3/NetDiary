@@ -5,7 +5,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import { Colors } from "../constants/Colors";
 import cleanInputData from "../security/CleanInputData";
 import Button from "../components/utils/Button";
- 
+import '../styles/ResetPassword.css'
 
 /**
  * @description Page for users to input their email to receive reset password link
@@ -26,25 +26,28 @@ function ForgotPasswordPage(){
 
         const form = event.currentTarget.elements;
         const email = cleanInputData(form.email.value)
-        const url = 'user/verify-email';
-        
+   
         if (event.currentTarget.checkValidity() === true && email && cleanInputData(email)) {
             setSendEmailResponse({ loading: true, disabled: true });
 
-            axios.post(process.env.REACT_APP_API_URL + url, {email: email}).then((res)=>{
-                setSendEmailResponse({success: res.data.message, loading: false, error: ""})
+            axios.post(process.env.REACT_APP_API_URL + 'user/verify-email', {email: email}).then((res)=>{
+				if(res.data.auth){
+					setSendEmailResponse({success: res.data.message, loading: false, error: undefined})
+				}
+                else{
+					setSendEmailResponse({success: undefined, loading: false, error: res.data.message})
+				}
             }).catch((err)=>{
                 setSendEmailResponse({error: err.response.message, loading: false, disabled: false});
             });
         
         }
-
         setValidated(true);
 	};
-
+	
 	return (
 		<div className="root">
-			<div className="formComponent">
+			<div className="formComponent ">
 				<h1 style={{color: 'white', fontWeight: 'normal', marginLeft: '10px', marginBottom: '20px'}}>Reset Password</h1>
 				<Form noValidate validated={validated} onSubmit={handleSubmit} className='inputComponent width-condition' style={{width: '30%'}}>
 					<Form.Group className="mb-3" controlId="formBasicEmail">
@@ -62,12 +65,14 @@ function ForgotPasswordPage(){
 						) : ("")}
 						Send email verification
 					</Button>
-					<Alert show={sendEmailResponse.error !== ""} variant="danger">
+					 
+					<Alert show={sendEmailResponse.error !== "" && sendEmailResponse.error !== undefined && sendEmailResponse.loading === false} variant="danger">
 						{sendEmailResponse.error}
 					</Alert>
-                    <Alert show={sendEmailResponse.success} variant="info">
-                        {sendEmailResponse.success}
-                    </Alert>
+					<Alert show={sendEmailResponse.success && sendEmailResponse.loading === false} variant="info" style={{marginTop: '10px' }}>
+						{sendEmailResponse.success}
+					</Alert>
+					 
 				</Form>
 			</div>
 		</div>

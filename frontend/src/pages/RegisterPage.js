@@ -45,7 +45,7 @@ function RegisterPage(){
         //Retrieve response token from reCAPTCHA and reset code that resets each time the form is submitted
         const token = captchaRef.current.getValue();
         captchaRef.current.reset();
-
+        
         if (!token) {
             setValidated(false);
             return;
@@ -159,10 +159,10 @@ function RegisterPage(){
                             <Link to={"/login"}> Login </Link>
                         </div>
                     </div> 
-                    <Alert show={registerUserResponseState.error !== ""} variant="danger">
+                    <Alert show={registerUserResponseState.error !== "" && registerUserResponseState.error !== undefined} variant="danger">
                         {registerUserResponseState.error}
                     </Alert>
-                    <Alert show={registerUserResponseState.success === true} variant="info">
+                    <Alert show={registerUserResponseState.success} variant="info">
                         User created
                     </Alert>
                 </Form>
