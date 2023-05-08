@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {registerUser, loginUser, googleLoginUser, verifyLoggedInUser, logoutUser, refresh, verifyEmailToken, verifyUserEmail} = require("../controllers/userController")
+const {registerUser, loginUser, googleLoginUser, verifyLoggedInUser, logoutUser, refresh, verifyEmailToken, verifyUserEmail, resetPassword} = require("../controllers/userController")
 
 
 
@@ -9,6 +9,9 @@ router.post('/register', registerUser)
 
 //Verify user email to send password reset link
 router.post('/verify-email', verifyUserEmail) 
+
+//Reset user password
+router.post('/reset-password', resetPassword) 
 
 //Verify email verification token
 router.get('/:id/verify/:token', verifyEmailToken)

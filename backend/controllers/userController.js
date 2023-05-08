@@ -14,12 +14,13 @@ const {generateAuthToken, generateRefreshToken} = require('../utils/GenerateAuth
 const { generateToken } = require('../utils/GenerateToken');
 const {sendEmail} = require('../utils/sendEmail');
 
- 
+
 /**
-@description: Register User to database
-@route POST /user/register
-@access Public
-*/
+ * @desc Register User to web app, creating new data in database
+ * @route POST /user/register
+ * @access Public 
+ * @payload Object containing: username, email, password
+ */
 const registerUser = async(req, res, next) => {
     try{
         
@@ -101,12 +102,12 @@ const registerUser = async(req, res, next) => {
         next(err)
     }
 }
-
-/*
-@description: LoginUser to database
-@route POST /user/login
-@access Public
-*/
+/**
+ * @desc Login user to web app
+ * @route POST /user/login
+ * @access Public 
+ * @payload Object containing: email, password, doNotLogout
+ */
 const loginUser = async(req, res, next) => {
     try{
         const { email, password, doNotLogout} = req.body //doNotLogout comes from frontend
@@ -124,7 +125,7 @@ const loginUser = async(req, res, next) => {
             const {_id, username, email } = user 
             const accessToken = generateAuthToken(_id, username, email)
             const refreshToken = generateRefreshToken(_id, username, email)
-             
+            
             //Find user's special share token 
             const shareTokenDoc = await Token.findOne({userId: _id})
             
@@ -177,7 +178,6 @@ const loginUser = async(req, res, next) => {
 @route POST /user/google-login
 @access Public
 */
-
 const googleLoginUser = async(req, res, next) => {
     const client = new OAuth2Client(process.env.GOOGLE_LOGIN_CLIENT_ID);
     
@@ -250,6 +250,7 @@ const googleLoginUser = async(req, res, next) => {
  * @description: Verify users email sent from client, used for sending password reset email
  * @route POST /verify-email
  * @access Public
+ * @payload Object: email
  */
 const verifyUserEmail = async(req, res, next) => {
     try{
@@ -286,8 +287,8 @@ const verifyUserEmail = async(req, res, next) => {
 		}
         
         //Link that will be sent to users in the email
-		const url = `${process.env.FRONTEND_URL}password-reset/${user._id}/${token.shareToken}/`;
-        
+		const url = `${process.env.FRONTEND_URL}password-reset/${token.shareToken}/`;
+       
 		const response = await sendEmail(user.email, "Password Reset Link", "d-602360db6ebc4466a850582808683ae5", {reset_link: url});
         
 		return res.status(200).send({ message: response.message, auth: response.auth});
@@ -342,11 +343,12 @@ const refresh = (req, res, next) => {
     return //Might cause errors
 }
 
-/*
-@desc Logout and destroy session
-@route GET /user/logout
-@access Public - just to clear cookie if exists
-*/
+
+/**
+ * @desc Logout user and destroy session and delete all cookies and local storage data
+ * @route GET /user/logout
+ * @access Public 
+ */
 const logoutUser = async(req, res, next) =>{
     try{
         //Destroy session on server side, not the cookie
@@ -399,7 +401,7 @@ const verifyLoggedInUser = async(req, res, next) => {
 }
 
 /*
-@desc Verify email verification token
+@desc Verify email verification token NOT CURRENTLY USED
 @route GET /user/:id/verify/:token
 @access Public 
 */
@@ -436,4 +438,41 @@ const verifyEmailToken = async(req, res, next) => {
     }
 }
 
-module.exports = {registerUser, loginUser, verifyLoggedInUser, logoutUser, refresh, googleLoginUser, verifyEmailToken, verifyUserEmail}
+/**
+ * @desc Reset user password by finding user document and updating password field
+ * @route POST /user/reset-password
+ * @access Public 
+ * @payload Object containing _id, newPassword, token
+ */
+const resetPassword = async(req, res, next) => {
+    
+    try{
+        const token = await Token.findOne({shareToken: req.body.shareToken})
+
+        //If no user found 
+        if(!token){
+            return res.status(400).send({auth: false, message: "Invalid Token!"})
+        }
+
+        //Search for user based on id found in the token table
+        const user = await User.findOne({_id: token.userId});
+
+        //If user not found
+		if (!user) {
+            return res.status(400).send({ message: "No user found", auth: false });
+        }
+
+        //Hash user passwords
+        const newHashedPassword = hashPassword(req.body.newPassword)
+        
+        await User.updateOne({_id: user._id}, {$set: {password: newHashedPassword}}).orFail()
+
+		return res.status(200).send({ message: "Password Updated Successfully!", auth: true});
+    }
+    catch(err){
+        res.status(500).send({message: 'Internal Server Error', auth: false})
+        next(err)
+    }
+}
+
+module.exports = {registerUser, loginUser, verifyLoggedInUser, logoutUser, refresh, googleLoginUser, verifyEmailToken, verifyUserEmail, resetPassword}

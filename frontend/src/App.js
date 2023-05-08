@@ -33,14 +33,12 @@ function App() {
 				<Route  path='/feedback' element={<FeedbackPage/>}/>
 				<Route  path='/shared/:collectionId/:catId' element={<SharedPage/>}/>
 				<Route  path='/forgot-pass' element={<ForgotPasswordPage/>}/>
-				<Route  path='/password-reset/:id/:token' element={<ResetPasswordPage/>}/>
+				<Route  path='/password-reset/:token' element={<ResetPasswordPage/>}/>
 				{/*User protected routes:*/}
 				{/* <Route element={<ProtectedRoutes isLoggedIn={isLoggedIn}/>} path='/user/*'> */}
 				<Route path='/users/:id/verify/:token' element={<EmailVerificationPage/>}/>
 				<Route element={<DiaryPage/>} path='/user/net-diary' exact/>
-			
 				{/* </Route> */}
-				
 			</Route>
 		</Routes>
 	</BrowserRouter>

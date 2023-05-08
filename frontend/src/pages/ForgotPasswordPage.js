@@ -8,7 +8,7 @@ import Button from "../components/utils/Button";
 import '../styles/ResetPassword.css'
 
 /**
- * @description Page for users to input their email to receive reset password link
+ * @description Page for users to input their email to receive reset password link in their email
  * @author Matt
  * @access public
  */
@@ -17,8 +17,9 @@ function ForgotPasswordPage(){
 	const [sendEmailResponse, setSendEmailResponse] = useState({success: "", error: "", loading: false, disabled: false}) 
 
     /**
-     * @description Sends email to backend server to verify and send the email link
+     * @description Sends email to backend server to verify and send the email link to user that forgot password
      * @param event The form values users input
+	 * @returns
      */
 	function handleSubmit(event){
 		event.preventDefault();
@@ -60,19 +61,17 @@ function ForgotPasswordPage(){
 						/>
 					</Form.Group>
 					<Button width='100%' height='40px' color={Colors.light_purple100}>
-						{sendEmailResponse && sendEmailResponse === true ? (
+						{sendEmailResponse && sendEmailResponse.loading === true ? (
 							<Spinner as="span" animation="border" size="sm" role="status"/>
 						) : ("")}
 						Send email verification
 					</Button>
-					 
 					<Alert show={sendEmailResponse.error !== "" && sendEmailResponse.error !== undefined && sendEmailResponse.loading === false} variant="danger">
 						{sendEmailResponse.error}
 					</Alert>
-					<Alert show={sendEmailResponse.success && sendEmailResponse.loading === false} variant="info" style={{marginTop: '10px' }}>
+					<Alert show={sendEmailResponse.success && sendEmailResponse.success !== undefined && sendEmailResponse.loading === false} variant="info" style={{marginTop: '10px' }}>
 						{sendEmailResponse.success}
 					</Alert>
-					 
 				</Form>
 			</div>
 		</div>

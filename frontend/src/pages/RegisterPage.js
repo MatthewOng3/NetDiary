@@ -16,7 +16,12 @@ import cleanInputData  from '../security/CleanInputData'
 import ReCAPTCHA from "react-google-recaptcha";
 import ErrorModal from "../components/utils/ErrorModal";
 
-
+/**
+ * @description Page to allow users to register to webapp
+ * @author Matt
+ * @access public
+ * @path /register
+ */
 function RegisterPage(){
     const navigate = useNavigate()
 	const [validated, setValidated] = useState(false);

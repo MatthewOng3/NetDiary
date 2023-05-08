@@ -17,8 +17,11 @@ import cleanInputData from "../security/CleanInputData";
  
 
 /**
- * Login page component that allows users to log in from either a net diary account or gmail account, seperate function handlers for them
-*/
+ * @description Login users to web app
+ * @author Matt
+ * @access public
+ * @path /login
+ */
 function LoginPage(){
     const [validated, setValidated] = useState(false);
 	//State to handle spinner login response
