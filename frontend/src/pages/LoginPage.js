@@ -50,15 +50,14 @@ function LoginPage(){
 		//Get relevant data from form 
 		const email = cleanInputData(form.email.value)
 		const password = cleanInputData(form.password.value)
-		const doNotLogout = cleanInputData(form.doNotLogout.checked )
-
+		 
 		//If it passes validaty
 		if (event.currentTarget.checkValidity() === true && email && password) {
 			setLoginUserResponseState({loading: true, disabled: true}) //Set the loading state to true
 			
 			//Send post request to api endpoint to log user in
 			axios.defaults.withCredentials = true
-			axios.post(process.env.REACT_APP_API_URL + "user/login", {email, password, doNotLogout}) 
+			axios.post(process.env.REACT_APP_API_URL + "user/login", {email, password}) 
 			.then((res) => {
 				setLoginUserResponseState({success: res.data.message, loading: false, error: undefined})
 				
@@ -124,7 +123,6 @@ function LoginPage(){
 		setLoginUserResponseState({error: error})
 	}
 
-	console.log(loginUserResponseState.error)
     return(
 		<div className="root">
 			<div className="formComponent">
@@ -146,14 +144,6 @@ function LoginPage(){
 							required
 							type="password"
 							placeholder="Enter password"
-						/>
-					</Form.Group>
-					<Form.Group className="mb-3" controlId="formBasicCheckbox">
-						<Form.Check
-							name="doNotLogout"
-							type="checkbox"
-							className="text-light"
-							label='Keep me signed in'
 						/>
 					</Form.Group>
 					{/* <div className=" mb-3 flex items-center justify-center">

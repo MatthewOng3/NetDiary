@@ -10,10 +10,14 @@ import {Col} from 'react-bootstrap'
 //Redux store
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteEntry } from '../store/categorySlice';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import DeleteVerificationModal from './DeleteVerificationModal';
 
-/*Component that handles each individual webpage entry, controls the button itself and icon buttons*/
+
+/**
+ * @description Component that handles each individual webpage entry, allow users to click on it, edit or delete it
+ * @author Matt
+ */
 function ListEntry({text_description, link, entryId, catId, editEntry, allowEdit}){
     
     const dispatch = useDispatch()
@@ -25,26 +29,32 @@ function ListEntry({text_description, link, entryId, catId, editEntry, allowEdit
         window.open(link, '_blank').focus();
     }
 
-    //Edit list entry by passing entryId into entry modal 
+    /**
+     * @description Update list entry by passing entryId into the entry modal
+     * @see editEntry
+     */
     function updateEntry(){
         editEntry(entryId)
     }
 
-    //Delete list entry
+    /**
+     * @description Delete list entry
+     * @see deleteEntry CategorySlice
+     */
     function deleteEntryHandler(){
         dispatch(deleteEntry({entryId: entryId, catId: catId, collectionId: collectionId}))
     }
 
-     /*Cancel entry*/
+    /*Cancel entry*/
     function closeModal(){
         setDeleteVerificationModal(false)
     }
  
     return(
         <>
-            <div className="w-76  rounded-md"style={{ marginBottom: '10px',backgroundColor: '#5d1669'}}>          
+            <div className="w-76  rounded-md"style={{ marginBottom: '10px',backgroundColor: '#194861'}}>          
                 <div className='flex flex-row justify-between'>
-                    <Button size='large' style={{backgroundColor: '#5d1669', width: '74%', borderRadius: '7px', display: 'flex', justifyContent: 'flex-start'}} onClick={goToLink}  >
+                    <Button size='large' style={{backgroundColor: '#194861', width: '74%', borderRadius: '7px', display: 'flex', justifyContent: 'flex-start'}} onClick={goToLink}  >
                         <Col md={8} className="flex ">
                             {/* <img src={} alt="" /> */}
                             <text className='page-name py-1' >{text_description}</text>

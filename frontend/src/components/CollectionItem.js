@@ -33,6 +33,8 @@ function CollectionItem({name, collectionId, showDeleteVerificationModal}) {
   //Handles name update of collections
   function updateNameHandler(event){
     event.stopPropagation();  
+    event.preventDefault();
+  
     dispatch(updateCollectionName({collectionId: collectionId, name: collectionName}))
   }
   
@@ -46,13 +48,38 @@ function CollectionItem({name, collectionId, showDeleteVerificationModal}) {
 
   return (
     <>
-      <div className='container mt-3 rounded-full  ' style={{opacity: currentCollectionId === collectionId ? "1" : "0.5"}}>
-        <Button variant='contained' size='large' sx={{backgroundColor: '#3f3c3c', borderRadius: '18px', '&:hover': {backgroundColor: '#5a5757'}}} disableRipple onClick={displayCategoriesHandler}>
-          <div  style={{flexDirection: 'row', display: 'flex', justifyContent: 'space-between', width: '100%'}}>
-            <div  style={{width: '48%'}}> 
-              <input placeholder='Diary Name' id='input' className='input-container' autoComplete='off'  value={collectionName} onChange={(event)=>{
-                setCollectionName(event.target.value)
-              }} onClick={(event) => {event.stopPropagation()}}/>
+      <div
+        className="container mt-3 rounded-full"
+        style={{ opacity: currentCollectionId === collectionId ? "1" : "0.5" }}
+      >
+        <div
+          onClick={displayCategoriesHandler}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            backgroundColor: "#3f3c3c",
+            borderRadius: "18px",
+            padding: "6px 12px",
+            cursor: "pointer",
+            transition: "background-color 0.3s",
+            "&:hover": { backgroundColor: "#5a5757" },
+          }}
+        >
+            <div style={{ width: "48%" }}>
+              <input
+                placeholder="Diary Name"
+                id="input"
+                className="input-container"
+                autoComplete="off"
+                value={collectionName}
+                onChange={(event) => {
+                  setCollectionName(event.target.value);
+                }}
+                onClick={(event) => {
+                  event.stopPropagation();
+                }}
+              />
             </div>
             <div className=' flex w-14 justify-between '>
               <Tooltip title="Save collection name">
@@ -69,7 +96,7 @@ function CollectionItem({name, collectionId, showDeleteVerificationModal}) {
               </Tooltip>
             </div>
           </div>
-        </Button>
+         
       </div>
     </>
   );

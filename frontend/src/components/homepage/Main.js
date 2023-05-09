@@ -20,7 +20,7 @@ function Main() {
           <h1
            className="text-2xl lg:text-5xl text-white w-full"
           >
-            Organize your favourite <br /> websites in  one place with <br /> our free
+            Organize and share your favourite <br /> websites in  one place with <br /> our free
             user-friendly <br /> platform.
           </h1>
           <h5

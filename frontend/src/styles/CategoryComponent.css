@@ -6,8 +6,8 @@
 
 .input-container{
     background: transparent;
-    border: none;
-    outline: none;
+    border: none !important;
+    outline: none !important;
     white-space: pre-line;
 }
 

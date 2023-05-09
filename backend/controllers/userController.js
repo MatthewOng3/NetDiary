@@ -110,7 +110,7 @@ const registerUser = async(req, res, next) => {
  */
 const loginUser = async(req, res, next) => {
     try{
-        const { email, password, doNotLogout} = req.body //doNotLogout comes from frontend
+        const { email, password} = req.body //doNotLogout comes from frontend
         
         if(!(email && password)){
             return res.status(400).send({message: 'All fields are required'})
@@ -136,10 +136,9 @@ const loginUser = async(req, res, next) => {
                 res.cookie('currentCollectionId', collectionId.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: false});
             }
             
-            //If do not logout is checked, create user session
-            if(doNotLogout){
-                req.session.user = true
-            }
+             
+            req.session.user = true
+            
             
             
             // Create secure cookie with refresh token 

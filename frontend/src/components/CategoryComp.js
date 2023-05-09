@@ -17,7 +17,6 @@ import { useDispatch  } from 'react-redux';
 import { deleteCategory, updateCatName } from '../store/categorySlice';
 import DeleteVerificationModal from './DeleteVerificationModal';
 import ErrorModal from './utils/ErrorModal';
-import { getShareToken } from '../store/userSlice';
  
 
 /*Each category card component*/
@@ -57,7 +56,7 @@ function CategoryComp({name, listEntries, catId, collectionId}){
   //Use effect hook to change value of col for diff window dimensions
   useEffect(()=>{
     if(767 <= windowDimension.winWidth && windowDimension.winWidth<= 1225){
-      setColValue(7)
+      setColValue(5)
     }
     else if( windowDimension.winWidth <= 775){
       setColValue(12)

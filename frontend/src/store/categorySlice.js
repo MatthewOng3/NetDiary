@@ -96,7 +96,7 @@ export const updateCatName = createAsyncThunk('category/updateCatName', async(da
         const catName = cleanInputData(data_payload.name)
         const collectionId = cleanInputData(data_payload.collectionId)
 
-        if(!catId || !catName || !collectionId || typeof(catId) !== "string" || typeof(catName) !== "string" || typeof(collectionId) !== "string"){
+        if(!catId || !collectionId || typeof(catId) !== "string" || typeof(catName) !== "string" || typeof(collectionId) !== "string"){
             throw new CodeError("Invalid Input")
         }
         

@@ -2,7 +2,7 @@ import { Col, FloatingLabel, Form } from "react-bootstrap";
 import '../styles/FeedbackPage.css'
 import EmailIcon from '@mui/icons-material/Email';
 import DiaryNavbar from "../components/DiaryNavbar";
- 
+import { Colors } from "../constants/Colors";
 import {FiSend} from "react-icons/fi"
 import emailjs from '@emailjs/browser';
 import { useRef } from "react";
@@ -27,8 +27,8 @@ function FeedbackPage() {
     return (
         <>
             <DiaryNavbar diaryPage={false}/>
-            <div className="root">
-                <div className="feedback-container"  >
+            <div className="root" style={{backgroundColor: Colors.dark_grey200}}>
+                <div className="feedback-container" >
                     <div className="p-4  bg-slate-200  rounded-lg w-4/12 fill">
                         <Form autoComplete="off" onSubmit={sendFeedback}  ref={form}>
                             <div className="flex justify-center align-middle">

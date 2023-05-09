@@ -11,6 +11,7 @@ import '../styles/ResetPassword.css'
  * @description Page for users to input their email to receive reset password link in their email
  * @author Matt
  * @access public
+ * @path /forgot-pass
  */
 function ForgotPasswordPage(){
     const [validated, setValidated] = useState(false);
@@ -64,7 +65,7 @@ function ForgotPasswordPage(){
 						{sendEmailResponse && sendEmailResponse.loading === true ? (
 							<Spinner as="span" animation="border" size="sm" role="status"/>
 						) : ("")}
-						Send email verification
+						Send password reset link
 					</Button>
 					<Alert show={sendEmailResponse.error !== "" && sendEmailResponse.error !== undefined && sendEmailResponse.loading === false} variant="danger">
 						{sendEmailResponse.error}

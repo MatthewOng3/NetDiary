@@ -13,11 +13,11 @@ function Features() {
             <div className="w-full px-3 py-6 ">
               <h1 style={{ marginBottom: "0" }} className="text-2xl font-bold">
                 {" "}
-                Multiple Categories
+                Create and share categories
               </h1>
               <h6 style={{ marginBottom: "0" }}>
                 {" "}
-                Sort your favourite webpages by category! Be it your favourite movies or tv shows and more!
+                Sort your favourite links like your favourite korean restaurants and share them!
               </h6>
             </div>
           </div>

@@ -22,7 +22,12 @@ import { addCategory, getAllCategory, getCategoryError, getCategoryStatus,  fetc
 import { MAX_CATEGORIES } from "../../constants/Limits";
 import { getCollectionsStatus, updateCurrentCollection } from "../../store/collectionSlice";
 
-/*Component that displays the main diary page*/
+/**
+ * @description Page that allows users to store webpages, main dashboard page
+ * @author Matt
+ * @access public
+ * @path /user/net-diary
+ */
 function DiaryPage(){
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -116,7 +121,7 @@ function DiaryPage(){
             {isLoggedIn &&  (
                 <>
                     <DiaryNavbar diaryPage={true}/>
-                    <div style={{backgroundColor: Colors.dark_grey200, width: '100%', height:'100vh', overflow: 'scroll', scrollBehavior:'smooth', paddingBottom: '2%'}} >   
+                    <div style={{backgroundColor: Colors.dark_grey200, width: '100%', height:'100vh', overflow: 'auto', scrollBehavior:'smooth', paddingBottom: '2%'}} >   
                         <div className="new-category mb-4" style={{backgroundColor: Colors.dark_grey200}}>
                             {currentCollectionId ? <Button width='150px' height='45px' onClick={addNewCategory} color={'#FB8C00'} disabled={(categoryList.length >= MAX_CATEGORIES)}>
                                 <NewspaperIcon sx={{marginRight: '2px'}}/>
