@@ -6,7 +6,14 @@ import Features from "../components/homepage/Features";
 import Footer from "../components/Footer";
 import HowWorks from "../components/homepage/HowWorks";
 import Learn from "../components/homepage/Learn";
+import Comparison from "../components/homepage/Comparison";
 
+/**
+ * @description Home page of website detailing features etc
+ * @author Matt
+ * @access public
+ * @path /
+ */
 function HomePage(){
     return(
         <>
@@ -18,12 +25,12 @@ function HomePage(){
             <div style={{height: '100vh', overflow: 'scroll'}}>
                 <Main/>
                 <Features/>
+                <Comparison/>
                 <HowWorks/>
                 <Learn/>
                 <Footer/>
             </div>
         </>
-       
     )
 }
 

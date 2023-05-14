@@ -9,7 +9,6 @@ function Navbar() {
   const [isclose, setIsclose] = useState(false);
 
   return (
-    
     <div
       style={{ background: Colors.navbar }}
       className="w-full flex items-center justify-center"

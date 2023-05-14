@@ -1,5 +1,11 @@
 import React from 'react'
 
+/**
+ * @description Upcoming features section of the homepage
+ * @author Matt
+ * @access public
+ * @path /
+ */
 function Learn(){
   return (
     <section style={{background:"rgba(0,0,0,0.9)"}} className=" bg-gray-900 w-full py-20 flex items-center justify-center">
@@ -9,7 +15,7 @@ function Learn(){
       </h1>
       <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6 mt-16   ">
         <div className="rounded-2xl overflow-hidden ">
-          <img className="w-full" src="/images/l1.png" alt="" />
+          <img className="w-full h-4/6" src="/images/Mobile.png" alt="" />
           <div className="w-full px-3 py-6 ">
             <h1 style={{ marginBottom: "0" }} className="text-2xl text-white font-bold">
              Mobile App
@@ -22,7 +28,7 @@ function Learn(){
           </div>
         </div>
         <div className="rounded-2xl overflow-hidden ">
-          <img className="w-full" src="/images/l1.png" alt="" />
+          <img className="w-full" src="/images/ai.jpg" alt="" />
           <div className="w-full px-3 py-6 ">
             <h1 style={{ marginBottom: "0" }} className="text-2xl text-white font-bold">
              Faster saving through AI 
@@ -35,7 +41,7 @@ function Learn(){
           </div>
         </div>
         <div className="rounded-2xl overflow-hidden ">
-          <img className="w-full" src="/images/l1.png" alt="" />
+          <img className="w-full" src="/images/suggestion.jpg" alt="" />
           <div className="w-full px-3 py-6 ">
             <h1 style={{ marginBottom: "0" }} className="text-2xl text-white font-bold">
               Advanced Suggestions
@@ -43,7 +49,7 @@ function Learn(){
             <p className='text-white font-light' style={{ marginBottom: "0" }}>
               {" "}
              Suggestion functionality that can be toggled on or off for specific categories. These suggestions will 
-             find links similar to the ones you have saved.
+             find links similar to the ones you have saved using AI and web scraping
             </p>
           </div>
         </div>

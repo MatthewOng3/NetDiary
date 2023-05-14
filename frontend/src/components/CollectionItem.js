@@ -12,10 +12,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { deleteCollection, updateCollectionName, updateCurrentCollection} from '../store/collectionSlice'
 import { fetchCategories } from '../store/categorySlice';
 
-
-/*
-Component that allows user to create, choose, delete diary collections
-*/
+/**
+ * @description Component that allows user to create, choose, delete diary collections
+ * @author Matt
+ * @access public
+ * @path /user/net-diary
+ */
 function CollectionItem({name, collectionId, showDeleteVerificationModal}) {
   const dispatch = useDispatch(); //Dispatch an action to store  
   const [collectionName, setCollectionName] = useState(name) //State to handle name of collection

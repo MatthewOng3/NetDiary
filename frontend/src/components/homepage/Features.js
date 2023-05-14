@@ -1,5 +1,12 @@
 import "./Features.css";
 
+
+/**
+ * @description Features section of the homepage
+ * @author Matt
+ * @access public
+ * @path /
+ */
 function Features() {
   return (
     <section className=" w-full py-20 flex items-center justify-center" style={{backgroundColor: '#181717'}}>

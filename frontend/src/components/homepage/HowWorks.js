@@ -1,6 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+/**
+ * @description The video portion of the homepage showcasing how to use the product
+ * @author Matt
+ * @access public
+ * @path /
+ */
 function HowWorks(){
   return (
     <section className="w-full flex py-20 items-center  justify-center" id="howWorks" style={{backgroundColor: '#0a0a0a'}}>
