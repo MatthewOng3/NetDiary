@@ -19,7 +19,7 @@ function Main() {
   }
 
   return (
-    <section style={{background: '#ffffff', overflow: 'hidden'}} className="w-full lg:min-h-screen flex py-20 lg:py-0 items-center justify-center">
+    <section style={{background: 'white', overflow: 'hidden'}} className="w-full lg:min-h-screen flex py-20 lg:py-0 items-center justify-center">
       <div className=" container">
       <div className=" grid grid-cols-1 lg:grid-cols-5 items-center gap-6 ">
       <div className="lg:col-span-2">

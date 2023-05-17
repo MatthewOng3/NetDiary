@@ -4,12 +4,22 @@
     display: flex;
     justify-content: space-between;
     padding: 10px;
-    
     height: 100%;
-    width: 50%;
+    width: 100%;
 }
 
- 
+@media (min-width: 1100px) {
+    .comparison-container {
+        width: 80%;
+    }
+}
+
+@media (min-width: 1386px) {
+    .comparison-container {
+        width: 60%;
+    }
+}
+
 .comparison-list ul {
     list-style-type: none;
     padding: 0;
