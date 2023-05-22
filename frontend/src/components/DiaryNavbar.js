@@ -9,13 +9,15 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {useNavigate} from "react-router-dom";
 import { Colors } from '../constants/Colors';
 import axios from 'axios';
-import { API_URL } from '../constants/ApiURL';
+import { useDispatch } from "react-redux";
+import { logout } from '../store/userSlice';
 /*
 Component to handle the navbar and its icons
 */
 function DiaryNavbar({diaryPage}){
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const navigate = useNavigate();
+    const dispatch = useDispatch()
 
     //Send log out request to server and clear cookies and redirect to login page
     function logoutUser(){
@@ -26,6 +28,7 @@ function DiaryNavbar({diaryPage}){
             //If logged out successful navigate back to login page
             if(res.data.loggedOut){
                 localStorage.clear() //Clear all local storage data
+                dispatch(logout())
                 navigate('/login')
             }
         })

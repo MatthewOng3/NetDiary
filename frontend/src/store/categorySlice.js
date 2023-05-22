@@ -15,7 +15,11 @@ const axiosConfig = {
     withCredentials: true
 };
 
-//Fetch categories relevant to the collection
+/**
+ * @description Fetch all categories associated with the current collection from backend
+ * @route categories/get
+ * @response List of categories associated with the collection
+ */
 export const fetchCategories = createAsyncThunk('category/fetchCategories', async (collectionId,{rejectWithValue}) =>{
     try{
         
@@ -23,7 +27,7 @@ export const fetchCategories = createAsyncThunk('category/fetchCategories', asyn
         if(!collectionId || typeof(collectionId) !== "string"){
             throw new CodeError("Invalid Input")
         }
-        
+        console.log("IN CAT SLICE",collectionId)
         //Send a get request to express server
         const response = await axios.get(process.env.REACT_APP_API_URL + `categories/get/${collectionId}`, axiosConfig)  
         

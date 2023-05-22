@@ -38,7 +38,7 @@ function DiaryPage(){
 	//Once component first loads verify if user has an ongoing session
 	useEffect(()=>{
 		dispatch(verifyLoggedIn())
-	},[])
+	},[isLoggedIn])
 
 
     //Hook to send user back to login page if the verification fails
@@ -79,7 +79,7 @@ function DiaryPage(){
     const categoryListStatus = useSelector(getCategoryStatus)
     const collectionListStatus = useSelector(getCollectionsStatus)
     const currentCollectionId = useSelector((store) => store.collection.currentCollection)
- 
+    console.log("IN DIARY PAGE",currentCollectionId)
     //Retrieve error
     const error = useSelector(getCategoryError)
     
@@ -105,6 +105,7 @@ function DiaryPage(){
         }
         return () => {
             abortController.abort();
+
         };
         
     },[currentCollectionId, categoryListStatus])

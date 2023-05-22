@@ -48,6 +48,7 @@ const userSlice = createSlice({
         },
         logout: (state, {payload}) => {
             state.token = null
+            state.loggedIn = false
         }
     },
     extraReducers(builder){

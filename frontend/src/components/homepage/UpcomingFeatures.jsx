@@ -11,7 +11,7 @@ function Learn(){
     <section style={{background:"rgba(0,0,0,0.9)"}} className=" bg-gray-900 w-full py-20 flex items-center justify-center">
     <div className="container">
       <h1 className="text-white text-center ">
-        Future features
+        Upcoming Features
       </h1>
       <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6 mt-16 ">
           <div className="rounded-2xl overflow-auto flex flex-col ">

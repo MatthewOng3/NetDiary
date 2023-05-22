@@ -1,7 +1,6 @@
 import "./Main.css";
  
 import { Link } from "react-router-dom";
-import { Colors } from "../../constants/Colors";
 
 /**
  * @description Top part of the hompage 
@@ -40,17 +39,22 @@ function Main() {
             <Link to="/register"
                className="px-9 hover:bg-transparent text-gray-50 hover:text-blue-400 py-2 rounded-3xl  border-2 border-blue-500 bg-blue-500 hover:bg-blue-600"
               >
-                Sign Up
+                Sign Up for Free!
               </Link>
-            <button
+            <Link to="/login"
+              className="px-8 py-2 rounded-3xl text-orange-400 hover:text-white  border-2 border-orange-500 hover:bg-orange-600"
+            >
+              Login
+            </Link>
+            {/* <button
              className="px-8 py-2 rounded-3xl text-orange-400 hover:text-white  border-2 border-orange-500 hover:bg-orange-600" onClick={scrollToFeatures}
             >
-              Learn More
-            </button>
+              Login
+            </button> */}
           </div>
         </div>
         <div className=" w-full flex items-center lg:col-span-3 justify-center">
-          <img  src="images/test.jpg" class=" w-full rounded-3xl" />
+          <img  src="images/Main.jpg" class=" w-full rounded-3xl" />
         </div>
       </div>
       </div>

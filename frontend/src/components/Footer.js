@@ -38,7 +38,7 @@ function Footer(){
                         </h6>
                         </MDBCol>
 
-                        <MDBCol md='2' lg='2' xl='2' className='mx-auto mb-4'>
+                        {/* <MDBCol md='2' lg='2' xl='2' className='mx-auto mb-4'>
                         <h6 className='text-uppercase fw-bold mb-4'>Products</h6>
                         <p>
                             <a href='#!' className='text-reset'>
@@ -60,7 +60,7 @@ function Footer(){
                             Laravel
                             </a>
                         </p>
-                        </MDBCol>
+                        </MDBCol> */}
 
                         <MDBCol md='3' lg='2' xl='2' className='mx-auto mb-4'>
                         <h6 className='text-uppercase fw-bold mb-4'>Useful links</h6>
@@ -70,17 +70,17 @@ function Footer(){
                             </a>
                         </p>
                         <p>
-                            <a href='#!' className='text-reset'>
-                            Settings
+                            <a href='/register' className='text-reset'>
+                            Sign Up
                             </a>
                         </p>
                         <p>
-                            <a href='#!' className='text-reset'>
-                            Orders
+                            <a href='/feedback' className='text-reset'>
+                            Feedback
                             </a>
                         </p>
                         <p>
-                            <a href='#!' className='text-reset'>
+                            <a href='/contact' className='text-reset'>
                             Help
                             </a>
                         </p>
@@ -94,7 +94,7 @@ function Footer(){
                         </p>
                         <p>
                             <MDBIcon color='secondary' icon='envelope' className='me-3' />
-                            netdiary@gmail.org
+                            netdiary0@gmail.com
                         </p>
                          
                         </MDBCol>

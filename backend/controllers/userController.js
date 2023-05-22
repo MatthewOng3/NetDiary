@@ -129,6 +129,8 @@ const loginUser = async(req, res, next) => {
             //Find user's special share token 
             const shareTokenDoc = await Token.findOne({userId: _id})
             
+            console.log(user._id)
+
             //Set collectionId to the first object in collections
             if(user.collections.length > 0){
                 collectionId = user.collections[0].collectionId

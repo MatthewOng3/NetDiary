@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import cleanInputData from '../security/CleanInputData'
 import axios from 'axios';
-
-/*
-Collection redux state to handle the CRUD operations of collections
-*/
+ 
+/**
+ * @description Collection redux state to handle the CRUD operations of collections
+ * @author Matt
+ */
 
 //Define axios config options
 const axiosConfig = {
@@ -15,10 +16,11 @@ const axiosConfig = {
     credentials: "include"
 };
 
-
 /**
- * Fetch collection from backend using get request
+ * @description Fetch collection from backend using get request
+ * @author Matt
  */
+
 export const fetchCollections = createAsyncThunk('collection/fetchCollections', async (_,{rejectWithValue}) =>{
     try{
         //Send a get request to express server

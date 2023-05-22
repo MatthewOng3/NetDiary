@@ -1,7 +1,12 @@
 const Joi = require('joi')
 const passwordComplexity  = require('joi-password-complexity')
 
-//Validate data before saving to database
+/**
+ * @description Validate email type and password incoming from client side before saving to database, 
+ * @param user user object from client side
+ * @file ValidateUser.js
+ * @see userController
+ */
 function validate(user){
 
     const complexityOptions = {
@@ -14,7 +19,7 @@ function validate(user){
     
     const schema = Joi.object({
         username: Joi.string().required(),
-        email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
+        email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'sg', 'au'] } }).required(),
         password: passwordComplexity(complexityOptions).required()
     })
      

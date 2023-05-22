@@ -15,9 +15,9 @@ function Features() {
           Save your online world
         </h1>
         <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6 mt-16">
-          <div className="rounded-2xl overflow-hidden bg-white">
+          <div className="rounded-2xl overflow-hidden bg-white h-full">
             <img className="w-full h-4/6 object-cover" src="/images/category.PNG" alt="" />
-            <div className="w-full px-3 py-6 ">
+            <div className="w-full px-3 py-6">
               <h1 style={{ marginBottom: "0" }} className="text-2xl font-bold">
                 {" "}
                 Create and share categories

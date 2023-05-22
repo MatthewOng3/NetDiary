@@ -5,7 +5,7 @@ import {Helmet} from "react-helmet";
 import Features from "../components/homepage/Features";
 import Footer from "../components/Footer";
 import HowWorks from "../components/homepage/HowWorks";
-import Learn from "../components/homepage/Learn";
+import UpcomingFeatures from "../components/homepage/UpcomingFeatures";
 import Comparison from "../components/homepage/Comparison";
 
 /**
@@ -27,7 +27,7 @@ function HomePage(){
                 <Features/>
                 <Comparison/>
                 <HowWorks/>
-                <Learn/>
+                <UpcomingFeatures/>
                 <Footer/>
             </div>
         </>
