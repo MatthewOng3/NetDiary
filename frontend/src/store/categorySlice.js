@@ -2,12 +2,15 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import cleanInputData from '../security/CleanInputData'
 import CodeError from '../util/CodeError';
-
+ 
 /*
 Category redux state to handle the CRUD operations of category as well as list entries 
 */
+const initialState = {value: [], status: 'idle', error: ""}
 
-//Define axios config options
+/**
+ * @description 
+ */
 const axiosConfig = {
     headers: {
         'Content-Type': 'application/json',
@@ -117,10 +120,10 @@ export const updateCatName = createAsyncThunk('category/updateCatName', async(da
     }
 })
 
-/*
-@description: Save list entry
-@params data_payload, data object from EntryModal
-*/
+/**
+ * @description Save list entry to database
+ * @param data_payload data object from EntryModal
+ */
 export const saveEntry = createAsyncThunk('category/saveEntry', async(data_payload,{rejectWithValue}) => {
     try{
          
@@ -177,7 +180,7 @@ export const deleteEntry = createAsyncThunk('category/deleteEntry', async(payloa
 
 const categorySlice = createSlice({
     name: 'category',
-    initialState: {value: [], status: 'idle', error: ""},
+    initialState: initialState,
     reducers:{
         //this reducer allows other components to force a fetch category from backend  
         forceCategoryFetch: (state, {payload}) => {
@@ -201,6 +204,9 @@ const categorySlice = createSlice({
                     
                 }
             })
+        },
+        resetCategory: (state=initialState, {payload}) => {
+            return initialState
         }
     },
     //builder is an object that lets us define additional case reducers that run in response to the actions defined outside of the slice
@@ -289,5 +295,5 @@ export const getCategoryError = (state) => state.category.error
 export const getCurrentCollectionId = (state) => state.category.currentCollectionId
  
 
-export const {removeEntry, forceCategoryFetch, setCategoryStateError} = categorySlice.actions;
+export const {removeEntry, forceCategoryFetch, setCategoryStateError, resetCategory} = categorySlice.actions;
 export default categorySlice.reducer;

@@ -40,7 +40,7 @@ function Learn(){
             <p className='text-white font-light' style={{ marginBottom: "0" }}>
               {" "}
              Integrating ChatGpt to automatically categorise your new links when saving or insert them into existing
-             categories
+             categories, whether it be using chrome extensions or through social media apps
             </p>
           </div>
         </div>
@@ -54,7 +54,7 @@ function Learn(){
             <p className='text-white font-light' style={{ marginBottom: "0" }}>
               {" "}
              Suggestion functionality that can be toggled on or off for specific categories. These suggestions will 
-             find links similar to the ones you have saved using AI and web scraping
+             curate links similar to the ones you have saved using AI and web scraping
             </p>
           </div>
         </div>

@@ -77,7 +77,7 @@ const registerUser = async(req, res, next) => {
   
             //Save new token doc
             const newShareToken = await newToken.save() 
-          
+            
 
             //For email verification
             // const token = await new Token({
@@ -129,7 +129,6 @@ const loginUser = async(req, res, next) => {
             //Find user's special share token 
             const shareTokenDoc = await Token.findOne({userId: _id})
             
-            console.log(user._id)
 
             //Set collectionId to the first object in collections
             if(user.collections.length > 0){
@@ -138,7 +137,7 @@ const loginUser = async(req, res, next) => {
                 res.cookie('currentCollectionId', collectionId.toString(), { httpOnly: true, maxAge: 3600000 * 24, secure: false});
             }
             
-             
+            
             req.session.user = true
             
             
@@ -379,11 +378,11 @@ const logoutUser = async(req, res, next) =>{
     }
 }
 
-/*
-@desc Verify if user has an ongoing session
-@route GET /user/verifySession
-@access Public 
-*/
+/**
+ * @description Verify if user has an ongoing session
+ * @route GET /user/verifySession
+ * @access Public
+ */
 const verifyLoggedInUser = async(req, res, next) => {
     try{
         let loggedIn = false;
@@ -392,7 +391,7 @@ const verifyLoggedInUser = async(req, res, next) => {
             loggedIn = true
             
         }
-       
+        
         return res.send({loggedIn: loggedIn})
     }
     catch(err){

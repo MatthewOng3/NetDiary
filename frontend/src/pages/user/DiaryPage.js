@@ -79,6 +79,7 @@ function DiaryPage(){
     const categoryListStatus = useSelector(getCategoryStatus)
     const collectionListStatus = useSelector(getCollectionsStatus)
     const currentCollectionId = useSelector((store) => store.collection.currentCollection)
+
     console.log("IN DIARY PAGE",currentCollectionId)
     //Retrieve error
     const error = useSelector(getCategoryError)
@@ -132,7 +133,7 @@ function DiaryPage(){
                         <Container fluid style={{backgroundColor: Colors.dark_grey200, paddingLeft: '0%', }} >
                             <Row className="flex justify-start condition" style={{paddingLeft: '10px', paddingRight: '0%', }}>
                                 {isLoading && <LoadingSpinner/>}
-                                {categoryList.map((item,index)=>{
+                                {categoryList.map((item)=>{
                                     return(
                                         <React.Fragment key={`cat-${item.catId}`}>
                                             <CategoryComp key={item.catId} name={item.name} listEntries={item.listEntries} catId={item.catId} collectionId={currentCollectionId}/>

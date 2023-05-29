@@ -7,6 +7,8 @@ import axios from 'axios';
  * @author Matt
  */
 
+const initialState = {value: [],status: 'idle', currentCollection: "",error: null}
+
 //Define axios config options
 const axiosConfig = {
     headers: {
@@ -109,11 +111,14 @@ export const deleteCollection = createAsyncThunk('collection/deleteCollection', 
 
 const collectionSlice = createSlice({
     name: 'collection',
-    initialState: {value: [],status: 'idle', currentCollection: "",error: null},
+    initialState: initialState,
     reducers:{
         updateCurrentCollection: (state, {payload}) => {
             state.currentCollection = payload
         },
+        resetCollection: (state=initialState, {payload}) => {
+            return initialState
+        }
     },
     //builder is an object that lets us define additional case reducers that run in response to the actions defined outside of the slice
     extraReducers(builder){
@@ -180,5 +185,5 @@ export const getAllCollections = (state) => state.collection.value
 export const getCollectionsError = (state) => state.collection.error
 export const getCollectionsLength = (state) => state.collection.value.length
 
-export const {updateCurrentCollection} = collectionSlice.actions;
+export const {updateCurrentCollection, resetCollection} = collectionSlice.actions;
 export default collectionSlice.reducer;

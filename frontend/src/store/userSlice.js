@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
+ 
 const axiosConfig = {
     headers: {
         'Content-Type': 'application/json',
@@ -8,9 +8,13 @@ const axiosConfig = {
     withCredentials: true
 };
 
+const initialState = { loggedIn: false, status: 'idle', error:"", token: null, shareToken: null }
+
 /**
-* Verify user session so can log user in right away
-*/
+ * @description Verify user session so can log user in right away
+ * @route  /user/verifySession
+ * @reponse loggedIn boolean flag
+ */
 export const verifyLoggedIn = createAsyncThunk('user/verifyLoggedIn', async (_,{rejectWithValue}) =>{
     try{
        
@@ -31,7 +35,7 @@ export const verifyLoggedIn = createAsyncThunk('user/verifyLoggedIn', async (_,{
 
 const userSlice = createSlice({
     name: 'user',
-    initialState: { loggedIn: false, status: 'idle', error:"", token: null, shareToken: null },
+    initialState: initialState,
     reducers:{
         setLoginState: (state,{payload}) => {
             state.loggedIn = payload
@@ -46,9 +50,8 @@ const userSlice = createSlice({
             const {accessToken} = payload
             state.token = accessToken
         },
-        logout: (state, {payload}) => {
-            state.token = null
-            state.loggedIn = false
+        logout: (state=initialState, {payload}) => {
+            return initialState
         }
     },
     extraReducers(builder){
@@ -60,6 +63,9 @@ const userSlice = createSlice({
             if(payload.loggedIn){
                 state.loggedIn = true
                 state.status = 'success'
+            }
+            else{
+                state.loggedIn = false
             }
         })
         .addCase(verifyLoggedIn.rejected, (state, {payload}) => {

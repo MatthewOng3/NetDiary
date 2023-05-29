@@ -16,7 +16,7 @@ function Navbar() {
       <div className="w-full pr-4 pl-4">
         <div className={!isclose ? "flex items-center justify-between  w-full" : "flex flex-col items-center  w-full"}>
           <a className="navbar-brand" href="/">
-            <img src="images/Logo.png" alt="" className="w-20 lg:w-32" />
+            <img src="images/Logo1.png" alt="" className="w-20 lg:w-32 " />
           </a>
           <div className={ !isclose ?" hidden lg:flex items-center gap-3" : " flex items-center flex-col gap-3 mt-3"}>
             <Link

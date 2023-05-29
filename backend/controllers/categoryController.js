@@ -3,11 +3,11 @@ const User = require('../models/UserModel')
 const ObjectId = require('mongodb').ObjectId
 const Token = require('../models/tokenModel')
 
-/*
-@description: Fetch all categories
-@route GET /categories/get
-@access Public
-*/
+/**
+ * @description: Fetch all categories
+ * @route GET /categories/get
+ * @access Public
+ */
 async function fetchCategories(req, res, next){
     try{
          
@@ -66,11 +66,11 @@ async function addCategory(req, res, next){
     }
 }
 
-/*
-@description: Delete category from database
-@route PUT categories/deleteCategory
-@access Public
-*/
+/**
+ * @description: Delete category from database
+ * @route PUT categories/deleteCategory
+ * @access Public
+ */
 async function deleteCategory(req, res, next){
     try{
         
@@ -221,7 +221,6 @@ async function deleteEntry(req, res, next){
         await User.updateOne({_id: ObjectId(userId)}, 
             {  $pull: { 'collections.$[collection].categoryList.$[category].listEntries': { "entryId": ObjectId(entryId)}}}, 
             { arrayFilters: [{ 'collection.collectionId': ObjectId(collectionId) }, { 'category.catId': ObjectId(catId) }], new: true }).orFail() 
-        
         
         return res.status(200).json({ success: true })
     }

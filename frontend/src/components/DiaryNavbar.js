@@ -11,6 +11,8 @@ import { Colors } from '../constants/Colors';
 import axios from 'axios';
 import { useDispatch } from "react-redux";
 import { logout } from '../store/userSlice';
+import { resetCategory } from '../store/categorySlice';
+import { resetCollection } from '../store/collectionSlice';
 /*
 Component to handle the navbar and its icons
 */
@@ -28,6 +30,8 @@ function DiaryNavbar({diaryPage}){
             //If logged out successful navigate back to login page
             if(res.data.loggedOut){
                 localStorage.clear() //Clear all local storage data
+                dispatch(resetCategory())
+                dispatch(resetCollection())
                 dispatch(logout())
                 navigate('/login')
             }
