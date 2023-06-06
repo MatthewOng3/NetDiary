@@ -46,15 +46,14 @@ function Learn(){
         </div>
         
         <div className="rounded-2xl overflow-hidden ">
-          <img className="w-full" src="/images/suggestion.jpg" alt="" />
+          <img className="w-full" src="/images/Chrome.jpg" alt="" />
           <div className="w-full px-3 py-6 ">
             <h1 style={{ marginBottom: "0" }} className="text-2xl text-white font-bold">
-              Advanced Suggestions
+              Chrome extension
             </h1>
             <p className='text-white font-light' style={{ marginBottom: "0" }}>
               {" "}
-             Suggestion functionality that can be toggled on or off for specific categories. These suggestions will 
-             curate links similar to the ones you have saved using AI and web scraping
+             Easily save favourite webpages within a few seconds through a chrome extension
             </p>
           </div>
         </div>

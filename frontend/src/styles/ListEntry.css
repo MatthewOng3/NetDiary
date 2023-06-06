@@ -16,9 +16,12 @@
 }
 
 .page-name{
-    text-align: inherit;
     font-weight: 500;
     color: white;
     text-transform: capitalize;
+    justify-content: flex-start;
+    display: flex;
 }
+ 
 
+ 

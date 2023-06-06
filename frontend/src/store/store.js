@@ -25,7 +25,7 @@ import categoryReducer from './categorySlice'
 // 	reducer: resettableReducer
 // })
 
-// //Main store to store all reducers
+//Main store to store all reducers
 export const store = configureStore({
 	reducer: {
 		user: userReducer,

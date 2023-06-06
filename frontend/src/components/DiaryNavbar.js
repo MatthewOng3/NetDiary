@@ -13,9 +13,11 @@ import { useDispatch } from "react-redux";
 import { logout } from '../store/userSlice';
 import { resetCategory } from '../store/categorySlice';
 import { resetCollection } from '../store/collectionSlice';
-/*
-Component to handle the navbar and its icons
-*/
+
+
+/**
+ * @description Component to handle the navbar and its icons 
+ */
 function DiaryNavbar({diaryPage}){
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const navigate = useNavigate();
@@ -29,7 +31,9 @@ function DiaryNavbar({diaryPage}){
         },}).then((res) => {
             //If logged out successful navigate back to login page
             if(res.data.loggedOut){
-                localStorage.clear() //Clear all local storage data
+                //Clear all local storage data
+                localStorage.clear() 
+                //Reset all local states
                 dispatch(resetCategory())
                 dispatch(resetCollection())
                 dispatch(logout())

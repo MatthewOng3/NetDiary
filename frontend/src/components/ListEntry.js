@@ -5,7 +5,7 @@ import { Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {Col} from 'react-bootstrap'
+ 
 
 //Redux store
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,8 +14,16 @@ import { useState } from 'react';
 import DeleteVerificationModal from './DeleteVerificationModal';
 
 
+import List from '@mui/joy/List';
+import ListItem from '@mui/joy/ListItem';
+import ListItemButton from '@mui/joy/ListItemButton';
+import Typography from '@mui/joy/Typography';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import Collapsible from './Collapsible';
+
 /**
  * @description Component that handles each individual webpage entry, allow users to click on it, edit or delete it
+ * @param allowEdit True if user's dashboard, false if it's a shared category component
  * @author Matt
  */
 function ListEntry({text_description, link, entryId, catId, editEntry, allowEdit}){
@@ -23,6 +31,7 @@ function ListEntry({text_description, link, entryId, catId, editEntry, allowEdit
     const dispatch = useDispatch()
     const collectionId = useSelector((store) => store.collection.currentCollection)
     const [deleteVerificationModal, setDeleteVerificationModal] = useState(false) //State for showing delete verification modal
+    const [openCluster, setOpenCluster] = useState(false)
 
     //Open link in a new tab when link is clicked
     function goToLink(){
@@ -49,16 +58,26 @@ function ListEntry({text_description, link, entryId, catId, editEntry, allowEdit
     function closeModal(){
         setDeleteVerificationModal(false)
     }
- 
+    
+    /**
+     * @description Open dropdown list of possible clusters, set open state to true
+     * @param event click event
+     */
+    function openDropDown(event){
+        event.stopPropagation();
+        event.preventDefault();
+        setOpenCluster(!openCluster)
+    }
+
     return(
         <>
             <div className="w-76  rounded-md"style={{ marginBottom: '10px',backgroundColor: '#194861'}}>          
-                <div className='flex flex-row justify-between'>
-                    <Button size='large' style={{backgroundColor: '#194861', width: '74%', borderRadius: '7px', display: 'flex', justifyContent: 'flex-start'}} onClick={goToLink}  >
-                        <Col md={8} className="flex ">
-                            {/* <img src={} alt="" /> */}
-                            <text className='page-name py-1' >{text_description}</text>
-                        </Col>
+                <div className='flex flex-row '>
+                    <Button size='large' style={{backgroundColor: '#194861', width: '74%', borderRadius: '7px', display: 'flex', justifyContent: 'flex-start', flexDirection: 'row'}} onClick={goToLink}>
+                        <Collapsible />
+                        <div className="flex-1">
+                            <text className='page-name'>{text_description}</text>   
+                        </div>
                     </Button>
                     {allowEdit && (
                         <div className='p-1 flex flex-row justify-evenly'>

@@ -382,6 +382,7 @@ const logoutUser = async(req, res, next) =>{
  * @description Verify if user has an ongoing session
  * @route GET /user/verifySession
  * @access Public
+ * @returns True if user is logged in false if user is not
  */
 const verifyLoggedInUser = async(req, res, next) => {
     try{

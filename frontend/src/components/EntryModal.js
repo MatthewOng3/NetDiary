@@ -1,9 +1,11 @@
 import '../styles/EntryModal.css'
 import { Form } from "react-bootstrap";
 import { useEffect, useState } from 'react'; 
-
-import Button from './utils/Button';
-import { Colors } from '../constants/Colors';
+import List from '@mui/joy/List';
+import ListItem from '@mui/joy/ListItem';
+import ListItemButton from '@mui/joy/ListItemButton';
+import Typography from '@mui/joy/Typography';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
@@ -14,10 +16,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import cleanInputData from '../security/CleanInputData';
 import validateURL from '../util/ValidateURL';
 
+/**
+ * @description Entry modal that appears when users edit or create a new list entry
+ * @param closeModal
+ * @author Matt
+ * @path /
+ */
 function EntryModal({closeModal, catId, entryId}){
    
     //States to keep track of the input by user
     const [enteredDescription, setEnteredDescription] = useState('')
+    const [open, setOpen] = useState(false)
     const [enteredLink, setEnteredLink] = useState('')
     const [validated, setValidated] = useState(false);
     const categoryList = useSelector((store) => store.category.value) //Get current category list state
@@ -100,12 +109,18 @@ function EntryModal({closeModal, catId, entryId}){
                         Unsafe Url detected
                     </Form.Control.Feedback>
                 </Form.Group>
+                
                 <div className= "mt-3" style={{justifyContent: 'space-evenly', display: 'flex' }}>
                     <button
                     className="px-8 py-2 rounded-3xl text-orange-400 hover:text-white  border-2 border-orange-500 hover:bg-orange-600" onClick={saveListEntry}
                     >
                         Save
                         <TurnedInIcon className='ml-1'/>
+                    </button>
+                    <button
+                    className="px-8 py-2 rounded-3xl text-orange-400 hover:text-white  border-2 border-orange-500 hover:bg-orange-600"
+                    >
+                        Add to cluster
                     </button>
                     <button
                     className="px-8 py-2 rounded-3xl text-orange-400 hover:text-white  border-2 border-orange-500 hover:bg-orange-600" onClick={closeModal}
@@ -119,3 +134,4 @@ function EntryModal({closeModal, catId, entryId}){
 }
 
 export default EntryModal;
+
