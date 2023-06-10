@@ -2,21 +2,28 @@ import { useState } from "react";
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { IconButton } from "@mui/material";
 
-
-function Collapsible({open, clusterEntries}){
+/**
+ * @description Collapsible list component that displays the cluster entry
+ * @param appear Boolean value to show the collapsible lists if true
+ * @see ListEntry
+ */
+function Collapsible({ open, appear, clusterEntries }) {
   const [isOpen, setIsOpen] = useState(open);
 
-  function handleFilterOpening(event){
+  function handleFilterOpening(event) {
     event.stopPropagation();
     event.preventDefault();
     setIsOpen((prev) => !prev);
   };
-  
+  console.log(isOpen)
   return (
     <div className="">
-      <IconButton size='medium' edge='start' color='default' onClick={handleFilterOpening}>
-        <ChevronRightIcon sx={{ transform: isOpen ? 'rotate(90deg)' : 'initial' }}/>
-      </IconButton>
+      {appear &&
+        <IconButton size='medium' edge='start' color='default' onClick={handleFilterOpening}>
+          <ChevronRightIcon sx={{ transform: isOpen ? 'rotate(90deg)' : 'initial' }} />
+
+        </IconButton>
+      }
     </div>
   );
 };

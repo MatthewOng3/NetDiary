@@ -1,27 +1,22 @@
-.list-entry{
+.list-entry {
     width: 100%;
-    background-color: #5d1669;
     border-radius: 7px;
     display: flex;
     justify-content: flex-start;
 }
 
-.list-entry-button:hover{
+.list-entry-button:hover {
     background-color: #5d1669;
 }
 
-.icon-btn{
-    background-color: #610fdd;
+.icon-btn {
     border-radius: 6px;
 }
 
-.page-name{
+.page-name {
     font-weight: 500;
     color: white;
     text-transform: capitalize;
     justify-content: flex-start;
     display: flex;
 }
- 
-
- 

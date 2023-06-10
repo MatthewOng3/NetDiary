@@ -1,8 +1,9 @@
 const express = require('express');
-const { fetchCategories, addCategory, deleteCategory, updateCategoryName, saveEntry, deleteEntry, getSharedCategory} = require('../controllers/categoryController');
+const { fetchCategories, addCategory, deleteCategory, updateCategoryName, saveEntry, deleteEntry, getSharedCategory } = require('../controllers/categoryController');
+
 const router = express.Router()
 const verifyJWT = require("../middleware/verifyJWT")
- 
+
 
 // router.use(verifyJWT)
 
@@ -26,5 +27,6 @@ router.put('/saveEntry', saveEntry)
 
 //Save entry
 router.put('/deleteEntry', deleteEntry)
+
 
 module.exports = router; 

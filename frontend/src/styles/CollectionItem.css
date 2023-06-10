@@ -2,8 +2,7 @@
 
 .input-container{
     background: transparent;
-    border: none;
-    outline: none;
+
     border-bottom: 1px solid #000000;
     width: 100%;
 }
