@@ -13,23 +13,32 @@ import { RandomId } from '../util/RandomId';
 import ShareIcon from '@mui/icons-material/Share';
 
 //Redux functions
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deleteCategory, updateCatName } from '../store/categorySlice';
 import { updateClusterAdd } from '../store/clusterSlice';
 import DeleteVerificationModal from './DeleteVerificationModal';
 import ErrorModal from './utils/ErrorModal';
+import { getDeleteModalOpenState, getEntryModalOpenState, updateDeleteModalState, updateEntryModalState } from '../store/modalSlice';
 
 
 /*Each category card component*/
 function CategoryComp({ name, listEntries, catId, collectionId }) {
   const dispatch = useDispatch();
-  const [colValue, setColValue] = useState(3) //State to set dimensions
-  const [showModal, setShowModal] = useState(false) //Show ListEntry state
+  //State to set dimensions
+  const [colValue, setColValue] = useState(3)
+  //
   const [catName, setCatName] = useState(name) //State to keep track of the category's name
   const [clickedEntryId, setClickedEntryId] = useState('') //State to keep track of which entry clicked to open the modal
-  const [deleteVerificationModal, setDeleteVerificationModal] = useState(false) //State for showing delete verification modal
-  const [error, setError] = useState()
 
+  const [error, setError] = useState()
+  const [clusterEdit, setClusterEdit] = useState(false)
+  const [clusterEntryId, setClusterEntryId] = useState(null) //State for setting cluster entryId for updating/deleting cluster entry id
+
+  //Modal open states
+  const isEntryModalOpen = useSelector(getEntryModalOpenState)
+  const isDeleteModalOpen = useSelector(getDeleteModalOpenState)
+  // const [showModal, setShowModal] = useState(false) //Show ListEntry state
+  // const [deleteVerificationModal, setDeleteVerificationModal] = useState(false) //State for showing delete verification modal
 
   //State to keep track of window size
   const [windowDimension, detectWD] = useState({
@@ -80,7 +89,8 @@ function CategoryComp({ name, listEntries, catId, collectionId }) {
 
   /*Delete category handler*/
   function deleteCategoryHandler() {
-    setDeleteVerificationModal(false)
+    // setDeleteVerificationModal(false)
+    dispatch(updateDeleteModalState(false))
     dispatch(deleteCategory({ collectionId: collectionId, catId: catId }))
   }
 
@@ -88,7 +98,7 @@ function CategoryComp({ name, listEntries, catId, collectionId }) {
    * @description Show delete verification modal to verify if user wants to delete category
    */
   function showDeleteVerificationModal() {
-    setDeleteVerificationModal(true)
+    dispatch(updateDeleteModalState(true))
   }
 
   /**
@@ -100,42 +110,56 @@ function CategoryComp({ name, listEntries, catId, collectionId }) {
     //Set clicked entry id
     setClickedEntryId(undefined)
     //Display entry modal
-    setShowModal(true)
+    dispatch(updateEntryModalState(true))
+    // setShowModal(true)
   }
-
 
   /**
    * @description Create new entry cluster by calling EntryModal and passing in entry id
    * @param entryId Entry Id of cluster
    * @see ListEntry
    */
-  function addToCluster(entryId) {
+  function addToCluster(clusterId, clusterEntryId) {
     dispatch(updateClusterAdd(true))
     //Set clicked entry id
-    setClickedEntryId(entryId)
+    setClickedEntryId(clusterId)
     //Display entry modal
-    setShowModal(true)
+    dispatch(updateEntryModalState(true))
+    // setShowModal(true)
   }
 
   /*Handles updating the list entry so pass in current entry id, function passed into ListEntry*/
   function updateListEntry(entryId) {
     setClickedEntryId(entryId)
-    setShowModal(true)
+    dispatch(updateEntryModalState(true))
+    // setShowModal(true)
   }
 
   /**
    * @description Close the entry either by clicking cancel or x
    */
   function closeEntry() {
-    setShowModal(false)
+    // setShowModal(false)
     dispatch(updateClusterAdd(false))
-    //setIsClusterAdd(false)
-    setDeleteVerificationModal(false)
+    dispatch(updateDeleteModalState(false))
+    dispatch(updateEntryModalState(false))
+    setClusterEdit(false)
+    // setDeleteVerificationModal(false)
+
   }
 
   /*Cancel entry*/
   function closeErrorModal() {
     setError(undefined)
+  }
+
+  function editClusterEntry(clusterId, clusterEntryId) {
+    setClickedEntryId(clusterId)
+    //Set cluster entry id
+    setClusterEntryId(clusterEntryId)
+    // setShowModal(true)
+    setClusterEdit(true)
+    dispatch(updateEntryModalState(true))
   }
 
   /*Allow users to share either by link or native apps*/
@@ -164,6 +188,7 @@ function CategoryComp({ name, listEntries, catId, collectionId }) {
   }
 
 
+
   return (
     <>
       <Col md={colValue} className='col' style={{ marginBottom: '30px', }}>
@@ -188,7 +213,8 @@ function CategoryComp({ name, listEntries, catId, collectionId }) {
             <div className="card-body scrollbar" id='scrollbar1'>
               {
                 listEntries.map((value, index) => (
-                  <ListEntry key={RandomId() + index} text_description={value.name} link={value.link} entryId={value.entryId} catId={catId} editEntry={updateListEntry} allowEdit={true} canAddCluster={true} addToCluster={addToCluster} />
+                  <ListEntry key={RandomId() + index} text_description={value.name} link={value.link} entryId={value.entryId} catId={catId} editEntry={updateListEntry} allowEdit={true} canAddCluster={true} addToCluster={addToCluster}
+                    editClusterEntry={editClusterEntry} />
                 ))
               }
             </div>
@@ -196,17 +222,17 @@ function CategoryComp({ name, listEntries, catId, collectionId }) {
         </div>
       </Col>
       <ErrorModal isOpen={error} onClose={closeErrorModal}>{error}</ErrorModal>
-      {showModal &&
-        <Modal open={showModal} >
-          <Fade in={showModal}>
+      {isEntryModalOpen &&
+        <Modal open={isEntryModalOpen}>
+          <Fade in={isEntryModalOpen}>
             <div className="flex h-full justify-center" style={{ alignItems: 'center' }}>
-              <EntryModal closeModal={closeEntry} catId={catId} entryId={clickedEntryId} />
+              <EntryModal closeModal={closeEntry} catId={catId} entryId={clickedEntryId} clusterEdit={clusterEdit} clusterEntryId={clusterEntryId} />
             </div>
           </Fade>
         </Modal>
       }
       {
-        deleteVerificationModal && <DeleteVerificationModal message={"Category"} onCancel={closeEntry} onConfirm={deleteCategoryHandler} modalState={deleteVerificationModal} />
+        isDeleteModalOpen && <DeleteVerificationModal message={"Category"} onCancel={closeEntry} onConfirm={deleteCategoryHandler} modalState={isDeleteModalOpen} />
       }
     </>
   )

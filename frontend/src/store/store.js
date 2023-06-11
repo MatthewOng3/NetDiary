@@ -3,7 +3,7 @@ import userReducer from './userSlice'
 import collectionReducer from './collectionSlice'
 import categoryReducer from './categorySlice'
 import clusterReducer from './clusterSlice'
-
+import modalReducer from './modalSlice'
 
 //Main store to store all reducers
 export const store = configureStore({
@@ -11,6 +11,7 @@ export const store = configureStore({
 		user: userReducer,
 		collection: collectionReducer,
 		category: categoryReducer,
-		cluster: clusterReducer
+		cluster: clusterReducer,
+		modal: modalReducer
 	}
 })

@@ -10,51 +10,42 @@ import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import { saveEntry } from '../store/categorySlice';
 import { addClusterEntry, getClusterAddState } from '../store/clusterSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { getEntryModalDetails } from '../store/modalSlice';
 
 
 /**
  * @description Entry modal that appears when users edit or create a new list entry
  * @param closeModal Function passed in to close modal
- * @param isClusterAdd Boolean value to indicated if it's a cluster entry or normal entry
+ * @param clusterEdit Boolean value to indicated if it's a cluster edit or normal entry edit
  * @path /user/net-diary
  * @see CategoryComp
  */
-function EntryModal({ closeModal, catId, entryId }) {
+function EntryModal({ closeModal, catId, entryId, clusterEntryId, clusterEdit }) {
 
     //States to keep track of the input by user
     const [enteredDescription, setEnteredDescription] = useState('')
-
     const [enteredLink, setEnteredLink] = useState('')
     const [validated, setValidated] = useState(false);
-    const categoryList = useSelector((store) => store.category.value) //Get current category list state
+    const dispatch = useDispatch()
+    // const categoryList = useSelector((store) => store.category.value) //Get current category list state
+
     const collectionId = useSelector((store) => store.collection.currentCollection)
     const isClusterAdd = useSelector(getClusterAddState)
-
-    const dispatch = useDispatch()
+    const entryDetails = useSelector(getEntryModalDetails);
 
     //Display link and description if it exists, meaning user clicked edit button
     useEffect(() => {
-        //If entry id is false, meaning there is none
+        //If entry id is false, if it is a cluster add, do not display anything
         if (!entryId || isClusterAdd) {
             return
         }
 
-        //Retrieve matching category item
-        const catItem = categoryList.find((item) => {
-            return item.catId === catId
-        })
+        // //If entry is found then update the value in the description and link states to display in the entry modal
+        // setEnteredDescription(entryDetails.name)
+        // setEnteredLink(entryDetails.link)
 
-        //Find list entry if it exists
-        const foundEntry = catItem.listEntries.find((item) => {
-            return item.entryId === entryId
-        })
+    }, [entryId, entryDetails])
 
-        //If entry is found then update the value in the description and link states to display in the entry modal
-        if (foundEntry) {
-            setEnteredDescription(foundEntry.name)
-            setEnteredLink(foundEntry.link)
-        }
-    }, [entryId])
 
     /**
      * @description Save list entry, both regular and cluster entry dispatches actions to category and cluster slice
@@ -76,7 +67,6 @@ function EntryModal({ closeModal, catId, entryId }) {
         }
 
         closeModal();
-
     }
 
 
@@ -95,7 +85,7 @@ function EntryModal({ closeModal, catId, entryId }) {
                         required
                         type="text"
                         placeholder="Enter short description of webpage"
-                        value={enteredDescription}
+                        value={entryDetails.name}
                         onChange={(event) => { setEnteredDescription(event.target.value) }}
                     />
                 </Form.Group>
@@ -106,7 +96,7 @@ function EntryModal({ closeModal, catId, entryId }) {
                         required
                         type="text"
                         placeholder="Place URL of webpage here"
-                        value={enteredLink}
+                        value={entryDetails.link}
                         onChange={(event) => { setEnteredLink(event.target.value) }}
                         isInvalid={validated}
                     />

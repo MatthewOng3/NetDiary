@@ -135,5 +135,17 @@ export function selectClusterById(state, entryId) {
     return state.cluster.clusters[entryIdKey] || null;
 };
 
+
+export function selectClusterEntryFromCluster(clusterState, clusterId, clusterEntryId) {
+    const clusterIdKey = clusterId.toString()
+
+    const foundCluster = clusterState.clusters[clusterIdKey]
+    const foundEntry = foundCluster.find((item) => {
+        return item.clusterEntryId === clusterEntryId
+    })
+
+    return foundEntry
+}
+
 export const { updateClusterAdd, resetCluster, fetchCluster } = clusterSlice.actions;
 export default clusterSlice.reducer;

@@ -309,6 +309,20 @@ export const getAllCategory = (state) => state.category.value
 export const getCategoryError = (state) => state.category.error
 export const getCurrentCollectionId = (state) => state.category.currentCollectionId
 
+export function findListEntry(categoryState, catId, entryId) {
+
+    const categoryList = categoryState.value
+    //Find category item that corresponds to catId
+    const catItem = categoryList.find((item) => {
+        return item.catId === catId.toString()
+    })
+
+    //Find list entry if it exists
+    const foundEntry = catItem.listEntries.find((item) => {
+        return item.entryId === entryId.toString()
+    })
+    return foundEntry
+}
 
 export const { removeEntry, forceCategoryFetch, setCategoryStateError, resetCategory, updateClusterAdd } = categorySlice.actions;
 export default categorySlice.reducer;
