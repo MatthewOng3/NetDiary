@@ -1,16 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import cleanInputData from '../security/CleanInputData'
-import CodeError from '../util/CodeError';
-import validateURL from '../util/ValidateURL'
+// import CodeError from '../util/CodeError';
+// import validateURL from '../util/ValidateURL'
 
-/*
-Category redux state to handle the CRUD operations of category as well as list entries 
-*/
-const initialState = { clusters: {}, clusterAdd: false, status: 'idle', error: "" }
+
+
 
 /**
- * @description 
+ * @description axios config options
  */
 const axiosConfig = {
     headers: {
@@ -18,17 +16,36 @@ const axiosConfig = {
     },
     withCredentials: true
 };
+
 /**
  * @description Save cluster list entry to cluster collections
- * @param data_payload data object from EntryModal containing relevant id's and text and link
+ * @param {object} data_payload data object from EntryModal containing relevant id's and text and link
  * @see ClusterController Server function that handles the 
  */
-export const addClusterEntry = createAsyncThunk('cluster/addClusterEntry', async (data_payload, { rejectWithValue }) => {
+export const saveClusterEntry = createAsyncThunk('cluster/saveClusterEntry', async (data_payload, { rejectWithValue }) => {
     try {
-        const entryDescription = cleanInputData(data_payload.description)
-        const link = cleanInputData(data_payload.link)
+        data_payload.description = cleanInputData(data_payload.description)
+        data_payload.link = cleanInputData(data_payload.link)
 
-        const response = await axios.put(process.env.REACT_APP_API_URL + 'cluster/add-cluster', { data: data_payload }, axiosConfig)
+        const response = await axios.put(process.env.REACT_APP_API_URL + 'cluster/save-entry', { data: data_payload }, axiosConfig)
+        return response.data
+    }
+    catch (err) {
+        return rejectWithValue(err.message)
+    }
+})
+
+/**
+ * @description Delete cluster entry from a specific cluster
+ * @param {object} data_payload data object containing relevant id's and text and link
+ * @see ClusterController Server function that handles the 
+ */
+export const deleteClusterEntry = createAsyncThunk('cluster/deleteClusterEntry', async (data_payload, { rejectWithValue }) => {
+    try {
+        data_payload.description = cleanInputData(data_payload.description)
+        data_payload.link = cleanInputData(data_payload.link)
+
+        const response = await axios.put(process.env.REACT_APP_API_URL + 'cluster/delete-cluster-entry', { data: data_payload }, axiosConfig)
         return response.data
     }
     catch (err) {
@@ -44,6 +61,7 @@ export const addClusterEntry = createAsyncThunk('cluster/addClusterEntry', async
 export const fetchClusterEntries = createAsyncThunk('cluster/fetchClusterEntries', async (entryId, { rejectWithValue }) => {
     try {
         const response = await axios.get(process.env.REACT_APP_API_URL + `cluster/retrieve/${entryId}`, axiosConfig)
+
         return response.data
     }
     catch (err) {
@@ -67,6 +85,8 @@ export const fetchAllClusters = createAsyncThunk('cluster/fetchAllClusters', asy
     }
 })
 
+const initialState = { clusters: {}, clusterAdd: false, status: 'idle', error: "" }
+
 const clusterSlice = createSlice({
     name: 'cluster',
     initialState: initialState,
@@ -83,14 +103,14 @@ const clusterSlice = createSlice({
     extraReducers(builder) {
 
         //Save list entry
-        builder.addCase(addClusterEntry.pending, (state, action) => {
+        builder.addCase(saveClusterEntry.pending, (state, action) => {
             state.status = 'loading'
         })
-            .addCase(addClusterEntry.fulfilled, (state, action) => {
+            .addCase(saveClusterEntry.fulfilled, (state, action) => {
                 state.status = 'idle'
                 state.clusterAdd = false
             })
-            .addCase(addClusterEntry.rejected, (state, action) => {
+            .addCase(saveClusterEntry.rejected, (state, action) => {
                 state.status = 'failed'
                 state.clusterAdd = false
                 state.error = action.payload.message
@@ -100,7 +120,7 @@ const clusterSlice = createSlice({
             state.status = 'loading'
         })
             .addCase(fetchAllClusters.fulfilled, (state, { payload }) => {
-                state.status = 'idle'
+                state.status = 'success'
                 const clusters = payload
 
                 //For each cluster object in clusters, map to hashmap
@@ -115,6 +135,20 @@ const clusterSlice = createSlice({
                 state.error = action.payload.message
             })
 
+        builder.addCase(fetchClusterEntries.pending, (state, action) => {
+            state.status = 'loading'
+        })
+            .addCase(fetchClusterEntries.fulfilled, (state, { payload }) => {
+                state.status = 'success'
+                const clusterObj = payload.cluster
+
+                state.clusters[clusterObj.clusterId.toString()] = clusterObj.clusterEntries
+            })
+            .addCase(fetchClusterEntries.rejected, (state, action) => {
+                state.status = 'failed'
+                state.error = action.payload.message
+            })
+
     }
 })
 
@@ -125,17 +159,23 @@ export const getClusterReducerStatus = (state) => state.cluster.status
 export const getAllClusters = (state) => state.cluster.clusters
 
 /**
- * @description Retrieves a specific cluster entry list based on clusterId key
- * @param entryId ClusterId key
- * @returns Value that corresponds to Cluster Id Key or null if not exist
+ * @description Retrieves a specific cluster entry list from cluster slice based on clusterId key
+ * @param {string} clusterId ClusterId key
+ * @returns Cluster object that corresponds to Cluster Id Key or null if not exist
  * @see ListEntry
  */
-export function selectClusterById(state, entryId) {
-    const entryIdKey = entryId.toString()
-    return state.cluster.clusters[entryIdKey] || null;
+export function selectClusterById(state, clusterId) {
+    const clusterIdKey = clusterId.toString()
+    return state.cluster.clusters[clusterIdKey] || null;
 };
 
-
+/**
+ * @description Select a specific cluster entry from a specific cluster
+ * @param {clusterState} clusterState Cluster State
+ * @param {string} clusterId Cluster Id used to identify the cluster object to retrieve from
+ * @param {string} clusterEntryId Cluster Entry Id used to identify the specific entry inside the cluster object array 
+ * @returns Cluster Object of form {name, link}
+ */
 export function selectClusterEntryFromCluster(clusterState, clusterId, clusterEntryId) {
     const clusterIdKey = clusterId.toString()
 

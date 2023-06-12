@@ -6,7 +6,7 @@ import { findListEntry } from './categorySlice';
 /**
  * @description Modal Slice that tracks the open status of different modals, performs actions necessary related to the modal
  */
-const initialState = { deleteModalOpen: false, entryModalOpen: false, errorModal: false, entryModalDetails: { name: null, link: null }, clusterAdd: false }
+const initialState = { deleteModalOpen: false, entryModalOpen: false, errorModal: false, clickedEntryId: "", clickedClusterEntryId: "", entryModalDetails: { name: null, link: null } }
 
 const modalSlice = createSlice({
     name: 'modal',
@@ -31,9 +31,19 @@ const modalSlice = createSlice({
             const { clusterId, clusterEntryId, clusterState } = action.payload;
 
             const foundClusterEntry = selectClusterEntryFromCluster(clusterState, clusterId, clusterEntryId)
-            console.log("IN ENTRY MODAL", foundClusterEntry)
             state.entryModalDetails.name = foundClusterEntry.name
             state.entryModalDetails.link = foundClusterEntry.link
+        },
+        resetEntryModalDetails: (state, action) => {
+            console.log("IN RESET ENTRY MODAL DETAILS")
+            state.entryModalDetails.name = ""
+            state.entryModalDetails.link = ""
+        },
+        setClickedEntryId: (state, { payload }) => {
+            state.clickedEntryId = payload
+        },
+        setClickedClusterEntryId: (state, { payload }) => {
+            state.clickedClusterEntryId = payload
         },
         //Reset modal state
         resetModalState: (state = initialState, { payload }) => {
@@ -46,6 +56,8 @@ const modalSlice = createSlice({
 export const getEntryModalDetails = (state) => state.modal.entryModalDetails
 export const getEntryModalOpenState = (state) => state.modal.entryModalOpen
 export const getDeleteModalOpenState = (state) => state.modal.deleteModalOpen
+export const getClickedEntryId = (state) => state.modal.clickedEntryId
+export const getClickedClusterEntryId = (state) => state.modal.clickedClusterEntryId
 
-export const { updateEntryModalState, resetModalState, setNormalEntryDetails, setClusterEntryDetails, updateDeleteModalState } = modalSlice.actions;
+export const { updateEntryModalState, resetModalState, setNormalEntryDetails, setClusterEntryDetails, updateDeleteModalState, resetEntryModalDetails, setClickedEntryId, setClickedClusterEntryId } = modalSlice.actions;
 export default modalSlice.reducer;

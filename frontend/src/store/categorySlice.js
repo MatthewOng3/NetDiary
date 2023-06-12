@@ -309,6 +309,13 @@ export const getAllCategory = (state) => state.category.value
 export const getCategoryError = (state) => state.category.error
 export const getCurrentCollectionId = (state) => state.category.currentCollectionId
 
+/**
+ * @description Find specific list entry details based on catId and entryId
+ * @param {categoryState} categoryState Category state
+ * @param {string} catId catId corresponding to the specific category object
+ * @param {string} entryId entryId corresponding to the specific list entry in a category
+ * @returns foundEntry object of form {name, link}
+ */
 export function findListEntry(categoryState, catId, entryId) {
 
     const categoryList = categoryState.value

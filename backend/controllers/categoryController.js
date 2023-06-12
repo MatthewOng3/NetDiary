@@ -203,11 +203,15 @@ async function saveEntry(req, res, next) {
     }
 }
 
-/*
-@description: Delete an entry of a webpage
-@route PUT categories/deleteEntry
-@access Public
-*/
+
+/**
+ * @description Delete a specific list entry of a category
+ * @param {string} collectionId
+ * @param {string} catId 
+ * @param {string} entryId
+ * @route PUT categories/deleteEntry
+ * @returns 
+ */
 async function deleteEntry(req, res, next) {
     try {
 

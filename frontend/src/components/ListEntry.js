@@ -18,11 +18,11 @@ import { deleteEntry } from '../store/categorySlice';
 import { useEffect, useState } from 'react';
 import DeleteVerificationModal from './DeleteVerificationModal';
 
-import { getClusterReducerStatus, selectClusterById, fetchClusterEntries } from '../store/clusterSlice';
+import { getClusterReducerStatus, selectClusterById, fetchClusterEntries, updateClusterAdd } from '../store/clusterSlice';
 
 import Accordion from 'react-bootstrap/Accordion';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
-import { setNormalEntryDetails, updateDeleteModalState, updateEntryModalState, getDeleteModalOpenState } from '../store/modalSlice';
+import { setNormalEntryDetails, updateDeleteModalState, updateEntryModalState, getDeleteModalOpenState, resetEntryModalDetails, setClickedEntryId, setClickedClusterEntryId } from '../store/modalSlice';
 
 
 /**
@@ -33,14 +33,15 @@ import { setNormalEntryDetails, updateDeleteModalState, updateEntryModalState, g
  * @param createListEntry Function to open entry modal from category comp
  * @see CategoryComp
  */
-function ListEntry({ text_description, link, entryId, catId, editEntry, allowEdit, canAddCluster, addToCluster, editClusterEntry }) {
+function ListEntry({ text_description, link, entryId, catId, allowEdit, canAddCluster }) {
 
     const dispatch = useDispatch()
     const collectionId = useSelector((store) => store.collection.currentCollection)
     //const [deleteVerificationModal, setDeleteVerificationModal] = useState(false) //State for showing delete verification modal
     const [isLoading, setIsLoading] = useState(false)
     const [isOpen, setIsOpen] = useState(false);
-    const isDeleteModalOpen = useSelector(getDeleteModalOpenState)
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
     //Cluster states
     const clusterStatus = useSelector(getClusterReducerStatus)
     const cluster = useSelector(state => selectClusterById(state, entryId));
@@ -72,12 +73,12 @@ function ListEntry({ text_description, link, entryId, catId, editEntry, allowEdi
     }
 
     /**
-     * @description Update list entry by passing entryId into the entry modal
+     * @description Update list entry by updating entry modal details to display data, and update clicked entry id
      * @see CategoryComp
      */
     function updateEntry() {
-        // editEntry(entryId);
         dispatch(setNormalEntryDetails({ catId: catId, entryId: entryId, categoryState: categoryState }))
+        dispatch(setClickedEntryId(entryId))
         dispatch(updateEntryModalState(true))
     }
 
@@ -87,17 +88,25 @@ function ListEntry({ text_description, link, entryId, catId, editEntry, allowEdi
      */
     function deleteEntryHandler() {
         dispatch(deleteEntry({ entryId: entryId, catId: catId, collectionId: collectionId }));
+        setIsDeleteModalOpen(false)
     }
 
-    /*Cancel entry*/
-    function closeModal() {
-        dispatch(updateDeleteModalState(false))
+    /**
+     * @description Create new entry cluster by opening EntryModal and passing in entry id
+     * @param {string} clusterId Id used to identify cluster 
+     * @see ListEntry
+     */
+    function addToCluster() {
+        dispatch(updateClusterAdd(true))
+        //Reset entry modal details since it is a cluster add
+        dispatch(resetEntryModalDetails())
+        //Set clicked entry id
+        dispatch(setClickedEntryId(entryId))
+        //Reset clicked cluster entry id
+        dispatch(setClickedClusterEntryId(""))
+        //Display entry modal
+        dispatch(updateEntryModalState(true))
     }
-
-    function addClusterHandler() {
-        addToCluster(entryId)
-    }
-
 
     const decoratedOnClick = useAccordionButton("0", () => {
         setIsOpen((prev) => !prev)
@@ -123,7 +132,7 @@ function ListEntry({ text_description, link, entryId, catId, editEntry, allowEdi
                             <div className='p-1 flex flex-row justify-evenly'>
                                 {canAddCluster &&
                                     <Tooltip title="Add to cluster">
-                                        <IconButton size='large' className="icon-btn" onClick={addClusterHandler} sx={{ color: 'black' }}>
+                                        <IconButton size='large' className="icon-btn" onClick={addToCluster} sx={{ color: 'black' }}>
                                             <LibraryAddIcon />
                                         </IconButton>
                                     </Tooltip>
@@ -147,7 +156,7 @@ function ListEntry({ text_description, link, entryId, catId, editEntry, allowEdi
                     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                         {
                             isOpen && cluster.map((value, index) => (
-                                <ClusterEntry key={RandomId() + index} clusterDesc={value.name} allowEdit={true} link={value.link} clusterId={entryId} clusterEntryId={value.clusterEntryId} editEntry={editClusterEntry} />
+                                <ClusterEntry key={RandomId() + index} clusterDesc={value.name} allowEdit={true} link={value.link} clusterId={entryId} clusterEntryId={value.clusterEntryId} />
                             ))
                         }
                     </div>
@@ -155,7 +164,13 @@ function ListEntry({ text_description, link, entryId, catId, editEntry, allowEdi
             </Accordion>
             {
                 isDeleteModalOpen &&
-                <DeleteVerificationModal message={"list entry"} onCancel={closeModal} onConfirm={deleteEntryHandler} modalState={isDeleteModalOpen} />
+                <Modal open={isDeleteModalOpen}>
+                    <Fade in={isDeleteModalOpen}>
+                        <div className="flex h-full justify-center">
+                            <DeleteVerificationModal message={"category"} onCancel={() => setIsDeleteModalOpen(false)} onConfirm={deleteEntryHandler} />
+                        </div>
+                    </Fade>
+                </Modal>
             }
         </>
     )

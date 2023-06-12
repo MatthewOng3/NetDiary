@@ -8,9 +8,9 @@ import TurnedInIcon from '@mui/icons-material/TurnedIn';
 
 //Redux functions
 import { saveEntry } from '../store/categorySlice';
-import { addClusterEntry, getClusterAddState } from '../store/clusterSlice';
+import { saveClusterEntry, getClusterAddState } from '../store/clusterSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { getEntryModalDetails } from '../store/modalSlice';
+import { getClickedClusterEntryId, getClickedEntryId, getEntryModalDetails } from '../store/modalSlice';
 
 
 /**
@@ -20,31 +20,29 @@ import { getEntryModalDetails } from '../store/modalSlice';
  * @path /user/net-diary
  * @see CategoryComp
  */
-function EntryModal({ closeModal, catId, entryId, clusterEntryId, clusterEdit }) {
+function EntryModal({ closeModal, catId }) {
 
     //States to keep track of the input by user
     const [enteredDescription, setEnteredDescription] = useState('')
     const [enteredLink, setEnteredLink] = useState('')
     const [validated, setValidated] = useState(false);
     const dispatch = useDispatch()
-    // const categoryList = useSelector((store) => store.category.value) //Get current category list state
 
+    //Get current collection id
     const collectionId = useSelector((store) => store.collection.currentCollection)
+    //Get cluster add status
     const isClusterAdd = useSelector(getClusterAddState)
+    //Get entry details for entry modal
     const entryDetails = useSelector(getEntryModalDetails);
+    //Get clicked entry id
+    const clickedEntryId = useSelector(getClickedEntryId)
+    //Get clicked cluster entry Id
+    const clickedClusterEntryId = useSelector(getClickedClusterEntryId)
 
-    //Display link and description if it exists, meaning user clicked edit button
     useEffect(() => {
-        //If entry id is false, if it is a cluster add, do not display anything
-        if (!entryId || isClusterAdd) {
-            return
-        }
-
-        // //If entry is found then update the value in the description and link states to display in the entry modal
-        // setEnteredDescription(entryDetails.name)
-        // setEnteredLink(entryDetails.link)
-
-    }, [entryId, entryDetails])
+        setEnteredDescription(entryDetails.name)
+        setEnteredLink(entryDetails.link)
+    }, [entryDetails])
 
 
     /**
@@ -58,12 +56,12 @@ function EntryModal({ closeModal, catId, entryId, clusterEntryId, clusterEdit })
         setValidated(false)
         //Cluster add
         if (isClusterAdd) {
-            dispatch(addClusterEntry({ description: enteredDescription, link: enteredLink, entryId: entryId }))
+            dispatch(saveClusterEntry({ description: enteredDescription, link: enteredLink, entryId: clickedEntryId, clusterEntryId: clickedClusterEntryId }))
         }
         //Regular list entry add
         else {
             //Save entry to database
-            dispatch(saveEntry({ description: enteredDescription, link: enteredLink, catId: catId, entryId: entryId, collectionId: collectionId }))
+            dispatch(saveEntry({ description: enteredDescription, link: enteredLink, catId: catId, entryId: clickedEntryId, collectionId: collectionId }))
         }
 
         closeModal();
@@ -85,7 +83,7 @@ function EntryModal({ closeModal, catId, entryId, clusterEntryId, clusterEdit })
                         required
                         type="text"
                         placeholder="Enter short description of webpage"
-                        value={entryDetails.name}
+                        value={enteredDescription}
                         onChange={(event) => { setEnteredDescription(event.target.value) }}
                     />
                 </Form.Group>
@@ -96,7 +94,7 @@ function EntryModal({ closeModal, catId, entryId, clusterEntryId, clusterEdit })
                         required
                         type="text"
                         placeholder="Place URL of webpage here"
-                        value={entryDetails.link}
+                        value={enteredLink}
                         onChange={(event) => { setEnteredLink(event.target.value) }}
                         isInvalid={validated}
                     />

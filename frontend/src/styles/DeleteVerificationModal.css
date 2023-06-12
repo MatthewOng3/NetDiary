@@ -1,13 +1,11 @@
 .delete-confirmation-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
+ 
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.5);
+   
   }
   
   .delete-confirmation-modal__content {
@@ -22,6 +20,22 @@
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
   }
   
+  .ReactModal__Overlay {
+    opacity: 0;
+    transform: translateX(-100px);
+    transition: all 500ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open {
+opacity: 1;
+transform: translateX(0px);
+}
+
+.ReactModal__Overlay--before-close {
+opacity: 0;
+transform: translateX(-100px);
+}
+
   .delete-confirmation-modal__message {
     font-size: 18px;
     margin-bottom: 20px;
