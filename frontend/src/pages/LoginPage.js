@@ -2,7 +2,7 @@ import { Form, Alert } from "react-bootstrap";
 import Spinner from 'react-bootstrap/Spinner';
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Button from "../components/utils/Button";
+
 import '../styles/AuthForm.css'
 import { Colors } from "../constants/Colors";
 import axios from 'axios'
@@ -14,7 +14,8 @@ import { GoogleLogin } from "@react-oauth/google";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { setLoginState, setShareToken } from "../store/userSlice";
 import cleanInputData from "../security/CleanInputData";
- 
+import OwnButton from "../components/utils/OwnButton";
+
 
 /**
  * @description Login users to web app
@@ -22,10 +23,10 @@ import cleanInputData from "../security/CleanInputData";
  * @access public
  * @path /login
  */
-function LoginPage(){
-    const [validated, setValidated] = useState(false);
+function LoginPage() {
+	const [validated, setValidated] = useState(false);
 	//State to handle spinner login response
-	const [loginUserResponseState, setLoginUserResponseState] = useState({success: "", error: undefined, status: "",loading: false, disabled: false}) 
+	const [loginUserResponseState, setLoginUserResponseState] = useState({ success: "", error: undefined, status: "", loading: false, disabled: false })
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
 
@@ -40,8 +41,8 @@ function LoginPage(){
 	// }
 
 	//Handles submitting login attempt
-	function handleSubmit(event){
-		
+	function handleSubmit(event) {
+
 		event.preventDefault();
 		event.stopPropagation();
 
@@ -50,84 +51,84 @@ function LoginPage(){
 		//Get relevant data from form 
 		const email = cleanInputData(form.email.value)
 		const password = cleanInputData(form.password.value)
-		 
+
 		//If it passes validaty
 		if (event.currentTarget.checkValidity() === true && email && password) {
-			setLoginUserResponseState({loading: true, disabled: true}) //Set the loading state to true
-			
+			setLoginUserResponseState({ loading: true, disabled: true }) //Set the loading state to true
+
 			//Send post request to api endpoint to log user in
 			axios.defaults.withCredentials = true
-			axios.post(process.env.REACT_APP_API_URL + "user/login", {email, password}) 
+			axios.post(process.env.REACT_APP_API_URL + "user/login", { email, password })
+				.then((res) => {
+					setLoginUserResponseState({ success: res.data.message, loading: false, error: undefined })
+
+					//If back end validation is successful, navigate to net diary page
+					if (res.data.auth) {
+						//Update the current collection id local state
+						dispatch(updateCurrentCollection(res.data.collectionId))
+						//Dispatch action to store to set Login state to true
+						dispatch(setLoginState(true))
+						//Set share token to local storage
+						localStorage.setItem('share-token', res.data.shareToken)
+						navigate("/user/net-diary", { replace: true }) //Replace deletes history of webpages so you cant go back to login page
+					}
+
+				})
+				.catch((err) => {
+					setLoginUserResponseState({
+						error: err.response.data.message,
+						loading: false,
+						status: err.response.status,
+					});
+				})
+		}
+		setValidated(true);
+	};
+
+	//Handles logging in with google
+	function googleLoginHandler(response) {
+
+		//Retrieve token from google api
+		const google_token = response.credential
+		setLoginUserResponseState({ loading: true, disabled: true });
+
+		//Send post request to log user in using google
+		axios.defaults.withCredentials = true;
+
+		axios.post(process.env.REACT_APP_API_URL + 'user/google-login', { google_token })
 			.then((res) => {
-				setLoginUserResponseState({success: res.data.message, loading: false, error: undefined})
-				
-				//If back end validation is successful, navigate to net diary page
-				if(res.data.auth){
-					//Update the current collection id local state
+				setLoginUserResponseState({
+					success: res.data.message,
+					loading: false,
+					error: '',
+				});
+
+				//If authentication is succesful navigate to main app page
+				if (res.data.auth) {
 					dispatch(updateCurrentCollection(res.data.collectionId))
-					//Dispatch action to store to set Login state to true
 					dispatch(setLoginState(true))
-					//Set share token to local storage
-					localStorage.setItem('share-token', res.data.shareToken)
-					navigate("/user/net-diary", {replace: true}) //Replace deletes history of webpages so you cant go back to login page
+					navigate('/user/net-diary', { replace: true });
 				}
-				
-			}) 
+			})
 			.catch((err) => {
 				setLoginUserResponseState({
 					error: err.response.data.message,
 					loading: false,
 					status: err.response.status,
 				});
-			})
-		} 
-		setValidated(true);
-	};
-
-	//Handles logging in with google
-	function googleLoginHandler(response){
-		
-		//Retrieve token from google api
-		const google_token = response.credential
-		setLoginUserResponseState({ loading: true, disabled: true });
-		
-		//Send post request to log user in using google
-		axios.defaults.withCredentials = true;
-		 
-		axios.post(process.env.REACT_APP_API_URL + 'user/google-login', {google_token})
-		  .then((res) => {
-			setLoginUserResponseState({
-			  success: res.data.message,
-			  loading: false,
-			  error: '',
 			});
-			
-			//If authentication is succesful navigate to main app page
-			if (res.data.auth) {
-				dispatch(updateCurrentCollection(res.data.collectionId))
-				dispatch(setLoginState(true))
-			  	navigate('/user/net-diary', { replace: true });
-			}
-		  })
-		  .catch((err) => {
-			setLoginUserResponseState({
-			  error: err.response.data.message,
-			  loading: false,
-			  status: err.response.status,
-			});
-		  });
 	}
-	
+
 	//Set error state if error with google auth
-	function handleLoginError(error){
-		setLoginUserResponseState({error: error})
+	function handleLoginError(error) {
+		setLoginUserResponseState({ error: error })
 	}
 
-    return(
+	return (
 		<div className="root">
 			<div className="formComponent">
-				<h1 style={{color: 'white', fontWeight: 'normal', marginLeft: '10px', marginBottom: '20px'}}>Welcome</h1>
-				<Form noValidate validated={validated} onSubmit={handleSubmit} className='inputComponent width-condition' style={{width: '30%'}}>
+				<h1 style={{ color: 'white', fontWeight: 'normal', marginLeft: '10px', marginBottom: '20px' }}>Welcome</h1>
+				<Form noValidate validated={validated} onSubmit={handleSubmit} className='inputComponent width-condition' style={{ width: '30%' }}>
 					<Form.Group className="mb-3" controlId="formBasicEmail">
 						<Form.Label className="text-light">Email address</Form.Label>
 						<Form.Control
@@ -151,18 +152,18 @@ function LoginPage(){
 							<GoogleLogin onSuccess={googleLoginHandler} onError={handleLoginError} shape="circle" theme="filled_blue"/>
 						</GoogleOAuthProvider>
 					</div> */}
-					<Button width='100%' height='40px' color={Colors.light_purple100}>
+					<OwnButton width='100%' height='40px' color={Colors.light_purple100}>
 						{loginUserResponseState && loginUserResponseState.loading === true ? (
-							<Spinner as="span" animation="border" size="sm" role="status"/>
+							<Spinner as="span" animation="border" size="sm" role="status" />
 						) : ("")}
 						Sign In
-					</Button>
+					</OwnButton>
 					<div className="goToRegisterContainer">
-						<span style={{color: 'white', marginRight: '10px', marginLeft: '30px'}}>Don't have an account?</span>
+						<span style={{ color: 'white', marginRight: '10px', marginLeft: '30px' }}>Don't have an account?</span>
 						<Link to={"/register"}> Register </Link>
 					</div>
 					<div className="goToRegisterContainer">
-						<span style={{color: 'white', marginRight: '10px', marginLeft: '30px'}}>Forgot your password?</span>
+						<span style={{ color: 'white', marginRight: '10px', marginLeft: '30px' }}>Forgot your password?</span>
 						<Link to={"/forgot-pass"}> Reset Password</Link>
 					</div>
 					<Alert show={loginUserResponseState.error !== "" && loginUserResponseState.error !== undefined} variant="danger">
@@ -171,7 +172,7 @@ function LoginPage(){
 				</Form>
 			</div>
 		</div>
-    )
+	)
 }
 
 export default LoginPage;

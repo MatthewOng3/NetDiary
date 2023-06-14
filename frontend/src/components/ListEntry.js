@@ -75,14 +75,18 @@ function ListEntry({ text_description, link, entryId, catId, allowEdit, canAddCl
      * @description Open list entry link and all cluster links associated with it in a new tab
      */
     function goToLink() {
-        window.open(link, text_description).focus();
+        window.open(link, text_description)
+
         cluster.forEach((element, index) => {
-            setTimeout(() => {
-                if (element.link) {
-                    window.open(element.link, element.name);
-                }
-            }, index * 1000);
+
+            clusterLink(element.link, element.name)
+
         });
+    }
+
+
+    function clusterLink(link, name) {
+        window.open(link, name)
     }
 
     /**
@@ -136,7 +140,7 @@ function ListEntry({ text_description, link, entryId, catId, allowEdit, canAddCl
                             <IconButton size='medium' edge='start' color='default' onClick={decoratedOnClick} disableRipple>
                                 <ChevronRightIcon sx={{ transform: isOpen ? 'rotate(90deg)' : 'initial' }} />
                             </IconButton>}
-                        <Button size='large' style={{ backgroundColor: '#194861', width: '74%', borderRadius: '7px', display: 'flex', justifyContent: 'flex-start', flexDirection: 'row' }} onClick={goToLink}>
+                        <Button size='large' className='openLinks' onClick={goToLink} style={{ backgroundColor: '#194861', width: '74%', borderRadius: '7px', display: 'flex', justifyContent: 'flex-start', flexDirection: 'row' }}>
                             <div className="flex-1">
                                 <text className='page-name'>{text_description}</text>
                             </div>

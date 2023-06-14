@@ -3,7 +3,7 @@ import { Form, Alert } from "react-bootstrap";
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import '../styles/AuthForm.css'
-import Button from "../components/utils/Button";
+
 import { Colors } from "../constants/Colors";
 import Spinner from 'react-bootstrap/Spinner';
 import { useNavigate } from "react-router-dom";
@@ -15,6 +15,7 @@ import axios from 'axios'
 import cleanInputData from '../security/CleanInputData'
 import ReCAPTCHA from "react-google-recaptcha";
 import ErrorModal from "../components/utils/ErrorModal";
+import OwnButton from "../components/utils/OwnButton";
 
 /**
  * @description Page to allow users to register to webapp
@@ -153,12 +154,12 @@ function RegisterPage() {
                     </Form.Group>
                     <div className="flex flex-col items-center">
                         <ReCAPTCHA sitekey={process.env.REACT_APP_CAPTCHA_SITE_KEY} ref={captchaRef} className="mb-2" />
-                        <Button width='80%' height='40px' color={Colors.light_purple100} disabled={registerUserResponseState.disabled}>
+                        <OwnButton width='80%' height='40px' color={Colors.light_purple100} disabled={registerUserResponseState.disabled}>
                             Sign Up
                             {registerUserResponseState && registerUserResponseState.loading === true ? (
                                 <Spinner as="span" animation="border" size="sm" role="status" className="ml-3" />
                             ) : ("")}
-                        </Button>
+                        </OwnButton>
                         <div style={{ marginTop: '10px' }}>
                             <span style={{ color: 'white', marginRight: '10px' }}>Do you have an account already?</span>
                             <Link to={"/login"}> Login </Link>

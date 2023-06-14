@@ -1,18 +1,18 @@
 
 import '../../styles/Button.css'
 
-function Button({children, onClick, width, height, color, disabled}){
+function OwnButton({ children, onClick, width, height, color, disabled }) {
     const styles = {
-        root:{
+        root: {
             backgroundColor: color,
             width: width,
             height: height,
-            
+
         },
     }
-    
-    return(
-        <button style={styles.root} onClick={onClick}  disabled={disabled} className='button'>
+
+    return (
+        <button style={styles.root} onClick={onClick} disabled={disabled} className='button'>
             <text className="text">
                 {children}
             </text>
@@ -20,4 +20,4 @@ function Button({children, onClick, width, height, color, disabled}){
     )
 }
 
-export default Button;
+export default OwnButton;
