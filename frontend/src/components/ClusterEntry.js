@@ -1,22 +1,27 @@
-
+import { Fade, Modal } from '@mui/material';
 import { Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { setClickedClusterEntryId, setClickedEntryId, setClusterEntryDetails, updateDeleteModalState, updateEntryModalState } from '../store/modalSlice';
+import { setClickedClusterEntryId, setClickedEntryId, setClusterEntryDetails, updateEntryModalState } from '../store/modalSlice';
 import { deleteClusterEntry, updateClusterAdd } from '../store/clusterSlice';
-
+import { useState } from 'react';
+import DeleteVerificationModal from './DeleteVerificationModal';
 /**
- * @description Collapsible list component that displays the cluster entry
- * @param appear Boolean value to show the collapsible lists if true
+ * @description Cluster Entry component, can edit and delete 
+ * @param {string} clusterDesc Text description of cluster
+ * @param {string} link Link related to cluster entry
+ * @param {string} clusterId Id to identify the cluster this cluster entry belongs to, the cluster id is essentially entryId
+ * @param {string} clusterEntryId Id used to identify the specific cluster entry
+ * @param {boolean} allowEdit Boolean to indicated if you can edit the component 
  * @see ListEntry
  */
 function ClusterEntry({ clusterDesc, link, clusterId, clusterEntryId, allowEdit }) {
     const dispatch = useDispatch();
     const clusterState = useSelector((store) => store.cluster);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false) //Handles delete modal state
 
 
     /**
@@ -77,7 +82,7 @@ function ClusterEntry({ clusterDesc, link, clusterId, clusterEntryId, allowEdit 
                 <Modal open={isDeleteModalOpen}>
                     <Fade in={isDeleteModalOpen}>
                         <div className="flex h-full justify-center">
-                            <DeleteVerificationModal message={"category"} onCancel={() => setIsDeleteModalOpen(false)} onConfirm={deleteClusterEntry} />
+                            <DeleteVerificationModal message={"category"} onCancel={() => setIsDeleteModalOpen(false)} onConfirm={deleteClusterEntryHandler} />
                         </div>
                     </Fade>
                 </Modal>

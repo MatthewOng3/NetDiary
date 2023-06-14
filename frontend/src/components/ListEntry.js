@@ -1,6 +1,7 @@
 import '../styles/Button.css'
 import '../styles/ListEntry.css'
 
+//Components
 import { Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { IconButton } from '@mui/material';
@@ -11,15 +12,14 @@ import LoadingSpinner from './utils/LoadingSpinner';
 import ClusterEntry from './ClusterEntry';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { RandomId } from "../util/RandomId";
+import { Fade, Modal } from '@mui/material';
 
 //Redux store
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteEntry } from '../store/categorySlice';
 import { useEffect, useState } from 'react';
 import DeleteVerificationModal from './DeleteVerificationModal';
-
-import { getClusterReducerStatus, selectClusterById, fetchClusterEntries, updateClusterAdd } from '../store/clusterSlice';
-
+import { getClusterReducerStatus, selectClusterById, fetchClusterEntries, updateClusterAdd, getIndividualClusterStatus } from '../store/clusterSlice';
 import Accordion from 'react-bootstrap/Accordion';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { setNormalEntryDetails, updateDeleteModalState, updateEntryModalState, getDeleteModalOpenState, resetEntryModalDetails, setClickedEntryId, setClickedClusterEntryId } from '../store/modalSlice';
@@ -30,7 +30,6 @@ import { setNormalEntryDetails, updateDeleteModalState, updateEntryModalState, g
  * @param allowEdit True if user's dashboard, false if it's a shared category component
  * @param editEntry Function passed in through category comp to 
  * @param canAddCluster Boolean value to indicate if the list entry will show the add button to add to cluster
- * @param createListEntry Function to open entry modal from category comp
  * @see CategoryComp
  */
 function ListEntry({ text_description, link, entryId, catId, allowEdit, canAddCluster }) {
@@ -43,17 +42,22 @@ function ListEntry({ text_description, link, entryId, catId, allowEdit, canAddCl
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
     //Cluster states
-    const clusterStatus = useSelector(getClusterReducerStatus)
+    //const clusterStatus = useSelector(getClusterReducerStatus)
+    const clusterStatus = useSelector(state => getIndividualClusterStatus(state, entryId))
     const cluster = useSelector(state => selectClusterById(state, entryId));
+
     //Retrieve category state
     const categoryState = useSelector((store) => store.category);
 
+    //console.log("IN LIST ENTRY CLUSTER STATUS: ", clusterStatus, "CLUSTER: ", cluster)
+
+
     useEffect(() => {
         //If on idle status and current collection id is not undefined, fetch categories from backend
-        if (cluster !== null && clusterStatus === 'idle') {
+        if (clusterStatus === 'idle') {
             dispatch(fetchClusterEntries(entryId))
         }
-        else if (clusterStatus === 'succeeded') {
+        else if (clusterStatus === 'success') {
             setIsLoading(false)
         }
         else if (clusterStatus === 'loading') {
@@ -65,11 +69,20 @@ function ListEntry({ text_description, link, entryId, catId, allowEdit, canAddCl
 
     }, [clusterStatus])
 
+
+
     /**
-     * @description Open link in a new tab when the entry is clicked
+     * @description Open list entry link and all cluster links associated with it in a new tab
      */
     function goToLink() {
-        window.open(link, '_blank').focus();
+        window.open(link, text_description).focus();
+        cluster.forEach((element, index) => {
+            setTimeout(() => {
+                if (element.link) {
+                    window.open(element.link, element.name);
+                }
+            }, index * 1000);
+        });
     }
 
     /**
@@ -119,7 +132,7 @@ function ListEntry({ text_description, link, entryId, catId, allowEdit, canAddCl
             <Accordion defaultActiveKey="0" >
                 <div className="w-76  rounded-md " style={{ marginBottom: '10px', backgroundColor: '#194861' }}>
                     <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
-                        {cluster &&
+                        {cluster && cluster.length > 0 &&
                             <IconButton size='medium' edge='start' color='default' onClick={decoratedOnClick} disableRipple>
                                 <ChevronRightIcon sx={{ transform: isOpen ? 'rotate(90deg)' : 'initial' }} />
                             </IconButton>}
@@ -143,7 +156,7 @@ function ListEntry({ text_description, link, entryId, catId, allowEdit, canAddCl
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip title="Delete entry">
-                                    <IconButton size='large' edge='start' color='error' sx={{ borderRadius: '6px' }} className="icon-btn" onClick={() => { dispatch(updateDeleteModalState(true)) }} >
+                                    <IconButton size='large' edge='start' color='error' sx={{ borderRadius: '6px' }} className="icon-btn" onClick={() => setIsDeleteModalOpen(true)} >
                                         <DeleteIcon />
                                     </IconButton>
                                 </Tooltip>
@@ -153,9 +166,9 @@ function ListEntry({ text_description, link, entryId, catId, allowEdit, canAddCl
                     </div>
                 </div>
                 <Accordion.Collapse eventKey="0">
-                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-end', flexDirection: 'column' }}>
                         {
-                            isOpen && cluster.map((value, index) => (
+                            isOpen && cluster && cluster.map((value, index) => (
                                 <ClusterEntry key={RandomId() + index} clusterDesc={value.name} allowEdit={true} link={value.link} clusterId={entryId} clusterEntryId={value.clusterEntryId} />
                             ))
                         }

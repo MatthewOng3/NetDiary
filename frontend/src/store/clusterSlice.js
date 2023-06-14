@@ -1,11 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import cleanInputData from '../security/CleanInputData'
-// import CodeError from '../util/CodeError';
-// import validateURL from '../util/ValidateURL'
-
-
-
+import validateURL from '../util/ValidateURL';
 
 /**
  * @description axios config options
@@ -21,14 +17,19 @@ const axiosConfig = {
  * @description Save cluster list entry to cluster collections
  * @param {object} data_payload data object from EntryModal containing relevant id's and text and link
  * @see ClusterController Server function that handles the 
+ * @see EntryModal Component that calls this async thunk function
  */
 export const saveClusterEntry = createAsyncThunk('cluster/saveClusterEntry', async (data_payload, { rejectWithValue }) => {
     try {
         data_payload.description = cleanInputData(data_payload.description)
         data_payload.link = cleanInputData(data_payload.link)
 
-        const response = await axios.put(process.env.REACT_APP_API_URL + 'cluster/save-entry', { data: data_payload }, axiosConfig)
-        return response.data
+        if (validateURL(data_payload.link)) {
+            const response = await axios.put(process.env.REACT_APP_API_URL + 'cluster/save-entry', { data: data_payload }, axiosConfig)
+            return response.data
+        }
+
+        return rejectWithValue("Unsafe Url")
     }
     catch (err) {
         return rejectWithValue(err.message)
@@ -42,9 +43,6 @@ export const saveClusterEntry = createAsyncThunk('cluster/saveClusterEntry', asy
  */
 export const deleteClusterEntry = createAsyncThunk('cluster/deleteClusterEntry', async (data_payload, { rejectWithValue }) => {
     try {
-        data_payload.description = cleanInputData(data_payload.description)
-        data_payload.link = cleanInputData(data_payload.link)
-
         const response = await axios.put(process.env.REACT_APP_API_URL + 'cluster/delete-cluster-entry', { data: data_payload }, axiosConfig)
         return response.data
     }
@@ -70,7 +68,7 @@ export const fetchClusterEntries = createAsyncThunk('cluster/fetchClusterEntries
 })
 
 /**
- * @description Save cluster list entry to cluster collections
+ * @description Fetch all clusters belonging to user and assign it to their relevant clusters hashmap
  * @param data_payload data object from EntryModal containing relevant id's and text and link
  * @see ListEntry
  */
@@ -85,7 +83,7 @@ export const fetchAllClusters = createAsyncThunk('cluster/fetchAllClusters', asy
     }
 })
 
-const initialState = { clusters: {}, clusterAdd: false, status: 'idle', error: "" }
+const initialState = { clusters: {}, clusterIndividualStatus: {}, clusterAdd: false, status: 'idle', error: "" }
 
 const clusterSlice = createSlice({
     name: 'cluster',
@@ -104,18 +102,29 @@ const clusterSlice = createSlice({
 
         //Save list entry
         builder.addCase(saveClusterEntry.pending, (state, action) => {
-            state.status = 'loading'
+            state.clusterIndividualStatus[action.meta.arg.entryId.toString()] = 'loading'
         })
-            .addCase(saveClusterEntry.fulfilled, (state, action) => {
-                state.status = 'idle'
+            .addCase(saveClusterEntry.fulfilled, (state, { payload }) => {
+                state.clusterIndividualStatus[payload.clusterId.toString()] = 'idle'
                 state.clusterAdd = false
             })
-            .addCase(saveClusterEntry.rejected, (state, action) => {
-                state.status = 'failed'
+            .addCase(saveClusterEntry.rejected, (state, { payload }) => {
+                state.clusterIndividualStatus[payload.clusterId.toString()] = 'failed'
+                state.clusterAdd = false
+                state.error = payload.message
+            })
+        builder.addCase(deleteClusterEntry.pending, (state, action) => {
+            state.clusterIndividualStatus[action.meta.arg.clusterId.toString()] = 'loading'
+        })
+            .addCase(deleteClusterEntry.fulfilled, (state, { payload }) => {
+                state.clusterIndividualStatus[payload.clusterId.toString()] = 'idle'
+                state.clusterAdd = false
+            })
+            .addCase(deleteClusterEntry.rejected, (state, action) => {
+                state.clusterIndividualStatus[action.meta.arg.clusterId.toString()] = 'failed'
                 state.clusterAdd = false
                 state.error = action.payload.message
             })
-
         builder.addCase(fetchAllClusters.pending, (state, action) => {
             state.status = 'loading'
         })
@@ -129,6 +138,12 @@ const clusterSlice = createSlice({
                     return acc;
                 }, state.clusters);
 
+                //Update each individual status to success
+                clusters.reduce((acc, clusterItem) => {
+                    acc[clusterItem.clusterId.toString()] = 'success';
+                    return acc;
+                }, state.clusterIndividualStatus);
+
             })
             .addCase(fetchAllClusters.rejected, (state, action) => {
                 state.status = 'failed'
@@ -136,16 +151,19 @@ const clusterSlice = createSlice({
             })
 
         builder.addCase(fetchClusterEntries.pending, (state, action) => {
-            state.status = 'loading'
+            state.clusterIndividualStatus[action.meta.arg.toString()] = 'loading'
         })
             .addCase(fetchClusterEntries.fulfilled, (state, { payload }) => {
-                state.status = 'success'
+                //Fetch cluster entries related to a clusterId
                 const clusterObj = payload.cluster
+                if (clusterObj) {
+                    state.clusters[clusterObj.clusterId.toString()] = clusterObj.clusterEntries
+                }
 
-                state.clusters[clusterObj.clusterId.toString()] = clusterObj.clusterEntries
+                state.clusterIndividualStatus[clusterObj.clusterId.toString()] = 'success'
             })
             .addCase(fetchClusterEntries.rejected, (state, action) => {
-                state.status = 'failed'
+                state.clusterIndividualStatus[action.meta.arg.toString()] = 'failed'
                 state.error = action.payload.message
             })
 
@@ -159,11 +177,22 @@ export const getClusterReducerStatus = (state) => state.cluster.status
 export const getAllClusters = (state) => state.cluster.clusters
 
 /**
- * @description Retrieves a specific cluster entry list from cluster slice based on clusterId key
- * @param {string} clusterId ClusterId key
- * @returns Cluster object that corresponds to Cluster Id Key or null if not exist
- * @see ListEntry
+ * Retrieve the status of the cluster related to clusterId from clusterIndividualStatus
+ * @param {state} state Redux state of entire app
+ * @param {string} clusterId Id of cluster 
+ * @returns String indicating which status the cluster is currently at
  */
+export function getIndividualClusterStatus(state, clusterId) {
+    if (clusterId) {
+        return state.cluster.clusterIndividualStatus[clusterId.toString()]
+    }
+}
+/**
+* @description Retrieves a specific cluster entry list from cluster slice based on clusterId key
+* @param {string} clusterId ClusterId key
+* @returns Cluster object that corresponds to Cluster Id Key or null if not exist
+* @see ListEntry
+*/
 export function selectClusterById(state, clusterId) {
     const clusterIdKey = clusterId.toString()
     return state.cluster.clusters[clusterIdKey] || null;

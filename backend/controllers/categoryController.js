@@ -1,4 +1,5 @@
 require('dotenv').config();
+const Cluster = require('../models/ClusterModel');
 const User = require('../models/UserModel')
 const ObjectId = require('mongodb').ObjectId
 const Token = require('../models/tokenModel')
@@ -66,22 +67,41 @@ async function addCategory(req, res, next) {
 }
 
 /**
- * @description: Delete category from database
+ * @description: Delete category object from database
  * @route PUT categories/deleteCategory
  * @access Public
+ * @see CategorySlice
  */
 async function deleteCategory(req, res, next) {
     try {
 
         //Retrieve user_id cookie from frontend
-        const userId = req.cookies.user_id
-        const collectionId = req.body.data.collectionId
-        const catId = req.body.data.catId
+        const userId = ObjectId(req.cookies.user_id)
+        const collectionId = ObjectId(req.body.data.collectionId)
+        const catId = ObjectId(req.body.data.catId)
+
+        //Delete clusters related to the entry id's 
+        const listEntries = await User.aggregate([
+            { $match: { "collections.categoryList.catId": catId } },
+            { $unwind: "$collections" },
+            { $unwind: "$collections.categoryList" },
+            { $match: { "collections.categoryList.catId": catId } },
+            { $project: { listEntries: "$collections.categoryList.listEntries" } }
+        ]);
+
+        console.log("IN DELETE CATEGORY CONTROLLER", listEntries, listEntries[0].listEntries);
+
+        await Cluster.updateMany(
+            { userId: userId },
+            { $pull: { clusters: { "clusterId": { $in: listEntries[0].listEntries.map(entry => entry.entryId) } } } }
+        );
+
 
         /*Delete category in the respective collection id, first query identifes the collection object to delete from, second part  lets you identify which cat Id to pull from 
         The $ positional operator in MongoDB is used to identify the array element that matches the query criteria in the filter of the update operation.*/
-        const categoryList = await User.updateOne({ _id: ObjectId(userId), 'collections.collectionId': ObjectId(collectionId) },
-            { $pull: { 'collections.$.categoryList': { "catId": ObjectId(catId) } } }, { new: true }).orFail()
+        await User.updateOne({ _id: userId, 'collections.collectionId': collectionId },
+            { $pull: { 'collections.$.categoryList': { "catId": catId } } }, { new: true }).orFail()
+
 
         return res.status(200).json({ success: true })
     }
@@ -91,11 +111,14 @@ async function deleteCategory(req, res, next) {
     }
 }
 
-/*
-@description: Update the name of a specific category object in cateogry list array of a specific collection object
-@route PUT /categories/updateCatName
-@access Public
-*/
+/**
+ * @description Update the name of a specific category object in category list array of a specific collection object
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next
+ * @route PUT /categories/updateCatName 
+ * @returns Success boolean field
+ */
 async function updateCategoryName(req, res, next) {
     try {
 
@@ -222,10 +245,14 @@ async function deleteEntry(req, res, next) {
         const catId = req.body.data.catId
         const entryId = req.body.data.entryId
 
+
         //Perform query of deleting the list entry
         await User.updateOne({ _id: ObjectId(userId) },
             { $pull: { 'collections.$[collection].categoryList.$[category].listEntries': { "entryId": ObjectId(entryId) } } },
             { arrayFilters: [{ 'collection.collectionId': ObjectId(collectionId) }, { 'category.catId': ObjectId(catId) }], new: true }).orFail()
+
+        //Delete corresponding cluster related to entryId
+        await Cluster.updateOne({ userId: userId }), { $pull: { clusters: { entryId } } }
 
         return res.status(200).json({ success: true })
     }

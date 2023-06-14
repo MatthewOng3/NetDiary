@@ -18,10 +18,17 @@ import { deleteCategory, updateCatName } from '../store/categorySlice';
 import { updateClusterAdd } from '../store/clusterSlice';
 import DeleteVerificationModal from './DeleteVerificationModal';
 import ErrorModal from './utils/ErrorModal';
-import { getDeleteModalOpenState, getEntryModalOpenState, resetEntryModalDetails, updateDeleteModalState, updateEntryModalState, setClickedEntryId, setClickedClusterEntryId } from '../store/modalSlice';
+import { getEntryModalOpenState, resetEntryModalDetails, updateEntryModalState, setClickedEntryId, setClickedClusterEntryId } from '../store/modalSlice';
 
 
-/*Each category card component*/
+/**
+ * @description Component that handles each category component 
+ * @param {string} name Name of category component
+ * @param {Array[object]} listEntries Array of list entry objects
+ * @param catId
+ * @param collectionId 
+ * @path /user/net-diary
+ */
 function CategoryComp({ name, listEntries, catId, collectionId }) {
   const dispatch = useDispatch();
   //State to set dimensions
@@ -92,17 +99,8 @@ function CategoryComp({ name, listEntries, catId, collectionId }) {
    */
   function deleteCategoryHandler() {
     //Close Delete Modal
-    dispatch(updateDeleteModalState(false))
     dispatch(deleteCategory({ collectionId: collectionId, catId: catId }))
-  }
-
-  /**
-   * @description Show delete verification modal to verify if user wants to delete category
-   * @see ModalSlice
-   */
-  function showDeleteVerificationModal() {
-    //dispatch(updateDeleteModalState(true))
-    setIsDeleteModalOpen(true)
+    setIsDeleteModalOpen(false)
   }
 
   /**
@@ -125,7 +123,6 @@ function CategoryComp({ name, listEntries, catId, collectionId }) {
   function closeEntry() {
     dispatch(updateClusterAdd(false))
     setIsDeleteModalOpen(false)
-    //dispatch(updateDeleteModalState(false))
     dispatch(updateEntryModalState(false))
     dispatch(setClickedEntryId(""))
     dispatch(setClickedClusterEntryId(""))
@@ -137,7 +134,10 @@ function CategoryComp({ name, listEntries, catId, collectionId }) {
     setError(undefined)
   }
 
-  /*Allow users to share either by link or native apps*/
+  /**
+   * @description Allows uers to share their category blocks with other people, the people they share with can't edit the categories
+   * @see CategoryController
+   */
   async function shareCategory() {
 
     const url = `${process.env.REACT_APP_BASE_URL}shared/${collectionId}/${catId}`

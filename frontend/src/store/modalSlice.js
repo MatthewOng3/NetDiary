@@ -6,7 +6,7 @@ import { findListEntry } from './categorySlice';
 /**
  * @description Modal Slice that tracks the open status of different modals, performs actions necessary related to the modal
  */
-const initialState = { deleteModalOpen: false, entryModalOpen: false, errorModal: false, clickedEntryId: "", clickedClusterEntryId: "", entryModalDetails: { name: null, link: null } }
+const initialState = { entryModalOpen: false, errorModal: false, clickedEntryId: "", clickedClusterEntryId: "", entryModalDetails: { name: null, link: null } }
 
 const modalSlice = createSlice({
     name: 'modal',
@@ -15,9 +15,11 @@ const modalSlice = createSlice({
         updateEntryModalState: (state, { payload }) => {
             state.entryModalOpen = payload
         },
-        updateDeleteModalState: (state, { payload }) => {
-            state.deleteModalOpen = payload
-        },
+        /**
+         * @description Set the normal list entry details to be displayed in entry modal, finds specific list entry in a category object
+         * @param {Object} Payload fields 
+         * @see EntryModal
+         */
         setNormalEntryDetails: (state, action) => {
             const { catId, entryId, categoryState } = action.payload;
 
@@ -26,6 +28,11 @@ const modalSlice = createSlice({
             state.entryModalDetails.name = foundEntry.name
             state.entryModalDetails.link = foundEntry.link
         },
+        /**
+         * @description Set the cluster entry details to be displayed in entry modal, finds cluster entry from a specific cluster
+         * @param {Object} Payload fields 
+         * @see EntryModal
+         */
         setClusterEntryDetails: (state, action) => {
             //Retrieve cluster from cluster slice
             const { clusterId, clusterEntryId, clusterState } = action.payload;
@@ -35,7 +42,6 @@ const modalSlice = createSlice({
             state.entryModalDetails.link = foundClusterEntry.link
         },
         resetEntryModalDetails: (state, action) => {
-            console.log("IN RESET ENTRY MODAL DETAILS")
             state.entryModalDetails.name = ""
             state.entryModalDetails.link = ""
         },
@@ -55,9 +61,8 @@ const modalSlice = createSlice({
 //Functions to retrieve state values
 export const getEntryModalDetails = (state) => state.modal.entryModalDetails
 export const getEntryModalOpenState = (state) => state.modal.entryModalOpen
-export const getDeleteModalOpenState = (state) => state.modal.deleteModalOpen
 export const getClickedEntryId = (state) => state.modal.clickedEntryId
 export const getClickedClusterEntryId = (state) => state.modal.clickedClusterEntryId
 
-export const { updateEntryModalState, resetModalState, setNormalEntryDetails, setClusterEntryDetails, updateDeleteModalState, resetEntryModalDetails, setClickedEntryId, setClickedClusterEntryId } = modalSlice.actions;
+export const { updateEntryModalState, resetModalState, setNormalEntryDetails, setClusterEntryDetails, resetEntryModalDetails, setClickedEntryId, setClickedClusterEntryId } = modalSlice.actions;
 export default modalSlice.reducer;

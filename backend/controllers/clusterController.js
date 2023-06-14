@@ -80,7 +80,7 @@ async function saveClusterEntry(req, res, next) {
 
         //If there is no entry id then exit function
         if (!entryId) {
-            return res.send({ success: false })
+            return res.send({ success: false, clusterId: entryId })
         }
 
         //Search database for the corresponding user with the id and retrieve entire categoryList array
@@ -102,7 +102,7 @@ async function saveClusterEntry(req, res, next) {
                 }
             )
 
-            return res.send({ success: true })
+            return res.send({ success: true, clusterId: entryId })
         }
 
         //Create new cluster entry object
@@ -110,12 +110,13 @@ async function saveClusterEntry(req, res, next) {
 
         //If existing document found
         if (existingCluster) {
-            const clusterIndex = existingCluster.clusters.findIndex(cluster => cluster.clusterId === entryId);
+            const clusterIndex = existingCluster.clusters.findIndex(cluster => cluster.clusterId.equals(entryId));
+
 
             if (clusterIndex !== -1) {
                 // If an existing cluster is found with the given entryId, push a new object to clusterEntries
                 await Cluster.updateOne(
-                    { userId, 'clusters.clusterId': entryId },
+                    { userId: userId, 'clusters.clusterId': entryId },
                     { $push: { 'clusters.$.clusterEntries': clusterObj } }
                 );
             } else {
@@ -132,7 +133,7 @@ async function saveClusterEntry(req, res, next) {
             await Cluster.insertMany({ userId: userId, clusters: [newCluster] })
         }
 
-        return res.status(200).json({ success: true })
+        return res.status(200).json({ success: true, clusterId: entryId })
     }
     catch (err) {
         res.status(500).send({ message: 'Internal Server Error', success: false, error: err })
@@ -159,10 +160,10 @@ async function deleteClusterEntry(req, res, next) {
 
         await Cluster.updateOne({ userId: userId, 'clusters.clusterId': clusterId }, { $pull: { 'clusters.$.clusterEntries': { clusterEntryId } } })
 
-        return res.status(200).json({ clusters: foundUser ? foundUser.clusters : [], success: true })
+        return res.status(200).json({ success: true, clusterId: clusterId })
     }
     catch (err) {
-        res.status(500).send({ message: 'Internal Server Error', success: false, clusterEntries: [], error: err })
+        res.status(500).send({ message: 'Internal Server Error', success: false, clusterEntries: [], error: err, clusterId: clusterId })
         next(err)
     }
 }

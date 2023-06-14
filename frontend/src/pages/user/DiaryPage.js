@@ -35,7 +35,6 @@ function DiaryPage() {
     const [isLoading, setIsLoading] = useState(false)
     const isLoggedIn = useSelector((store) => store.user.loggedIn)
     const loginStatus = useSelector(getUserStatus)
-    const clusterStatus = useSelector(getClusterReducerStatus)
 
     //Once component first loads verify if user has an ongoing session
     useEffect(() => {
@@ -115,10 +114,9 @@ function DiaryPage() {
 
 
     useEffect(() => {
-        if (clusterStatus === 'idle') {
-            console.log("CALLED")
-            dispatch(fetchAllClusters())
-        }
+
+        dispatch(fetchAllClusters())
+
     }, [])
 
     /*Add a new category block*/
