@@ -67,7 +67,7 @@ async function addCategory(req, res, next) {
 }
 
 /**
- * @description: Delete category object from database
+ * @description: Delete category object from database as well as any clusters along with it
  * @route PUT categories/deleteCategory
  * @access Public
  * @see CategorySlice
@@ -80,7 +80,7 @@ async function deleteCategory(req, res, next) {
         const collectionId = ObjectId(req.body.data.collectionId)
         const catId = ObjectId(req.body.data.catId)
 
-        //Delete clusters related to the entry id's 
+        //Find list entries related to the category object
         const listEntries = await User.aggregate([
             { $match: { "collections.categoryList.catId": catId } },
             { $unwind: "$collections" },
@@ -89,8 +89,7 @@ async function deleteCategory(req, res, next) {
             { $project: { listEntries: "$collections.categoryList.listEntries" } }
         ]);
 
-        console.log("IN DELETE CATEGORY CONTROLLER", listEntries, listEntries[0].listEntries);
-
+        //Remove all clusters related to any of the list entries found
         await Cluster.updateMany(
             { userId: userId },
             { $pull: { clusters: { "clusterId": { $in: listEntries[0].listEntries.map(entry => entry.entryId) } } } }

@@ -8,6 +8,7 @@ const app = express()
 const session = require('express-session')
 const https = require('https');
 const fs = require('fs');
+const helmet = require("helmet")
 
 /*Set up and use relevant web config options*/
 
@@ -23,6 +24,7 @@ const corsOptions = {
   optionSuccessStatus: 200,
 
 }
+app.use(helmet())
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true })) // parse requests of content-type - application/x-www-form-urlencoded

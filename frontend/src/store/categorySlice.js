@@ -159,10 +159,11 @@ export const saveEntry = createAsyncThunk('category/saveEntry', async (data_payl
     }
 })
 
-/*
-@description: Delete list entry
-@params payload from list Entry, payload = {entryId, catId}
-*/
+/**
+ * @description Delete a list entry and the associated cluster
+ * @param payload payload = {entryId, catId}
+ * @see ListEntry
+ */
 export const deleteEntry = createAsyncThunk('category/deleteEntry', async (payload, { rejectWithValue }) => {
     try {
         //Sanitize payload
@@ -171,13 +172,13 @@ export const deleteEntry = createAsyncThunk('category/deleteEntry', async (paylo
         const collectionId = cleanInputData(payload.collectionId)
 
         if (typeof (catId) !== "string" || typeof (entryId) !== "string" || typeof (collectionId) !== "string") {
-            throw new CodeError("Invalid Input")
+            return rejectWithValue("Invalid Input")
         }
 
         const response = await axios.put(process.env.REACT_APP_API_URL + 'categories/deleteEntry', { data: payload }, axiosConfig)
 
         if (!response.data.success) {
-            throw new CodeError(response.data.err)
+            return rejectWithValue(response.data.err)
         }
 
         return response.data

@@ -11,45 +11,43 @@ import { TickIconComponent, XIconComponent } from '../ComparisonComponents';
  * @access public
  * @path /
  */
-function Comparison(){
+function Comparison() {
 
     const oldWay = [
-        "Inconvenient to share favourite saved links",
+        "Inconvenient to share favourite saved webpages/links",
         "Unappealing user interface",
-        "Unable to add own descriptions to links"
     ];
 
     const newWay = [
         "Organised and customisable descriptions",
-        "Share with a click of a button and sending the link",
-        "New and better way to store bookmarks"
+        "Create a cluster which opens all the webpages in new tabs with just one click!",
     ];
 
     return (
-        <section className=" w-full  flex justify-center" style={{backgroundColor: 'orange', padding: '1%', height: 575}}>
+        <section className=" w-full  flex justify-center" style={{ backgroundColor: 'orange', padding: '1%', height: 575 }}>
             <div className="comparison-container">
-                <Card sx={{  width: 370, height: '100%', display: 'flex', flexDirection: 'column'}}>
+                <Card sx={{ width: 370, height: '100%', display: 'flex', flexDirection: 'column' }}>
                     <CardMedia
                         sx={{ height: '60%' }}
                         image="/images/chrome_bookmark1.png"
                         title="bookmark"
                     />
-                    <CardContent sx={{ borderTop: '1px solid gray', display: 'flex', flexDirection: 'column', height: '45%'}}>
-                        <Typography variant="body2" color="text.secondary" sx={{fontSize: '13px',fontWeight: 'bold'}}>
-                        {oldWay.map((benefit, index) => (
-                            <XIconComponent key={index}>{benefit}</XIconComponent>
-                        ))}
+                    <CardContent sx={{ borderTop: '1px solid gray', display: 'flex', flexDirection: 'column', height: '45%' }}>
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '13px', fontWeight: 'bold' }}>
+                            {oldWay.map((benefit, index) => (
+                                <XIconComponent key={index}>{benefit}</XIconComponent>
+                            ))}
                         </Typography>
                     </CardContent>
                 </Card>
-                <Card sx={{  width: 370, height: '100%', display: 'flex', flexDirection: 'column'}}>
+                <Card sx={{ width: 370, height: '100%', display: 'flex', flexDirection: 'column' }}>
                     <CardMedia
                         sx={{ height: '60%' }}
-                        image="/images/betterway.PNG"
+                        image="/images/workflow.PNG"
                         title="green iguana"
                     />
-                    <CardContent sx={{ borderTop: '1px solid gray', display: 'flex', flexDirection: 'column', height: '45%'}}>
-                        <Typography variant="body2" color="text.secondary" sx={{fontSize: '13px',fontWeight: 'bold'}}>
+                    <CardContent sx={{ borderTop: '1px solid gray', display: 'flex', flexDirection: 'column', height: '45%' }}>
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '13px', fontWeight: 'bold' }}>
                             {newWay.map((benefit, index) => (
                                 <TickIconComponent key={index}>{benefit}</TickIconComponent>
                             ))}

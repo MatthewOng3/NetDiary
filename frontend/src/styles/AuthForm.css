@@ -19,7 +19,13 @@
 
 @media(max-width: 1300px){
     .width-condition{
-        background-color: red;
+        width: 70%;
+    }
+} 
+
+@media(min-width: 1301px){
+    .width-condition{
+        width: 35%;
     }
 } 
 

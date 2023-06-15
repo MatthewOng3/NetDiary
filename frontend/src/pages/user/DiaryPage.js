@@ -127,7 +127,7 @@ function DiaryPage() {
 
     }, [currentCollectionId, categoryListStatus])
 
-
+    //On first page load fetch all clusters into cluster slice
     useEffect(() => {
         dispatch(fetchAllClusters())
     }, [])
@@ -180,10 +180,10 @@ function DiaryPage() {
                                     onClose={handleClose}
                                     aria-describedby="alert-dialog-slide-description"
                                 >
-                                    <DialogTitle>{"Enable browser popups?"}</DialogTitle>
+                                    <DialogTitle>{"Enable browser popups in order to utilise cluster functionality"}</DialogTitle>
                                     <DialogContent>
                                         <DialogContentText id="alert-dialog-slide-description">
-                                            Enable browser popups in settings in order to utilise the cluster functionality
+                                            Enable browser popups in Settings &#x2192; Privacy and security &#x2192; Pop-ups and redirects
                                         </DialogContentText>
                                     </DialogContent>
                                     <DialogActions>

@@ -24,7 +24,7 @@ function Learn(){
                 </h1>
                 <p className='text-white font-light'  >
                     Creating a mobile app to allow users to access their net diary from their phone and easily save links
-                    through apps like TikTok and Instagram
+                    through apps like TikTok and Instagram and share them
                 </p>
             </div>
           </div>
@@ -35,7 +35,7 @@ function Learn(){
           </div>
           <div className="w-full px-3 py-6 h-1/2">
             <h1 className="text-2xl text-white font-bold">
-             Faster saving through AI 
+              Automatic saving through AI 
             </h1>
             <p className='text-white font-light' style={{ marginBottom: "0" }}>
               {" "}
@@ -53,7 +53,7 @@ function Learn(){
             </h1>
             <p className='text-white font-light' style={{ marginBottom: "0" }}>
               {" "}
-             Easily save favourite webpages within a few seconds through a chrome extension
+             Easily save favourite webpages within a few seconds through our upcoming chrome extension
             </p>
           </div>
         </div>

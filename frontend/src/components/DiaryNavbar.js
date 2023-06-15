@@ -35,7 +35,7 @@ function DiaryNavbar({ diaryPage }) {
             //If logged out successful navigate back to login page
             if (res.data.loggedOut) {
                 //Clear all local storage data
-                localStorage.clear()
+                localStorage.removeItem("share-token")
                 //Reset all local states
                 dispatch(resetCategory())
                 dispatch(resetCollection())

@@ -49,9 +49,6 @@ function ListEntry({ text_description, link, entryId, catId, allowEdit, canAddCl
     //Retrieve category state
     const categoryState = useSelector((store) => store.category);
 
-    //console.log("IN LIST ENTRY CLUSTER STATUS: ", clusterStatus, "CLUSTER: ", cluster)
-
-
     useEffect(() => {
         //If on idle status and current collection id is not undefined, fetch categories from backend
         if (clusterStatus === 'idle') {
@@ -77,16 +74,9 @@ function ListEntry({ text_description, link, entryId, catId, allowEdit, canAddCl
     function goToLink() {
         window.open(link, text_description)
 
-        cluster.forEach((element, index) => {
-
-            clusterLink(element.link, element.name)
-
+        cluster.forEach((element) => {
+            window.open(element.link, element.name)
         });
-    }
-
-
-    function clusterLink(link, name) {
-        window.open(link, name)
     }
 
     /**

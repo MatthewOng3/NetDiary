@@ -127,8 +127,9 @@ function LoginPage() {
 	return (
 		<div className="root">
 			<div className="formComponent">
-				<h1 style={{ color: 'white', fontWeight: 'normal', marginLeft: '10px', marginBottom: '20px' }}>Welcome</h1>
-				<Form noValidate validated={validated} onSubmit={handleSubmit} className='inputComponent width-condition' style={{ width: '30%' }}>
+
+				<Form noValidate validated={validated} onSubmit={handleSubmit} className="inputComponent width-condition" >
+					<h1 style={{ color: 'white', fontWeight: 'normal', marginLeft: '35%', marginBottom: '20px' }}>Welcome</h1>
 					<Form.Group className="mb-3" controlId="formBasicEmail">
 						<Form.Label className="text-light">Email address</Form.Label>
 						<Form.Control
@@ -170,6 +171,7 @@ function LoginPage() {
 						{loginUserResponseState.error}
 					</Alert>
 				</Form>
+
 			</div>
 		</div>
 	)
