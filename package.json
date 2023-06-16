@@ -9,9 +9,28 @@
   "scripts": {
     "backend": "npm run devStart --prefix backend",
     "frontend": "npm start --prefix frontend",
-    "start": "concurrently \"npm run frontend\" \"npm run backend\""
+    "start": "concurrently \"npm run frontend\" \"npm run backend\"",
+    "heroku-postbuild": "npm install --prefix frontend && npm run build --prefix frontend"
   },
   "devDependencies": {
     "@wixc3/react-board": "^2.1.3"
-  }
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "name": "netdiary",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MatthewOng3/NetDiary.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MatthewOng3/NetDiary/issues"
+  },
+  "homepage": "https://github.com/MatthewOng3/NetDiary#readme",
+  "description": ""
 }

@@ -22,20 +22,20 @@ function ContactPage() {
 
   /**
    * @description Send contact form to net diary company email 
-   * @param {*} event 
+   * @param {any} event 
    */
   function sendEmail(event) {
     event.preventDefault();
     setLoadingEmailState(true)
     emailjs.sendForm('service_m4gfd0i', 'template_z3c2388', form.current, 's17CG3AO-Qrx9D-mZ')
       .then((result) => {
-        alert("Form submitted!")
         setFullName('');
         setEmail('');
         setSubject('');
         setMessage('');
         setLoadingEmailState(false)
         setShowSuccessAlert(true)
+        alert("Form submitted!")
       }, (error) => {
         setLoadingEmailState(false)
         alert("Error submitting form")

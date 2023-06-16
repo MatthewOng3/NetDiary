@@ -22,7 +22,6 @@ const corsOptions = {
   origin: 'https://localhost:3000',
   credentials: true,            //access-control-allow-credentials:true
   optionSuccessStatus: 200,
-
 }
 app.use(helmet())
 app.use(cors(corsOptions));
@@ -37,7 +36,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: 3600000 * 48,
+    maxAge: 3600000 * 168,
     httpOnly: true,
     secure: false
   }
@@ -50,9 +49,9 @@ const connectDB = require("./config/db"); //import connect function
 
 connectDB(); //call functin to connect to database
 // app.listen(3001)
-
-https.createServer(options, app).listen(3001, () => {
-  console.log('Server started on port 3001');
+const port = process.env.PORT || 3000
+https.createServer(options, app).listen(port, () => {
+  console.log(`Server is up on port ${port}!`);
 });
 
 
@@ -60,6 +59,12 @@ https.createServer(options, app).listen(3001, () => {
 const apiRoutes = require('./routes/apiRoutes') //apiRoutes from other file
 
 app.use('/api', apiRoutes) //if url starts with /api, use apiRoutes to handle the request
+
+const path = require('path')
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/build"))) //Tells heroku the frontend 
+  app.get("*", (req, res) => res.sendFile(path.resolve(__dirname, "../frontend", "build", "index.html")))
+}
 
 
 /* Show error on browser*/

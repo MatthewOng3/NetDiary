@@ -8,8 +8,12 @@ import emailjs from '@emailjs/browser';
 import { useRef, useState } from "react";
 import Spinner from 'react-bootstrap/Spinner';
 
+/**
+ * @description Feedback page
+ * @path /feedback
+ * @returns 
+ */
 function FeedbackPage() {
-
 
     const form = useRef();
     const [fullName, setFullName] = useState('');
@@ -34,7 +38,6 @@ function FeedbackPage() {
                 setLoadingFeedbackState(false)
                 alert("Error submitting feedback")
             });
-
     };
 
     return (
