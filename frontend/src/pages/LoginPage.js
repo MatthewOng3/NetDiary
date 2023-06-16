@@ -15,6 +15,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { setLoginState, setShareToken } from "../store/userSlice";
 import cleanInputData from "../security/CleanInputData";
 import OwnButton from "../components/utils/OwnButton";
+import api from "../util/api";
 
 
 /**
@@ -58,7 +59,7 @@ function LoginPage() {
 
 			//Send post request to api endpoint to log user in
 			axios.defaults.withCredentials = true
-			axios.post(process.env.REACT_APP_API_URL + "user/login", { email, password })
+			api.post("user/login", { email, password })
 				.then((res) => {
 					setLoginUserResponseState({ success: res.data.message, loading: false, error: undefined })
 
@@ -95,7 +96,7 @@ function LoginPage() {
 		//Send post request to log user in using google
 		axios.defaults.withCredentials = true;
 
-		axios.post(process.env.REACT_APP_API_URL + 'user/google-login', { google_token })
+		api.post('user/google-login', { google_token })
 			.then((res) => {
 				setLoginUserResponseState({
 					success: res.data.message,

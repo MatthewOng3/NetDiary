@@ -29,6 +29,7 @@ import { addCategory, getAllCategory, getCategoryError, getCategoryStatus, fetch
 import { MAX_CATEGORIES } from "../../constants/Limits";
 import { getCollectionsStatus, updateCurrentCollection } from "../../store/collectionSlice";
 import { fetchAllClusters } from "../../store/clusterSlice";
+import api from "../../util/api";
 
 /**
  * @description Page that allows users to store webpages, main dashboard page essentially
@@ -85,7 +86,7 @@ function DiaryPage() {
     //Everytime isLoggedIn changes, send request to server and retrieve collectionId from httpOnly cookie
     useEffect(() => {
         if (isLoggedIn) {
-            axios.get(process.env.REACT_APP_API_URL + 'collection/retrieveCollectionId', {
+            api.get('collection/retrieveCollectionId', {
                 headers: {
                     'Content-Type': 'application/json',
                 },

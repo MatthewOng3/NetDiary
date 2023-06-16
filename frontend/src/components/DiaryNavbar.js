@@ -14,6 +14,7 @@ import { logout } from '../store/userSlice';
 import { resetCategory } from '../store/categorySlice';
 import { resetCollection } from '../store/collectionSlice';
 import { resetCluster } from '../store/clusterSlice';
+import api from '../util/api';
 
 
 /**
@@ -27,7 +28,7 @@ function DiaryNavbar({ diaryPage }) {
     //Send log out request to server and clear cookies and redirect to login page
     function logoutUser() {
 
-        axios.get(process.env.REACT_APP_API_URL + 'user/logout', {
+        api.get('user/logout', {
             withCredentials: true, credentials: "include", headers: {
                 'Content-Type': 'application/json',
             },

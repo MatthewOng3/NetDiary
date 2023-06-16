@@ -16,6 +16,7 @@ import cleanInputData from '../security/CleanInputData'
 import ReCAPTCHA from "react-google-recaptcha";
 import ErrorModal from "../components/utils/ErrorModal";
 import OwnButton from "../components/utils/OwnButton";
+import api from "../util/api";
 
 /**
  * @description Page to allow users to register to webapp
@@ -70,7 +71,7 @@ function RegisterPage() {
             //Send post request with user credentials to api endpoint
             axios.defaults.withCredentials = true
 
-            axios.post(`${process.env.REACT_APP_API_URL}user/register`, { user_data: { username: username, email: email, password: password }, token: token }).then((res) => {
+            api.post(`user/register`, { user_data: { username: username, email: email, password: password }, token: token }).then((res) => {
 
                 //If user registers successfully
                 if (res.data.success && res.data.captcha) {

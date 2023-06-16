@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import cleanInputData from '../security/CleanInputData'
 import validateURL from '../util/ValidateURL';
+import api from '../util/api';
 
 /**
  * @description axios config options
@@ -25,7 +26,7 @@ export const saveClusterEntry = createAsyncThunk('cluster/saveClusterEntry', asy
         data_payload.link = cleanInputData(data_payload.link)
 
         if (validateURL(data_payload.link)) {
-            const response = await axios.put(process.env.REACT_APP_API_URL + 'cluster/save-entry', { data: data_payload }, axiosConfig)
+            const response = await api.put('cluster/save-entry', { data: data_payload }, axiosConfig)
             return response.data
         }
 
@@ -43,7 +44,7 @@ export const saveClusterEntry = createAsyncThunk('cluster/saveClusterEntry', asy
  */
 export const deleteClusterEntry = createAsyncThunk('cluster/deleteClusterEntry', async (data_payload, { rejectWithValue }) => {
     try {
-        const response = await axios.put(process.env.REACT_APP_API_URL + 'cluster/delete-cluster-entry', { data: data_payload }, axiosConfig)
+        const response = await api.put('cluster/delete-cluster-entry', { data: data_payload }, axiosConfig)
         return response.data
     }
     catch (err) {
@@ -58,7 +59,7 @@ export const deleteClusterEntry = createAsyncThunk('cluster/deleteClusterEntry',
  */
 export const fetchClusterEntries = createAsyncThunk('cluster/fetchClusterEntries', async (entryId, { rejectWithValue }) => {
     try {
-        const response = await axios.get(process.env.REACT_APP_API_URL + `cluster/retrieve/${entryId}`, axiosConfig)
+        const response = await api.get(`cluster/retrieve/${entryId}`, axiosConfig)
 
         return response.data
     }
@@ -75,7 +76,7 @@ export const fetchClusterEntries = createAsyncThunk('cluster/fetchClusterEntries
 export const fetchAllClusters = createAsyncThunk('cluster/fetchAllClusters', async (_, { rejectWithValue }) => {
     try {
 
-        const response = await axios.get(process.env.REACT_APP_API_URL + 'cluster/get-clusters', axiosConfig)
+        const response = await api.get('cluster/get-clusters', axiosConfig)
         return response.data.clusters
     }
     catch (err) {
