@@ -21,8 +21,8 @@ root.render(
       <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
       <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' http://netdiaryapp.com; script-src 'self'; 
       img-src 'self'; 
-      style-src 'self';
-      font-src 'self';" />
+      style-src 'self' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;" />
       {/* <meta name="viewport" content="width=device-width,initial-scale=1"/> */}
     </head>
     <App />
