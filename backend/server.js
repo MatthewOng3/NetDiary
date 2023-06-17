@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser')
 
 const app = express()
 const session = require('express-session')
-const https = require('https');
+const http = require('http');
 const fs = require('fs');
 const helmet = require("helmet")
 
@@ -19,7 +19,7 @@ const options = {
 
 const cors = require('cors');
 const corsOptions = {
-  origin: 'https://localhost:3000',
+  origin: 'http://netdiaryapp.com',
   credentials: true,            //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 }
@@ -50,7 +50,7 @@ const connectDB = require("./config/db"); //import connect function
 connectDB(); //call functin to connect to database
 // app.listen(3001)
 const port = process.env.PORT || 3000
-https.createServer(options, app).listen(port, () => {
+http.createServer(options, app).listen(port, () => {
   console.log(`Server is up on port ${port}!`);
 });
 
