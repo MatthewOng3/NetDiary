@@ -140,7 +140,7 @@ function CategoryComp({ name, listEntries, catId, collectionId }) {
    */
   async function shareCategory() {
 
-    const url = `https://netdiaryapp.com/api/shared/${collectionId}/${catId}`
+    const url = `https://www.netdiaryapp.com/api/shared/${collectionId}/${catId}`
 
     //Create sharing data object
     const shareData = {

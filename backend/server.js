@@ -19,7 +19,7 @@ const options = {
 
 const cors = require('cors');
 const corsOptions = {
-  origin: 'http://netdiaryapp.com',
+  origin: 'https://netdiaryapp.com',
   credentials: true,            //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 }

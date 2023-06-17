@@ -7,6 +7,7 @@ import cleanInputData from "../security/CleanInputData";
 
 import '../styles/ResetPassword.css'
 import OwnButton from "../components/utils/OwnButton";
+import api from "../util/api";
 
 /**
  * @description Page for users to input their email to receive reset password link in their email
@@ -33,7 +34,7 @@ function ForgotPasswordPage() {
 		if (event.currentTarget.checkValidity() === true && email && cleanInputData(email)) {
 			setSendEmailResponse({ loading: true, disabled: true });
 
-			axios.post(process.env.REACT_APP_API_URL + 'user/verify-email', { email: email }).then((res) => {
+			api.post('user/verify-email', { email: email }).then((res) => {
 				if (res.data.auth) {
 					setSendEmailResponse({ success: res.data.message, loading: false, error: undefined })
 				}

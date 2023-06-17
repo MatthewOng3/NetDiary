@@ -16,17 +16,14 @@ import { store } from './store/store';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-  // <React.StrictMode>
-   
-    <Provider store={store}>
-      <head>
-        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
-        {/* <meta name="viewport" content="width=device-width,initial-scale=1"/> */}
-      </head>
-      <App />
-    </Provider>
-  
-  // </React.StrictMode>
+  <Provider store={store}>
+    <head>
+      <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+      <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://netdiaryapp.com;"></meta>
+      {/* <meta name="viewport" content="width=device-width,initial-scale=1"/> */}
+    </head>
+    <App />
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

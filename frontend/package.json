@@ -2,7 +2,6 @@
   "name": "frontend",
   "homepage": "https://www.netdiaryapp.com",
   "version": "0.1.0",
-  "proxy": "https://localhost:3001/",
   "private": true,
   "dependencies": {
     "@emailjs/browser": "^3.10.0",
