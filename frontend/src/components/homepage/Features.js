@@ -42,7 +42,7 @@ function Features() {
             </div>
           </div>
           <div className="rounded-2xl overflow-hidden bg-white">
-            <img className="w-full h-4/6" src={"/images/collection1.PNG"} alt="" />
+            <img className="w-full h-4/6" src={"../../../public/images/collection1.PNG"} alt="" />
             <div className="w-full px-3 py-6 ">
               <h1 style={{ marginBottom: "0" }} className="text-2xl font-bold">
                 Multiple Collections
