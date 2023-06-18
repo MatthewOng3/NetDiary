@@ -19,10 +19,6 @@ root.render(
   <Provider store={store}>
     <head>
       <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
-      <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://netdiaryapp.com/api; script-src 'self' https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.1/purify.min.js; 
-      img-src 'self'; 
-      style-src 'self' https://fonts.googleapis.com;
-      font-src 'self' https://fonts.gstatic.com;" />
       {/* <meta name="viewport" content="width=device-width,initial-scale=1"/> */}
     </head>
     <App />
