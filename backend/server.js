@@ -23,7 +23,13 @@ const corsOptions = {
   credentials: true,            //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 }
-app.use(helmet())
+
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
+// app.use(helmet())
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true })) // parse requests of content-type - application/x-www-form-urlencoded
@@ -48,7 +54,7 @@ app.use(session({
 const connectDB = require("./config/db"); //import connect function
 
 connectDB(); //call functin to connect to database
-// app.listen(3001)
+
 const port = process.env.PORT || 3000
 http.createServer(options, app).listen(port, () => {
   console.log(`Server is up on port ${port}!`);
@@ -65,7 +71,6 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/build"))) //Tells heroku the frontend 
   app.get("*", (req, res) => res.sendFile(path.resolve(__dirname, "../frontend", "build", "index.html")))
 }
-
 
 /* Show error on browser*/
 app.use((error, req, res, next) => {
