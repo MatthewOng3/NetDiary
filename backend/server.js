@@ -60,6 +60,12 @@ http.createServer(options, app).listen(port, () => {
   console.log(`Server is up on port ${port}!`);
 });
 
+app.get('*', function (req, res, next) {
+  if (req.headers['x-forwarded-proto'] != 'https' && process.env.NODE_ENV === 'production')
+    res.redirect('https://' + req.hostname + req.url)
+  else
+    next() /* Continue to other routes if we're not redirecting */
+});
 
 /*Routing*/
 const apiRoutes = require('./routes/apiRoutes') //apiRoutes from other file

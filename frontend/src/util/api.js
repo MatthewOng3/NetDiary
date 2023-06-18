@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://netdiaryapp.com/api/",
+    baseURL: "https://netdiaryapp.com/api/",
 });
 
 export default api;

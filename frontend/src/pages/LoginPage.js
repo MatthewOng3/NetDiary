@@ -59,7 +59,7 @@ function LoginPage() {
 
 			//Send post request to api endpoint to log user in
 			axios.defaults.withCredentials = true
-			api.post("user/login", { email, password })
+			axios.post("https://netdiaryapp.com/api/user/login", { email, password })
 				.then((res) => {
 					setLoginUserResponseState({ success: res.data.message, loading: false, error: undefined })
 
