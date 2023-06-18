@@ -7,6 +7,7 @@ import axios from "axios";
 import cleanInputData from "../security/CleanInputData";
 import { useNavigate, useParams } from "react-router-dom";
 import OwnButton from "../components/utils/OwnButton";
+import api from "../util/api";
 
 /**
  * @description Page for users are redirected to after clicking the link in their email, input old and new password to change password
@@ -48,7 +49,7 @@ function ResetPasswordPage() {
 		if (event.currentTarget.checkValidity() === true && newPassword) {
 			setResetPassResponseState({ loading: true, disabled: true });
 
-			axios.post(process.env.REACT_APP_API_URL + '/user/reset-password', { newPassword: newPassword, shareToken: token }).then((res) => {
+			api.post('/user/reset-password', { newPassword: newPassword, shareToken: token }).then((res) => {
 				//If authentication is successful navigate to login page
 				if (res.data.auth) {
 					setResetPassResponseState({ success: res.data.message, loading: false, error: "" })
