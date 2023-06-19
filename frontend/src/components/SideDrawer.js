@@ -1,10 +1,10 @@
 import '../styles/Drawer.css'
 import CollectionItem from './CollectionItem';
-import { Drawer, Box, Typography, IconButton} from '@mui/material'
+import { Drawer, Box, Typography, IconButton } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
 import { Colors } from '../constants/Colors';
 import LoadingSpinner from './utils/LoadingSpinner'
-import {MAX_COLLECTIONS }from '../constants/Limits' 
+import { MAX_COLLECTIONS } from '../constants/Limits'
 
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux'
@@ -13,13 +13,13 @@ import { addCollection, getAllCollections, getCollectionsError, getCollectionsSt
 import { RandomId } from '../util/RandomId';
 import DeleteVerificationModal from './DeleteVerificationModal';
 
-import { deleteCollection} from '../store/collectionSlice'
+import { deleteCollection } from '../store/collectionSlice'
 /*
 Component to handle the opening and closing of side drawer as well as creating each diary collection
 */
-function SideDrawer({setIsDrawerOpen, isDrawerOpen}){
-   
-    const dispatch = useDispatch(); 
+function SideDrawer({ setIsDrawerOpen, isDrawerOpen }) {
+
+    const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false) //State to set loading spinner
     const [collectionAmount, setCollectionAmount] = useState(0) //State to keep track of amount of collections and disable accordingly
     const [deleteVerificationModal, setDeleteVerificationModal] = useState(false) //State for showing delete verification modal
@@ -29,22 +29,22 @@ function SideDrawer({setIsDrawerOpen, isDrawerOpen}){
     const collectionListStatus = useSelector(getCollectionsStatus)
     const collectionList = useSelector(getAllCollections)
     const error = useSelector(getCollectionsError)
-    
+
     //Everytime the status is in idle, fetch most recent collections from database
-    useEffect(()=>{
+    useEffect(() => {
         //return a cleanup function that calls abort on the controller, which will cancel any outstanding requests when the component unmounts or the dependencies change.
-        const abortController = new AbortController(); 
-        const {signal} = abortController //Signal to the fetch operation to abort if component unmounts or dependancies change
-        if(collectionListStatus === 'idle'){
-            dispatch(fetchCollections(), {signal}); 
+        const abortController = new AbortController();
+        const { signal } = abortController //Signal to the fetch operation to abort if component unmounts or dependancies change
+        if (collectionListStatus === 'idle') {
+            dispatch(fetchCollections(), { signal });
         }
-        else if(collectionListStatus === 'succeeded'){
+        else if (collectionListStatus === 'succeeded') {
             setIsLoading(false)
         }
-        else if(collectionListStatus === 'loading'){
+        else if (collectionListStatus === 'loading') {
             setIsLoading(true)
         }
-        else if(collectionListStatus === 'failed'){
+        else if (collectionListStatus === 'failed') {
             setIsLoading(false)
             alert(error)
         }
@@ -52,25 +52,25 @@ function SideDrawer({setIsDrawerOpen, isDrawerOpen}){
         return () => {
             abortController.abort();
         };
-    },[collectionListStatus])
-    
+    }, [collectionListStatus])
+
     //Executes to update the state of number of collections
-    useEffect(()=>{
+    useEffect(() => {
         setCollectionAmount(collectionList.length)
-    },[collectionList])
+    }, [collectionList])
 
     //Add new collection handler 
-    function addNewCollection(){
+    function addNewCollection() {
         dispatch(addCollection())
     }
-    
+
     /*Cancel deleting by closing modal*/
-    function closeModal(){
+    function closeModal() {
         setDeleteVerificationModal(false)
     }
 
     //Handles the deleting of collections, dispatching an action to redux store, and close modal
-    function deleteCollectionHandler(){
+    function deleteCollectionHandler() {
         dispatch(deleteCollection(deletingCollectionId))
         setDeleteVerificationModal(false)
     }
@@ -78,42 +78,50 @@ function SideDrawer({setIsDrawerOpen, isDrawerOpen}){
     /*
     Function passed into collection item to display delete verification modal, and set the collection id 
     */
-    function showDeleteVerificationModal(collectionId){
+    function showDeleteVerificationModal(collectionId) {
         setDeletingCollectionId(collectionId)
         setDeleteVerificationModal(true)
     }
 
-    return(
-        <> 
-            <Drawer anchor='left' open={isDrawerOpen} onClose={()=> setIsDrawerOpen(false)}>
-                <Box p={2} width='305px' textAlign='center' role='presentation' style={{backgroundColor: Colors.charcoal}}>
-                    <div className='flex-1 items-center' style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
-                        <div style={{width: '100%', paddingLeft: '15px'}}>
-                            <Typography variant='h6' component='div' style={{color: 'white' }}>
+    return (
+        <>
+            <Drawer anchor='left' open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
+                <Box p={2} width='305px' textAlign='center' role='presentation' style={{ backgroundColor: Colors.charcoal }}>
+                    <div className='flex-1 items-center' style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+                        <div style={{ width: '100%', paddingLeft: '15px' }}>
+                            <Typography variant='h6' component='div' style={{ color: 'white' }}>
                                 Diary List
                             </Typography>
                         </div>
-                        <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                             <IconButton size='medium' edge='start' color='primary' aria-label='add collection' onClick={addNewCollection} disabled={collectionAmount >= MAX_COLLECTIONS}>
-                                <AddIcon/>
+                                <AddIcon />
                             </IconButton>
                         </div>
                     </div>
                 </Box>
-                <div className='drawer-body' style={{backgroundColor: Colors.charcoal}}>
-                    {isLoading && <LoadingSpinner/>}
+                <div className='drawer-body' style={{ backgroundColor: Colors.charcoal }}>
+                    {isLoading && <LoadingSpinner />}
                     {/*Display collection list if async get method is successful*/}
                     {(
                         collectionList.map((item) => (
-                            <CollectionItem name={item.name} collectionId={item.collectionId} key={RandomId()} showDeleteVerificationModal={showDeleteVerificationModal}/> 
+                            <CollectionItem name={item.name} collectionId={item.collectionId} key={RandomId()} showDeleteVerificationModal={showDeleteVerificationModal} />
                         ))
                     )}
-                    {
-                        deleteVerificationModal &&
-                        <DeleteVerificationModal message={"collection"} onCancel={closeModal} onConfirm={deleteCollectionHandler} modalState={deleteVerificationModal}/>
-                    }
+
                 </div>
             </Drawer>
+            {
+                deleteVerificationModal &&
+
+                <Modal open={deleteVerificationModal}>
+                    <Fade in={deleteVerificationModal}>
+                        <div className="flex h-full justify-center">
+                            <DeleteVerificationModal message={"collection"} onCancel={closeModal} onConfirm={deleteCollectionHandler} />
+                        </div>
+                    </Fade>
+                </Modal>
+            }
         </>
     )
 }

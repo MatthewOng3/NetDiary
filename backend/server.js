@@ -60,6 +60,9 @@ http.createServer(options, app).listen(port, () => {
   console.log(`Server is up on port ${port}!`);
 });
 
+/**
+ * @description Redirect all http to https version of site
+ */
 app.get('*', function (req, res, next) {
   if (req.headers['x-forwarded-proto'] != 'https' && process.env.NODE_ENV === 'production')
     res.redirect('https://' + req.hostname + req.url)

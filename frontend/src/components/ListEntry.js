@@ -174,7 +174,7 @@ function ListEntry({ text_description, link, entryId, catId, allowEdit, canAddCl
                 <Modal open={isDeleteModalOpen}>
                     <Fade in={isDeleteModalOpen}>
                         <div className="flex h-full justify-center">
-                            <DeleteVerificationModal message={"category"} onCancel={() => setIsDeleteModalOpen(false)} onConfirm={deleteEntryHandler} />
+                            <DeleteVerificationModal message={"list entry"} onCancel={() => setIsDeleteModalOpen(false)} onConfirm={deleteEntryHandler} />
                         </div>
                     </Fade>
                 </Modal>
