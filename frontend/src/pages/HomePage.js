@@ -28,7 +28,7 @@ function HomePage() {
                 <Features />
                 <Applications />
                 <Comparison />
-                <HowWorks />
+                {/* <HowWorks /> */}
                 <UpcomingFeatures />
                 <Footer />
             </div>

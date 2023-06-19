@@ -93,7 +93,7 @@ function Applications() {
                     <Card sx={{ maxWidth: 350, height: '400px' }}>
                         <CardMedia
                             sx={{ height: '60%' }}
-                            image="/images/essay.png"
+                            image="/images/essay.jpg"
                             title="green iguana"
                         />
                         <CardContent>
