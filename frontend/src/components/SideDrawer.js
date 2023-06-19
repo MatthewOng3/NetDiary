@@ -5,6 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { Colors } from '../constants/Colors';
 import LoadingSpinner from './utils/LoadingSpinner'
 import { MAX_COLLECTIONS } from '../constants/Limits'
+import { Fade, Modal } from '@mui/material';
 
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux'
@@ -113,7 +114,6 @@ function SideDrawer({ setIsDrawerOpen, isDrawerOpen }) {
             </Drawer>
             {
                 deleteVerificationModal &&
-
                 <Modal open={deleteVerificationModal}>
                     <Fade in={deleteVerificationModal}>
                         <div className="flex h-full justify-center">
