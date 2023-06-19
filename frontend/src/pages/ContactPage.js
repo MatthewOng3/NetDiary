@@ -35,7 +35,6 @@ function ContactPage() {
         setMessage('');
         setLoadingEmailState(false)
         setShowSuccessAlert(true)
-        alert("Form submitted!")
       }, (error) => {
         setLoadingEmailState(false)
         alert("Error submitting form")

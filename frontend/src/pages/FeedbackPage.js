@@ -33,7 +33,6 @@ function FeedbackPage() {
                 setMessage('');
                 setLoadingFeedbackState(false)
                 setShowSuccessAlert(true)
-                alert("Feedback submitted!")
             }, (error) => {
                 setLoadingFeedbackState(false)
                 alert("Error submitting feedback")
@@ -99,7 +98,7 @@ function FeedbackPage() {
                                     onChange={(e) => setMessage(e.target.value)}
                                 />
                             </FloatingLabel>
-                            <div className="flex justify-center">
+                            <div className="flex justify-center flex-col">
                                 <button
                                     className="px-4 py-2 flex items-center gap-2 rounded-2xl text-blue-400 hover:text-white  border-2 border-blue-500 hover:bg-blue-600 "
                                 >
