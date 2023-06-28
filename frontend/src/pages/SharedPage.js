@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from 'axios'
+
 import { useParams } from "react-router-dom";
 import LoadingSpinner from "../components/utils/LoadingSpinner";
 import ListEntry from "../components/ListEntry";
-import { RandomId } from "../util/RandomId";
+import api from "../util/api";
 import { Colors } from "../constants/Colors";
 import '../styles/CategoryComponent.css'
 
@@ -21,9 +21,9 @@ function SharedPage() {
   useEffect(() => {
     setIsLoading(true)
     const shareToken = localStorage.getItem("share-token")
-    const url = `https://netdiaryapp.com/api/categories/shareCategory/${shareToken}/${collectionId}/${catId}`
+    const url = `categories/shareCategory/${shareToken}/${collectionId}/${catId}`
 
-    axios.get(url).then((res) => {
+    api.get(url).then((res) => {
       const categoryObj = res.data.categoryObj
       setListEntries(categoryObj.listEntries)
       setCategoryName(categoryObj.name)
