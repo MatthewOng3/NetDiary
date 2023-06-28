@@ -171,7 +171,7 @@ async function getSharedCategory(req, res, next) {
         return res.status(200).json({ success: true, categoryObj: cat })
     }
     catch (err) {
-        return res.status(500).send({ message: 'Internal Server Error', success: false, error: err })
+        return res.status(500).send({ message: 'Internal Server Error', success: false, error: err, categoryObj: {} })
     }
 }
 
