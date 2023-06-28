@@ -1,4 +1,4 @@
-import {BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 
 //Components
@@ -19,30 +19,30 @@ import ResetPasswordPage from './pages/PasswordResetPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 
 function App() {
-	
-	
-  return (
-    <BrowserRouter>
-		<Routes>
-			<Route>
-				{/*Publicly available routes:*/}
-				<Route path='/' element={<HomePage/>}/>
-				<Route path='/login' element={<LoginPage/>}/>
-				<Route path='/register' element={<RegisterPage/>}/>
-				<Route path='/contact' element={<ContactPage/>}/>
-				<Route  path='/feedback' element={<FeedbackPage/>}/>
-				<Route  path='/shared/:collectionId/:catId' element={<SharedPage/>}/>
-				<Route  path='/forgot-pass' element={<ForgotPasswordPage/>}/>
-				<Route  path='/password-reset/:token' element={<ResetPasswordPage/>}/>
-				{/*User protected routes:*/}
-				{/* <Route element={<ProtectedRoutes isLoggedIn={isLoggedIn}/>} path='/user/*'> */}
-				<Route path='/users/:id/verify/:token' element={<EmailVerificationPage/>}/>
-				<Route element={<DiaryPage/>} path='/user/net-diary' exact/>
-				{/* </Route> */}
-			</Route>
-		</Routes>
-	</BrowserRouter>
-  );
+
+
+	return (
+		<BrowserRouter>
+			<Routes>
+				<Route>
+					{/*Publicly available routes:*/}
+					<Route path='/' element={<HomePage />} />
+					<Route path='/login' element={<LoginPage />} />
+					<Route path='/register' element={<RegisterPage />} />
+					<Route path='/contact' element={<ContactPage />} />
+					<Route path='/feedback' element={<FeedbackPage />} />
+					<Route path='/shared/:collectionId/:catId' element={<SharedPage />} />
+					<Route path='/forgot-pass' element={<ForgotPasswordPage />} />
+					<Route path='/password-reset/:token' element={<ResetPasswordPage />} />
+					{/*User protected routes:*/}
+					{/* <Route element={<ProtectedRoutes isLoggedIn={isLoggedIn}/>} path='/user/*'> */}
+					<Route path='/users/:id/verify/:token' element={<EmailVerificationPage />} />
+					<Route element={<DiaryPage />} path='/user/net-diary' exact />
+					{/* </Route> */}
+				</Route>
+			</Routes>
+		</BrowserRouter>
+	);
 }
 
 export default App;
