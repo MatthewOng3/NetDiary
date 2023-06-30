@@ -7,11 +7,12 @@ const cookieParser = require('cookie-parser')
 const app = express()
 const session = require('express-session')
 const http = require('http');
+const https = require('https');
+
 const fs = require('fs');
 const helmet = require("helmet")
 
 /*Set up and use relevant web config options*/
-
 const options = {
   key: fs.readFileSync('../ssl/server.key'),
   cert: fs.readFileSync('../ssl/server.crt')
@@ -19,7 +20,7 @@ const options = {
 
 const cors = require('cors');
 const corsOptions = {
-  origin: 'https://netdiaryapp.com',
+  origin: process.env.NODE_ENV === 'production' ? 'https://netdiaryapp.com' : 'https://localhost:3000',
   credentials: true,            //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 }
@@ -29,6 +30,7 @@ app.use(
     contentSecurityPolicy: false,
   })
 );
+
 // app.use(helmet())
 app.use(cors(corsOptions));
 app.use(cookieParser());
@@ -44,7 +46,7 @@ app.use(session({
   cookie: {
     maxAge: 3600000 * 168,
     httpOnly: true,
-    secure: false
+    secure: true
   }
 }))
 
@@ -55,10 +57,18 @@ const connectDB = require("./config/db"); //import connect function
 
 connectDB(); //call functin to connect to database
 
-const port = process.env.PORT || 3000
-http.createServer(options, app).listen(port, () => {
-  console.log(`Server is up on port ${port}!`);
-});
+if (process.env.NODE_ENV === "production") {
+  http.createServer(options, app).listen("https://netdiaryapp.com/", () => {
+    console.log(`Server is up on port https://netdiaryapp.com/ `);
+  });
+}
+else {
+  https.createServer(options, app).listen(3001, () => {
+    console.log(`Server is up on port 3001`);
+  });
+}
+
+
 
 /**
  * @description Redirect all http to https version of site

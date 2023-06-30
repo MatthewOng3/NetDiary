@@ -110,6 +110,7 @@ const registerUser = async (req, res, next) => {
  */
 const loginUser = async (req, res, next) => {
     try {
+
         const { email, password } = req.body //doNotLogout comes from frontend
 
         if (!(email && password)) {
@@ -129,12 +130,11 @@ const loginUser = async (req, res, next) => {
             //Find user's special share token 
             const shareTokenDoc = await Token.findOne({ userId: _id })
 
-
             //Set collectionId to the first object in collections
             if (user.collections.length > 0) {
                 collectionId = user.collections[0].collectionId
                 //Store current collection id in a cookie
-                res.cookie('currentCollectionId', collectionId.toString(), { httpOnly: true, maxAge: 3600000 * 168, secure: false });
+                res.cookie('currentCollectionId', collectionId.toString(), { httpOnly: true, maxAge: 3600000 * 168, secure: true });
             }
 
 
