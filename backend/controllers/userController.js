@@ -388,7 +388,7 @@ const verifyLoggedInUser = async (req, res, next) => {
     try {
         let loggedIn = false;
 
-        if (req.cookies.session) {
+        if (req.cookies.user_id) {
             loggedIn = true
 
         }
