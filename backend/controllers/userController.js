@@ -124,8 +124,10 @@ const loginUser = async (req, res, next) => {
             let collectionId = ""
             //Create new access token for user as well as refresh token
             const { _id, username, email } = user
-            const accessToken = generateAuthToken(_id, username, email)
-            const refreshToken = generateRefreshToken(_id, username, email)
+
+            // const accessToken = generateAuthToken(_id, username, email)
+            // const refreshToken = generateRefreshToken(_id, username, email)
+
 
             //Find user's special share token 
             const shareTokenDoc = await Token.findOne({ userId: _id })
@@ -139,8 +141,6 @@ const loginUser = async (req, res, next) => {
 
 
             req.session.user = true
-
-
 
             // Create secure cookie with refresh token 
             // res.cookie('jwt', refreshToken, {
@@ -158,7 +158,6 @@ const loginUser = async (req, res, next) => {
                 message: 'User Logged In Successfully',
                 user: user,
                 auth: true,
-                token: accessToken,
                 shareToken: shareTokenDoc.shareToken,
                 collectionId: collectionId
             })
@@ -390,7 +389,6 @@ const verifyLoggedInUser = async (req, res, next) => {
 
         if (req.cookies.user_id) {
             loggedIn = true
-
         }
 
         return res.send({ loggedIn: loggedIn })

@@ -20,13 +20,13 @@
     "postmark": "^3.0.18"
   },
   "devDependencies": {
-    "nodemon": "^2.0.21"
+    "nodemon": "^2.0.22"
   },
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "devStart": "set HTTPS=true&&set SSL_CRT_FILE=./ssl/server.crt&&set SSL_KEY_FILE=./ssl/server.key&&node server.js"
+    "devStart": "set HTTPS=true&&set SSL_CRT_FILE=./ssl/server.crt&&set SSL_KEY_FILE=./ssl/server.key&&nodemon server.js"
   },
   "keywords": [],
   "author": "",
