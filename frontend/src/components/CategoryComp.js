@@ -139,8 +139,13 @@ function CategoryComp({ name, listEntries, catId, collectionId }) {
    * @see CategoryController
    */
   async function shareCategory() {
-
-    const url = `https://www.netdiaryapp.com/shared/${collectionId}/${catId}`
+    let url;
+    if (process.env.REACT_APP_NODE_ENV === "development") {
+      url = `https://localhost:3000/shared/${collectionId}/${catId}`
+    }
+    else {
+      url = `https://www.netdiaryapp.com/shared/${collectionId}/${catId}`
+    }
 
     //Create sharing data object
     const shareData = {
@@ -188,7 +193,7 @@ function CategoryComp({ name, listEntries, catId, collectionId }) {
             <div className="card-body scrollbar" id='scrollbar1'>
               {
                 listEntries.map((value, index) => (
-                  <ListEntry key={RandomId() + index} text_description={value.name} link={value.link} entryId={value.entryId} catId={catId} allowEdit={true} canAddCluster={true} />
+                  <ListEntry key={RandomId() + index} text_description={value.name} link={value.link} entryId={value.entryId} catId={catId} allowEdit={true} canAddCluster={true} sharedCat={false} />
                 ))
               }
             </div>

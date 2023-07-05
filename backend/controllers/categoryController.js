@@ -146,7 +146,6 @@ async function updateCategoryName(req, res, next) {
  * @route /share/getCategory/:token/:collectionId/:catId
  * @return Category component data from relevant user
  */
-
 async function getSharedCategory(req, res, next) {
     try {
 
@@ -163,10 +162,14 @@ async function getSharedCategory(req, res, next) {
             { _id: ObjectId(userId), 'collections.collectionId': ObjectId(collectionId) },
         );
 
-        const collection = foundDoc.collections[0]
+        const collection = foundDoc.collections.find((item) => {
+            return item.collectionId.toString() === collectionId
+        })
+
         const cat = collection.categoryList.find((item) => {
             return item.catId.toString() === catId
         })
+
 
         return res.status(200).json({ success: true, categoryObj: cat })
     }

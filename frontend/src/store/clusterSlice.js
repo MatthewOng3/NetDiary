@@ -157,10 +157,10 @@ const clusterSlice = createSlice({
             .addCase(fetchClusterEntries.fulfilled, (state, { payload }) => {
                 //Fetch cluster entries related to a clusterId
                 const clusterObj = payload.cluster
+                //If there is a cluster obj returned, add it to the clusters hashmap
                 if (clusterObj) {
                     state.clusters[clusterObj.clusterId.toString()] = clusterObj.clusterEntries
                 }
-
                 state.clusterIndividualStatus[clusterObj.clusterId.toString()] = 'success'
             })
             .addCase(fetchClusterEntries.rejected, (state, action) => {

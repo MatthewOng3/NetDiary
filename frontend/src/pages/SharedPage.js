@@ -48,7 +48,7 @@ function SharedPage() {
 
                 listEntries.map((value, index) => {
                   return (
-                    <ListEntry key={value.entryId} text_description={value.name} link={value.link} allowEdit={false} />
+                    <ListEntry key={value.entryId} text_description={value.name} link={value.link} allowEdit={false} canAddCluster={false} entryId={value.entryId} catId={catId} sharedCat={true} />
                   )
                 })
               }

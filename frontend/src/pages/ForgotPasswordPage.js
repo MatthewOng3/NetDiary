@@ -38,7 +38,7 @@ function ForgotPasswordPage() {
 				if (res.data.auth) {
 					setSendEmailResponse({ success: res.data.message, loading: false, error: undefined })
 				}
-				else {
+				else if (!res.data.auth) {
 					setSendEmailResponse({ success: undefined, loading: false, error: res.data.message })
 				}
 			}).catch((err) => {

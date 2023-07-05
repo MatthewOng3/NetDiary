@@ -40,7 +40,7 @@ async function fetchCluster(req, res, next) {
 
 /**
  * @description Fetch all entry of a cluster
- * @route GET /cluster/retrieve/:entryId
+ * @route GET /get-cluster
  * @param EntryId Id of list entry component
  */
 async function fetchAllClusters(req, res, next) {

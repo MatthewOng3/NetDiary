@@ -285,8 +285,15 @@ const verifyUserEmail = async (req, res, next) => {
             }).save();
         }
 
+        let frontendUrl
+        if (process.env.NODE_ENV === "development") {
+            frontendUrl = "https://localhost:3000/"
+        }
+        else {
+            frontendUrl = "https://www.netdiaryapp.com"
+        }
         //Link that will be sent to users in the email
-        const url = `${process.env.FRONTEND_URL}password-reset/${token.shareToken}/`;
+        const url = `${frontendUrl}password-reset/${token.shareToken}/`;
 
         const response = await sendEmail(user.email, "Password Reset Link", "d-602360db6ebc4466a850582808683ae5", { reset_link: url });
 

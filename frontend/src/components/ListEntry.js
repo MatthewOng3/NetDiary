@@ -19,10 +19,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteEntry } from '../store/categorySlice';
 import { useEffect, useState } from 'react';
 import DeleteVerificationModal from './DeleteVerificationModal';
-import { getClusterReducerStatus, selectClusterById, fetchClusterEntries, updateClusterAdd, getIndividualClusterStatus } from '../store/clusterSlice';
+import { selectClusterById, fetchClusterEntries, updateClusterAdd, getIndividualClusterStatus } from '../store/clusterSlice';
 import Accordion from 'react-bootstrap/Accordion';
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
-import { setNormalEntryDetails, updateDeleteModalState, updateEntryModalState, getDeleteModalOpenState, resetEntryModalDetails, setClickedEntryId, setClickedClusterEntryId } from '../store/modalSlice';
+import { setNormalEntryDetails, updateEntryModalState, resetEntryModalDetails, setClickedEntryId, setClickedClusterEntryId } from '../store/modalSlice';
 
 
 /**
@@ -32,7 +32,7 @@ import { setNormalEntryDetails, updateDeleteModalState, updateEntryModalState, g
  * @param canAddCluster Boolean value to indicate if the list entry will show the add button to add to cluster
  * @see CategoryComp
  */
-function ListEntry({ text_description, link, entryId, catId, allowEdit, canAddCluster }) {
+function ListEntry({ text_description, link, entryId, catId, allowEdit, canAddCluster, sharedCat }) {
 
     const dispatch = useDispatch()
     const collectionId = useSelector((store) => store.collection.currentCollection)
@@ -50,8 +50,9 @@ function ListEntry({ text_description, link, entryId, catId, allowEdit, canAddCl
     const categoryState = useSelector((store) => store.category);
 
     useEffect(() => {
+        console.log(sharedCat, "USE EFFECT LIST ENTYR")
         //If on idle status and current collection id is not undefined, fetch categories from backend
-        if (clusterStatus === 'idle') {
+        if (clusterStatus === 'idle' || sharedCat) {
             dispatch(fetchClusterEntries(entryId))
         }
         else if (clusterStatus === 'success') {
@@ -65,7 +66,6 @@ function ListEntry({ text_description, link, entryId, catId, allowEdit, canAddCl
         }
 
     }, [clusterStatus])
-
 
 
     /**
@@ -156,14 +156,13 @@ function ListEntry({ text_description, link, entryId, catId, allowEdit, canAddCl
                                 </Tooltip>
                             </div>
                         )}
-
                     </div>
                 </div>
                 <Accordion.Collapse eventKey="0">
                     <div style={{ display: 'flex', alignItems: 'flex-end', flexDirection: 'column' }}>
                         {
                             isOpen && cluster && cluster.map((value, index) => (
-                                <ClusterEntry key={RandomId() + index} clusterDesc={value.name} allowEdit={true} link={value.link} clusterId={entryId} clusterEntryId={value.clusterEntryId} />
+                                <ClusterEntry key={RandomId() + index} clusterDesc={value.name} allowEdit={!sharedCat} link={value.link} clusterId={entryId} clusterEntryId={value.clusterEntryId} />
                             ))
                         }
                     </div>

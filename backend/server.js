@@ -69,7 +69,6 @@ else {
 }
 
 
-
 /**
  * @description Redirect all http to https version of site
  */

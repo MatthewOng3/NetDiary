@@ -8,7 +8,6 @@ import '../styles/DiaryNavbar.css'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from "react-router-dom";
 import { Colors } from '../constants/Colors';
-import axios from 'axios';
 import { useDispatch } from "react-redux";
 import { logout } from '../store/userSlice';
 import { resetCategory } from '../store/categorySlice';

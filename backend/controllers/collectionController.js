@@ -11,8 +11,7 @@ async function retrieveCurrentCollection(req, res, next) {
     try {
         //Retrieve user_id cookie from frontend
         const collectionId = req.cookies.currentCollectionId
-        console.log(req.cookie)
-        console.log(req.cookies)
+
 
         if (!collectionId) {
             return res.json({ success: false })

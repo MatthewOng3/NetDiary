@@ -3,7 +3,6 @@ import { Form, Alert } from "react-bootstrap";
 import Spinner from 'react-bootstrap/Spinner';
 import { Colors } from "../constants/Colors";
 
-import axios from "axios";
 import cleanInputData from "../security/CleanInputData";
 import { useNavigate, useParams } from "react-router-dom";
 import OwnButton from "../components/utils/OwnButton";
