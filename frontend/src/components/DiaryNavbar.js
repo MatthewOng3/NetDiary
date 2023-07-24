@@ -1,9 +1,7 @@
 import { IconButton } from '@mui/material'
-import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from 'react';
+
 
 import { Button } from 'react-bootstrap';
-import SideDrawer from './SideDrawer';
 import '../styles/DiaryNavbar.css'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from "react-router-dom";
@@ -20,7 +18,7 @@ import api from '../util/api';
  * @description Component to handle the navbar and its icons 
  */
 function DiaryNavbar({ diaryPage }) {
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
     const navigate = useNavigate();
     const dispatch = useDispatch()
 
@@ -51,17 +49,14 @@ function DiaryNavbar({ diaryPage }) {
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light " style={{ backgroundColor: Colors.navbar }}>
-            <div className="container-fluid d-flex">
-                {diaryPage ?
-                    <IconButton size='large' edge='start' color='primary' aria-label='logo' onClick={() => setIsDrawerOpen(true)} style={{ marginLeft: '10px' }}>
-                        <MenuIcon />
-                    </IconButton> :
-                    <IconButton size='large' edge='start' color='primary' aria-label='logo' onClick={() => navigate(-1)}>
+            <div className="container-fluid justify-end flex-auto">
+                {!diaryPage &&
+                    <IconButton IconButton size='large' edge='start' color='primary' aria-label='logo' onClick={() => navigate(-1)}>
                         <ArrowBackIcon />
                     </IconButton>
                 }
                 {/* PUT COMPANY LOGO HERE*/}
-                <div className="links" id="navbarSupportedContent">
+                <div className="links flex-auto justify-end" id="navbarSupportedContent">
                     <form className="links">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             {diaryPage &&
@@ -81,11 +76,11 @@ function DiaryNavbar({ diaryPage }) {
                     </form>
                 </div>
             </div>
-            {
+            {/* {
                 diaryPage && <SideDrawer setIsDrawerOpen={setIsDrawerOpen} isDrawerOpen={isDrawerOpen} />
-            }
+            } */}
 
-        </nav>
+        </nav >
 
     )
 }

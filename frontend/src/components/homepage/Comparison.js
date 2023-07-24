@@ -24,7 +24,7 @@ function Comparison() {
     ];
 
     return (
-        <section className=" w-full  flex justify-center" style={{ backgroundColor: 'orange', padding: '1%', height: 575 }}>
+        <section className=" w-full  flex justify-center" style={{ backgroundColor: '#151515', padding: '1%', height: 575 }}>
             <div className="comparison-container">
                 <Card sx={{ width: 370, height: '100%', display: 'flex', flexDirection: 'column' }}>
                     <CardMedia

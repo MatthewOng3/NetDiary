@@ -26,8 +26,8 @@ function HomePage() {
             <div style={{ height: '100vh', overflow: 'scroll' }}>
                 <Main />
                 <Features />
-                <Applications />
-                <Comparison />
+                {/* <Applications /> */}
+                {/* <Comparison /> */}
                 {/* <HowWorks /> */}
                 <UpcomingFeatures />
                 <Footer />

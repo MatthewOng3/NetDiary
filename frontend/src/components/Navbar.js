@@ -10,14 +10,16 @@ function Navbar() {
 
   return (
     <div
-      style={{ background: '#2b2b2b' }}
+      style={{
+        background: '#2F312F'
+      }}
       className="w-full flex items-center justify-center"
     >
       <div className="w-full pr-4 pl-4">
-        <div className={!isclose ? "flex items-center justify-between  w-full" : "flex flex-col items-center  w-full"}>
-          <a className="navbar-brand" href="/">
+        <div className={!isclose ? "flex items-center justify-end  w-full pb-2 pt-2" : "flex flex-col items-center  w-full"}>
+          {/* <a className="navbar-brand" href="/">
             <img src="images/Logo1.png" className="w-28 lg:w-32 " style={{ height: '50px', width: '75%' }} />
-          </a>
+          </a> */}
           <div className={!isclose ? " hidden lg:flex items-center gap-3" : " flex items-center flex-col gap-3 mt-3"}>
             <Link
               className="text-gray-50 text-sm hover:text-blue-500"

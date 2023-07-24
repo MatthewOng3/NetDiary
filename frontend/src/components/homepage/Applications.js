@@ -41,7 +41,7 @@ const Demo = styled('div')(({ theme }) => ({
 function Applications() {
 
     return (
-        <section className=" w-full  flex justify-center" style={{ backgroundColor: '#0a0a0a', padding: '1%', height: 575 }}>
+        <section className=" w-full  flex justify-center" style={{ backgroundColor: '#151515', padding: '1%', height: 575 }}>
             <Root>
                 <h1 style={{ display: 'flex', justifyContent: 'center', color: 'white' }}>Applications</h1>
                 <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>

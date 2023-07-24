@@ -14,12 +14,11 @@ async function fetchCluster(req, res, next) {
         //Retrieve entryId from frontend
         const clusterId = req.params.clusterId
 
-        //If there is no entry id then exit function
+        //If there is no clusterid then exit function
         if (!clusterId) {
             return res.send({ success: false, clusterEntries: [] })
         }
 
-        //Search database for the corresponding user with the id and retrieve entire categoryList array
         const foundCluster = await Cluster.findOne({ userId: req.cookies.user_id, clusterId: clusterId }).orFail()
 
         if (foundCluster) {

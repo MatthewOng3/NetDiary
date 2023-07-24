@@ -184,6 +184,8 @@ function DiaryPage() {
                                     <DialogTitle>{"Enable browser popups in order to utilise cluster functionality"}</DialogTitle>
                                     <DialogContent>
                                         <DialogContentText id="alert-dialog-slide-description">
+                                            We use cookies to enhance your browsing experience and ensure your privacy is protected. By continuing to use our site, you consent to our privacy policy and terms and conditions.
+                                            We hope you enjoy NetDiary!
                                             Enable browser popups in Settings &#x2192; Privacy and security &#x2192; Pop-ups and redirects
                                         </DialogContentText>
                                     </DialogContent>
